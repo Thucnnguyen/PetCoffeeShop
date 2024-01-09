@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PetCoffee.Domain\PetCoffee.Domain.csproj" />
+    <ProjectReference Include="..\PetCoffee.Shared\PetCoffee.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Models\Request\" />
+    <Folder Include="Features\Auth\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.8.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+  </ItemGroup>
+
+</Project>
