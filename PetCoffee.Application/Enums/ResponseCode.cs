@@ -8,13 +8,11 @@ public enum ResponseCode
 
 	[Description("Lỗi định dạng dữ liệu")] ValidationError = 2,
 
-	[Description("Lỗi mapping")] MappingError = 3,
+	[Description("Tài khoản không được xác thực")] Unauthorized = 3,
 
-	[Description("Tài khoản không được xác thực")] Unauthorized = 4,
-
-	[Description("Tài khoản không được phép truy cập tài nguyên này")] Forbidden = 5,
+	[Description("Tài khoản không được phép truy cập tài nguyên này")] Forbidden = 4,
 
 	//Auth
-	[Description("Email đã tồn tại")] AccountIsExisted = 6,
+	[Description("Email đã tồn tại")] AccountIsExisted = 5,
 
 }

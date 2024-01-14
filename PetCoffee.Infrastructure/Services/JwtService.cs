@@ -1,9 +1,8 @@
-﻿
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Infrastructure.Settings;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,14 +11,14 @@ namespace PetCoffee.Infrastructure.Services;
 
 public class JwtService : IJwtService
 {
-	private readonly IConfiguration _configuration;
-	public JwtService(IConfiguration configuration)
+	private readonly JwtSettings _jwtSettings;
+	public JwtService(JwtSettings jwtSettings)
 	{
-		_configuration = configuration;
+		_jwtSettings = jwtSettings;
 	}
 	private string GenerateJwtToken(Account account, int expireInDays)
 	{
-		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("Token:secret").Value));
+		var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key));
 		var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
 		var claims = new[]
@@ -39,6 +38,6 @@ public class JwtService : IJwtService
 	}
 	public string GenerateJwtToken(Account account)
 	{
-		return GenerateJwtToken(account,1000);
+		return GenerateJwtToken(account,_jwtSettings.TokenExpire);
 	}
 }

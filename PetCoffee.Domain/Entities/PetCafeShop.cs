@@ -18,7 +18,9 @@ public class PetCafeShop
 	public string Phone {  get; set; }
 	public string Email { get; set; }
 	public string Location { get; set; }
-	public ShopStatus status { get; set; }
+	public double? Latitude { get; set; }
+	public double? Longitude { get; set; }
+	public ShopStatus status { get; set; } = ShopStatus.Active;
 	public DateTimeOffset? StartTime { get; set; }
 	public DateTimeOffset? EndTime { get;set; }
 

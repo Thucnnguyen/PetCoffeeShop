@@ -20,7 +20,7 @@ public class CustomerRegisterCommandValidator : AbstractValidator<CustomerRegist
 	}
 }
 
-public class CustomerRegisterCommand : IRequest<string>
+public class CustomerRegisterCommand : IRequest<AccessTokenResponse>
 {
 	public string? FullName { get; set; }
 	public string? PhoneNumber { get; set; }
