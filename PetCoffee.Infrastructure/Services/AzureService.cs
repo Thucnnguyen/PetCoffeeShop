@@ -23,7 +23,7 @@ public class AzureService : IAzureService
 		_blobClient = blobServiceClient;
 	}
 
-	public async Task CreateBlob(string name, IFormFile file)
+	public async Task<string> CreateBlob(string name, IFormFile file)
 	{
 		BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(AzureConstant.ContainerName);
 		var blobClient = blobContainerClient.GetBlobClient(name);
@@ -34,6 +34,7 @@ public class AzureService : IAzureService
 			ContentType = file.ContentType,
 		};
 		var result = await blobClient.UploadAsync(file.OpenReadStream(), httpHeaders);
+		return result.ToString();
 	}
 
 	public async Task<string> GetBlob(string name)

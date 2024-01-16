@@ -35,9 +35,11 @@ namespace PetCoffee.API.Controllers
 		}
 
 		// PUT api/<PostController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
+		[HttpPost("file")]
+		public async Task<ActionResult<string>> PostFile([FromForm] FileCommand request)
 		{
+			var response = await Mediator.Send(request);
+			return response;
 		}
 
 		// DELETE api/<PostController>/5

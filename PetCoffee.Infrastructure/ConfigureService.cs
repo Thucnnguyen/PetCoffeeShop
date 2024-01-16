@@ -27,7 +27,6 @@ public static class ConfigureService
 		IConfiguration _configuration)
 	{
 		services.AddHttpContextAccessor();
-		using var sc = services.BuildServiceProvider().CreateScope();
 
 		//set up dbconnection
 		services.AddDbContext<ApplicationDbContext>(options =>
@@ -54,6 +53,7 @@ public static class ConfigureService
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<AzureSettings>>().Value);
 		// get azureSetting
+		using var sc = services.BuildServiceProvider().CreateScope();
 		var _azureSettings = sc.ServiceProvider.GetRequiredService<AzureSettings>();
 		// config azure blob
 		services.AddSingleton(u => new BlobServiceClient(_azureSettings.BlobConnectionString));
