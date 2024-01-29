@@ -7,8 +7,8 @@ namespace PetCoffee.Domain.Entities;
 public class Like : BaseAuditableEntity
 {
 	[Key]
-	public long Id { get; set; }
 	public long AccountId { get; set; }
+	[Key]
 	public long PostId { get; set; }
 	public Account Account { get; set; }
 	public Post Post { get; set; }

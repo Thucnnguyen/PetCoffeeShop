@@ -6,17 +6,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 [Table("Order")]
-public class Order : BaseAuditableEntity
+public class Reservation : BaseAuditableEntity
 {
 	[Key] 
 	public long Id { get; set; }
 	public decimal TotalPrice { get; set; }
 	public OrderStatus Status { get; set; }	
 	public decimal Discount { get; set; }
-	public DateTimeOffset ReceiveAt { get; set; }
+	public DateTime StartTime { get; set; }
+	public DateTime EndTime { get; set; }
 	public string? Note { get; set; }
 	public decimal Deposit { get; set; }
 	public string Code { get; set; }
-	public long CafeShopId { get; set; }
-	public PetCafeShop CafeShop { get; set; }
+	public string? Rate { get; set; }
+	public string? Comment { get; set; }
+
+	public long FloorId { get; set; }
+	public Floor Floor { get; set; }
 }

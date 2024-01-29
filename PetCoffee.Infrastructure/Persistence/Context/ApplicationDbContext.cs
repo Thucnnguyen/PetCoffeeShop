@@ -12,17 +12,24 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Account> Accounts => Set<Account>();
-    public DbSet<Comment> Comments => Set<Comment>();
+	public DbSet<Category> Categories => Set<Category>();
+	public DbSet<Comment> Comments => Set<Comment>();
+	public DbSet<Diary> Diaries => Set<Diary>();
     public DbSet<Event> Events => Set<Event>();
+    public DbSet<EventField> EventFields => Set<EventField>();
+    public DbSet<FollowEvent> FollowEvents => Set<FollowEvent>();
+    public DbSet<Item> Items => Set<Item>();
     public DbSet<Like> Like => Set<Like>();
     public DbSet<Notification> Notification => Set<Notification>();
-    public DbSet<Order> Order => Set<Order>();
-    public DbSet<OrderDetail> OrderDetails => Set<OrderDetail>();
+    public DbSet<Reservation> Order => Set<Reservation>();
     public DbSet<Pet> Pets => Set<Pet>();
-    public DbSet<PetCafeShop> Shops => Set<PetCafeShop>();
+    public DbSet<PetCoffeeShop> Shops => Set<PetCoffeeShop>();
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<PostCategory> PostCategories => Set<PostCategory>();
     public DbSet<Service> Services => Set<Service>();
-    public DbSet<Setting> Settings => Set<Setting>();
+    public DbSet<Report> Reports => Set<Report>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
     public DbSet<Wallet> Wallets => Set<Wallet>();
+
+
 }

@@ -14,6 +14,9 @@ public class Comment: BaseAuditableEntity
 	public long PostId { get; set; }
 	public Post Post { get; set; }
 
+	public long CommentorID { get; set; }
+	public Account Commentor { get; set; }
+
 	[ForeignKey("ParentComment")]
 	public long? ParentCommentId { get; set; }
 	public Comment? ParentComment { get; set; }

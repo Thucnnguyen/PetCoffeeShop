@@ -14,5 +14,7 @@ public enum ResponseCode
 
 	//Auth
 	[Description("Email đã tồn tại")] AccountIsExisted = 5,
+	[Description("Tài Khoản hoặc mật khẩu sai")] LoginFailed = 6,
+
 
 }

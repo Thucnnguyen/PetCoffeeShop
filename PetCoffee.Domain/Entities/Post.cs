@@ -17,7 +17,7 @@ public class Post : BaseAuditableEntity
 	public int LikeCount { get; set; }
 
 	public long PetCafeShopId { get; set; }
-	public PetCafeShop PetCafeShop { get; set; }
+	public PetCoffeeShop PetCafeShop { get; set; }
 
 	public IList<Comment> Comments { get; set; } = new List<Comment>();
 }

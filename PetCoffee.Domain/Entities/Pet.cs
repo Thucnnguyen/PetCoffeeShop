@@ -14,5 +14,5 @@ public class Pet : BaseAuditableEntity
 	public string? Image {  get; set; }
 	public PetStatus PetStatus { get; set; } = PetStatus.Active;
 	public long PetCafeShopId { get; set; }
-	public PetCafeShop PetCafeShop { get; set; }
+	public PetCoffeeShop PetCafeShop { get; set; }
 }

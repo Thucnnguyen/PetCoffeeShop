@@ -16,7 +16,7 @@ public class UnitOfWork : IUnitOfWork
 
 
 
-	public UnitOfWork(ApplicationDbContext dbContext, IServiceScopeFactory scopeFactory) 
+	public UnitOfWork(ApplicationDbContext dbContext, IServiceScopeFactory scopeFactory)
 	{
 		_dbContext = dbContext;
 		_scopeFactory = scopeFactory;
@@ -44,19 +44,9 @@ public class UnitOfWork : IUnitOfWork
 		return await _dbContext.SaveChangesAsync();
 	}
 
-	protected virtual void Dispose(bool disposing)
+	protected virtual void Dispose()
 	{
-		if (!_disposed)
-			if (disposing)
-				_dbContext.Dispose();
-
-		_disposed = true;
-	}
-
-	public void Dispose()
-	{
-		Dispose(true);
-		GC.SuppressFinalize(this);
+		_dbContext.Dispose();
 	}
 
 	private IAccountRepository? _accountRepository;
