@@ -1,6 +1,4 @@
 ﻿using EntityFrameworkCore.Projectables;
-using LockerService.Domain.Entities;
-using LockerService.Domain.Enums;
 using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -20,6 +18,8 @@ public class Notification : BaseAuditableEntity
 	public DateTimeOffset? ReadAt { get; set; }
 	public NotificationLevel Level { get; set; } = NotificationLevel.Information;
 
+	public long AccountId { get; set; }
+	public Account Account { get; set; }
 	[Projectable]
 	public bool IsRead => ReadAt != null || Deleted;
 }

@@ -5,7 +5,7 @@ using PetCoffee.Infrastructure.Persistence.Context;
 
 namespace PetCoffee.Infrastructure.Persistence.Repository;
 
-public class WalletRepository : BaseRepository<Wallet>, IWalletRepsitory
+public class WalletRepository : BaseRepository<Wallet>, IWalletRepository
 {
 	private readonly ApplicationDbContext _dbContext;
 

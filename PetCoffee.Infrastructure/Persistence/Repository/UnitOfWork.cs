@@ -50,6 +50,50 @@ public class UnitOfWork : IUnitOfWork
 	}
 
 	private IAccountRepository? _accountRepository;
+	private ICategoryRepository? _categoryRepository;
+	private ICommentRepository? _commentRepository;
+	private IDiaryRepository? _diaryRepository;
+	private IEventFieldRepsitory? _eventFieldRepsitory;
+	private IEventRepository? _eventRepository;
+	private IFloorRepsitory? _floorRepository;
+	private IFollowEventRepository _followEventRepository;
+	private IItemRepository? _itemRepository;
+	private ILikeRepository? _likeRepository;
+	private INotificationRepository? _notificationRepository;	
+	private IPetCoffeeShopRepository? _petCoffeeShopRepository;
+	private IPetRepository? _petRepository;
+	private IPostCategoryRepository? _postCategoryRepository;
+	private IPostRepository? _postRepository;
+	private IReportRepository? _reportRepository;
+	private IReservationRepository? _reservationRepository;
+	private ISubmittingEventFieldRepository? _submittingEventFieldRepository;
+	private ISubmittingEventRepository? _submittingEventRepsitory;
+	private ITransactionRepository? _transactionRepository;
+	private IVaccinationRepository? _vaccinationRepository;
+	private IWalletRepository? _walletRepsitory;
+
 	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
+	public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_dbContext);
+	public ICommentRepository CommentRepository => _commentRepository ??= new CommentRepository(_dbContext);
+	public IDiaryRepository DiaryRepository => _diaryRepository ??= new DiaryRepository(_dbContext);
+	public IEventFieldRepsitory EventFieldRepsitory => _eventFieldRepsitory ??= new EventFieldRepsitory(_dbContext);
+	public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_dbContext);
+	public IFloorRepsitory FloorRepository => _floorRepository ??= new FloorRepository(_dbContext);
+	public IFollowEventRepository FollowEventRepository => _followEventRepository ??= new FollowEventRepository(_dbContext);
+	public IItemRepository ItemRepository => _itemRepository ??= new ItemRepository(_dbContext);
+	public ILikeRepository LikeRepository => _likeRepository ??= new LikeRepository(_dbContext);
+	public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_dbContext);
+	public IPetCoffeeShopRepository PetCoffeeShopRepository => _petCoffeeShopRepository ??= new PetCoffeeShopRepository(_dbContext);
+	public IPetRepository PetRepository => _petRepository ??= new PetRepository(_dbContext);
+	public IPostCategoryRepository PostCategoryRepository => _postCategoryRepository ??= new PostCategoryRepository(_dbContext);
+	public IPostRepository PostRepository => _postRepository ??= new PostRepository(_dbContext);
+	public IReportRepository ReportRepository => _reportRepository ??= new ReportRepository(_dbContext);
+	public IReservationRepository ReservationRepository => _reservationRepository ??= new ReservationRepository(_dbContext);
+	public ISubmittingEventFieldRepository SubmittingEventFieldRepository => _submittingEventFieldRepository ??= new SubmittingEventFieldRepository(_dbContext);
+	public ISubmittingEventRepository SubmittingEventRepsitory => _submittingEventRepsitory ??= new SubmittingEventRepository(_dbContext);
+	public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_dbContext);
+	public IVaccinationRepository VaccinationRepository => _vaccinationRepository ??= new VaccinationRepository(_dbContext);
+	public IWalletRepository WalletRepsitory => _walletRepsitory ??= new WalletRepository(_dbContext);
+
 
 }

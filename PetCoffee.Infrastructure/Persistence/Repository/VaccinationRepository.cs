@@ -5,11 +5,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 
 namespace PetCoffee.Infrastructure.Persistence.Repository;
 
-public class VacciniationRepository : BaseRepository<Vaccination>, IVaccinationRepository
+public class VaccinationRepository : BaseRepository<Vaccination>, IVaccinationRepository
 {
 	private readonly ApplicationDbContext _dbContext;
 
-	public VacciniationRepository(ApplicationDbContext dbContext) : base(dbContext)
+	public VaccinationRepository(ApplicationDbContext dbContext) : base(dbContext)
 	{
 		_dbContext = dbContext;
 	}

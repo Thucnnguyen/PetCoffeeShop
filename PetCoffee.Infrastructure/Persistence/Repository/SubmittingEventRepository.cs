@@ -7,7 +7,7 @@ using PetCoffee.Infrastructure.Persistence.Context;
 
 namespace PetCoffee.Infrastructure.Persistence.Repository;
 
-public class SubmittingEventRepository : BaseRepository<SubmittingEvent>, ISubmittingEventRepsitory
+public class SubmittingEventRepository : BaseRepository<SubmittingEvent>, ISubmittingEventRepository
 {
 	private readonly ApplicationDbContext _dbContext;
 

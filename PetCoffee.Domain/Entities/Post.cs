@@ -1,5 +1,4 @@
 ﻿
-using LockerService.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,7 +16,13 @@ public class Post : BaseAuditableEntity
 	public int LikeCount { get; set; }
 
 	public long PetCafeShopId { get; set; }
-	public PetCoffeeShop PetCafeShop { get; set; }
-
+	public PetCoffeeShop PetCoffeeShop { get; set; }
+	[InverseProperty(nameof(Comment.Post))]
 	public IList<Comment> Comments { get; set; } = new List<Comment>();
+	[InverseProperty(nameof(Like.Post))]
+	public IList<Like> Likes { get; set; } = new List<Like>();
+	[InverseProperty(nameof(PostCategory.Post))]
+	public IList<PostCategory> PostCategories { get; set; } = new List<PostCategory>();
+	[InverseProperty(nameof(Report.Post))]
+	public IList<Report> Reports { get; set; } = new List<Report>();
 }

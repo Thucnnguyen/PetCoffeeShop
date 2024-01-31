@@ -1,4 +1,4 @@
-namespace LockerService.Domain.Enums;
+namespace PetCoffee.Domain.Enums;
 
 public enum NotificationLevel
 {

@@ -1,6 +1,5 @@
 ﻿
 
-using LockerService.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,7 +13,7 @@ public class Wallet : BaseAuditableEntity
 
 	public long AccountId { get; set; }
 	public Account Account { get; set; }
-
+	[InverseProperty(nameof(Transaction.Wallet))]
 	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 	
 	public Wallet()

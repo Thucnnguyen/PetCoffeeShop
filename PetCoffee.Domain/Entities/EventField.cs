@@ -1,6 +1,7 @@
 ﻿
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
@@ -17,4 +18,7 @@ public class EventField
 
 	public long EventId { get; set; }
 	public Event Event { get; set; }
+
+	[InverseProperty(nameof(SubmittingEventField.EventField))]
+	public IList<SubmittingEventField> SubmittingEventFields { get; set; } = new List<SubmittingEventField>();
 }

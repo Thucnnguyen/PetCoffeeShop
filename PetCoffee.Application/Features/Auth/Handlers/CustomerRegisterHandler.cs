@@ -37,6 +37,7 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 
 		account.Password = hasPassword;
 		account.Role = Role.Customer;
+		account.LoginMethod = LoginMethod.UserNamePass;
 		var newAccount = await _unitOfWork.AccountRepository.AddAsync(account);
 		await _unitOfWork.SaveChangesAsync();
 

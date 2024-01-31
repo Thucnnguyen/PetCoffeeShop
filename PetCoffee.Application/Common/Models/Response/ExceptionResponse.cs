@@ -28,7 +28,7 @@ public class ExceptionResponse
 	{
 		ErrorCode = apiException.ErrorCode;
 		Error = apiException.Error;
-		Message = apiException.Message;
+		Message = apiException.ErrorMessage;
 	}
 
 	public ExceptionResponse(Exception exception)

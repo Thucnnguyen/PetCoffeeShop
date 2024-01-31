@@ -1,6 +1,6 @@
 ﻿
-using LockerService.Domain.Entities;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
@@ -11,5 +11,8 @@ public class Item : BaseAuditableEntity
 	public string Name { get; set; }	
 	public double Price { get; set; }
 	public string Description { get; set; }
+
+	[InverseProperty(nameof(Transaction.Item))]
+	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 }

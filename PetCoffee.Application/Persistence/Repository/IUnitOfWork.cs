@@ -18,7 +18,7 @@ public interface IUnitOfWork
 	IDiaryRepository  DiaryRepository { get; }
 	IEventFieldRepsitory EventFieldRepsitory { get; }
 	IEventRepository EventRepository { get; }
-	IFloorRepsitory FloorRepsitory { get; }
+	IFloorRepsitory FloorRepository { get; }
 	IFollowEventRepository FollowEventRepository { get; }
 	IItemRepository ItemRepository { get; }
 	ILikeRepository LikeRepository { get; }
@@ -30,9 +30,8 @@ public interface IUnitOfWork
 	IReportRepository ReportRepository { get; }
 	IReservationRepository ReservationRepository { get; }
 	ISubmittingEventFieldRepository SubmittingEventFieldRepository { get; }
-	ISubmittingEventRepsitory SubmittingEventRepsitory { get; }
+	ISubmittingEventRepository SubmittingEventRepsitory { get; }
 	ITransactionRepository TransactionRepository { get; }
 	IVaccinationRepository VaccinationRepository { get; }
-	IWalletRepsitory WalletRepsitory { get; }
-	
+	IWalletRepository WalletRepsitory { get; }
 }

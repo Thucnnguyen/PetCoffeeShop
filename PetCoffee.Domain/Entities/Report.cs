@@ -1,5 +1,4 @@
 ﻿
-using LockerService.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;

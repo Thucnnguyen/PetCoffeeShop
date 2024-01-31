@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace PetCoffee.Domain.Entities;
 
 public class SubmittingEvent
@@ -10,4 +12,9 @@ public class SubmittingEvent
 
 	public Account Sender {  get; set; }
 	public Event Event { get; set; }
+
+	[InverseProperty(nameof(SubmittingEventField.SubmittingEvent))]
+	public IList<SubmittingEventField> SubmittingEventFields { get; set; } = new List<SubmittingEventField>();
+
+
 }

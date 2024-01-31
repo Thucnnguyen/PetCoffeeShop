@@ -6,7 +6,19 @@ namespace PetCoffee.Infrastructure.Persistence.Context;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<FollowEvent>()
+			.HasKey(e => new { e.EventId, e.CreatedById });
+		modelBuilder.Entity<Like>()
+			.HasKey(e => new { e.CreatedById, e.PostId });
+		modelBuilder.Entity<PostCategory>()
+			.HasKey(e => new { e.PostId, e.CategoryId });
+
+
+	}
+
+	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         
     }
@@ -26,7 +38,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<PetCoffeeShop> Shops => Set<PetCoffeeShop>();
     public DbSet<Post> Posts => Set<Post>();
     public DbSet<PostCategory> PostCategories => Set<PostCategory>();
-    public DbSet<Service> Services => Set<Service>();
     public DbSet<Report> Reports => Set<Report>();
     public DbSet<Transaction> Transactions => Set<Transaction>();
     public DbSet<Wallet> Wallets => Set<Wallet>();

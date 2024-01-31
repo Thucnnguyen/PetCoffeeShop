@@ -1,6 +1,4 @@
-﻿using EntityFrameworkCore.Projectables;
-using LockerService.Domain.Entities;
-using PetCoffee.Domain.Enums;
+﻿using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -24,12 +22,18 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 	public ShopStatus Status { get; set; } = ShopStatus.Active;
-	public DateTimeOffset? StartTime { get; set; }
-	public DateTimeOffset? EndTime { get;set; }
-
+	public DateTime? StartTime { get; set; }
+	public DateTime? EndTime { get;set; }
+	[InverseProperty(nameof(Account.PetCoffeeShop))]
 	public IList<Account> Staffs { get; set; } = new List<Account>();
-	public IList<Service> Services { get; set; } = new List<Service>();
+	[InverseProperty(nameof(Post.PetCoffeeShop))]
+	public IList<Post> Posts  { get; set; } = new List<Post>();
+
+	[InverseProperty(nameof(Pet.PetCoffeeShop))]
 	public IList<Pet> Pets { get; set; } = new List<Pet>();
+	[InverseProperty(nameof(Event.PetCoffeeShop))]
 	public IList<Event> Events { get; set; } = new List<Event>();
+	[InverseProperty(nameof(Floor.PetCoffeeShop))]
+	public IList<Floor> Floors { get; set; } = new List<Floor>();
 
 }

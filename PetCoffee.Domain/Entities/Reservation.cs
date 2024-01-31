@@ -1,5 +1,4 @@
-﻿using LockerService.Domain.Entities;
-using PetCoffee.Domain.Enums;
+﻿using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,4 +22,5 @@ public class Reservation : BaseAuditableEntity
 
 	public long FloorId { get; set; }
 	public Floor Floor { get; set; }
+
 }

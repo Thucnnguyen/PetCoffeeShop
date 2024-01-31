@@ -1,0 +1,42 @@
+﻿
+using AutoMapper;
+using MediatR;
+using PetCoffee.Application.Common.Enums;
+using PetCoffee.Application.Common.Exceptions;
+using PetCoffee.Application.Features.Auth.Commands;
+using PetCoffee.Application.Features.Auth.Models;
+using PetCoffee.Application.Persistence.Repository;
+using PetCoffee.Application.Service;
+using PetCoffee.Shared.Ultils;
+using System.Security.Principal;
+
+namespace PetCoffee.Application.Features.Auth.Handlers;
+
+public class LoginUsernamePassHandler : IRequestHandler<LoginUsernamePassCommand, AccessTokenResponse>
+{
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly IJwtService _jwtService;
+	private readonly IMapper _mapper;
+
+	public LoginUsernamePassHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper)
+	{
+		_unitOfWork = unitOfWork;
+		_jwtService = jwtService;
+		_mapper = mapper;
+	}
+
+	public async Task<AccessTokenResponse> Handle(LoginUsernamePassCommand request, CancellationToken cancellationToken)
+	{
+		var isExisted = await _unitOfWork.AccountRepository.GetUserByUserNameAndPassword(request.Username,request.Password);
+		if (isExisted == null)
+		{
+			throw new ApiException(ResponseCode.LoginFailed);
+		}
+		if (!HashHelper.CheckHashPwd(request.Password, isExisted.Password))
+		{
+			throw new ApiException(ResponseCode.LoginFailed);
+		}
+		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(isExisted));
+		return resp;
+	}
+}

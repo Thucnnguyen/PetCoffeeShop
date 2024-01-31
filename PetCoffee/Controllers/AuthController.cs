@@ -12,10 +12,11 @@ namespace PetCoffee.API.Controllers
 	public class AuthController :ApiControllerBase
 	{
 		// GET: api/<ValuesController>
-		[HttpGet]
-		public IEnumerable<string> Get()
+		[HttpPost("login")]
+		public async Task<ActionResult<AccessTokenResponse>> LoginUsernameAndPassword([FromBody] LoginUsernamePassCommand request)
 		{
-			return new string[] { "value1", "value2" };
+			var response = await Mediator.Send(request);
+			return response;
 		}
 
 		// GET api/<ValuesController>/5
@@ -27,22 +28,12 @@ namespace PetCoffee.API.Controllers
 
 		// POST api/<ValuesController>
 		[HttpPost("Resgister")]
-		//public async Task<ActionResult<AccessTokenResponse>> ResgisterCustommer([FromBody] CustomerRegisterCommand request)
-		//{
-		//	var response = await Mediator.Send(request);
-		//	return response;
-		//}
-
-		// PUT api/<ValuesController>/5
-		[HttpPut("{id}")]
-		public void Put(int id, [FromBody] string value)
+		public async Task<ActionResult<AccessTokenResponse>> ResgisterCustommer([FromBody] CustomerRegisterCommand request)
 		{
+			var response = await Mediator.Send(request);
+			return response;
 		}
 
-		// DELETE api/<ValuesController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
-		{
-		}
+		
 	}
 }

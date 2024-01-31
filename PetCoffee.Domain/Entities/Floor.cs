@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
@@ -13,4 +14,7 @@ public class Floor
 
     public long PetcoffeeShopId { get; set; }
     public PetCoffeeShop PetCoffeeShop { get; set; }
+
+	[InverseProperty(nameof(Reservation.Floor))]
+	public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

@@ -1,5 +1,4 @@
-﻿using LockerService.Domain.Entities;
-using PetCoffee.Domain.Enums;
+﻿using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,5 +13,9 @@ public class Pet : BaseAuditableEntity
 	public string? Image {  get; set; }
 	public PetStatus PetStatus { get; set; } = PetStatus.Active;
 	public long PetCafeShopId { get; set; }
-	public PetCoffeeShop PetCafeShop { get; set; }
+	public PetCoffeeShop PetCoffeeShop { get; set; }
+	[InverseProperty(nameof(Vaccination.Pet))]
+	public IList<Vaccination> Comments { get; set; } = new List<Vaccination>();
+	[InverseProperty(nameof(Diary.Pet))]
+	public IList<Diary> Diaries { get; set; } = new List<Diary>();
 }
