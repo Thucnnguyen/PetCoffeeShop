@@ -10,13 +10,11 @@ using Microsoft.IdentityModel.Tokens;
 using OpenAI_API;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Infrastructure.Persistence.Context;
 using PetCoffee.Infrastructure.Persistence.Repository;
 using PetCoffee.Infrastructure.Services;
 using PetCoffee.Infrastructure.Settings;
 using System.Reflection;
-using System.Runtime;
 using System.Text;
 
 namespace PetCoffee.Infrastructure;
@@ -76,6 +74,13 @@ public static class ConfigureService
 			var apiKey = sc.ServiceProvider.GetRequiredService<ChatgptSettings>();
 			return new OpenAIAPI(apiKey.Key);
 		});
+		//config firebase
+		services.AddOptions<FirebaseSettings>()
+			.BindConfiguration(FirebaseSettings.ConfigSection)
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+		services.AddSingleton(sp => sp.GetRequiredService<IOptions<FirebaseSettings>>().Value);
+	
 		//config jwt
 		services.AddOptions<JwtSettings>()
 			.BindConfiguration(JwtSettings.ConfigSection)

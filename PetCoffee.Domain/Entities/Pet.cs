@@ -14,6 +14,8 @@ public class Pet : BaseAuditableEntity
 	public PetStatus PetStatus { get; set; } = PetStatus.Active;
 	public long PetCafeShopId { get; set; }
 	public PetCoffeeShop PetCoffeeShop { get; set; }
+	public long? AreaId { get; set; }
+	public Area? Area { get; set; }
 	[InverseProperty(nameof(Vaccination.Pet))]
 	public IList<Vaccination> Comments { get; set; } = new List<Vaccination>();
 	[InverseProperty(nameof(Diary.Pet))]

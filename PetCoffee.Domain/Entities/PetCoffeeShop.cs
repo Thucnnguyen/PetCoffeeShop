@@ -33,7 +33,7 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public IList<Pet> Pets { get; set; } = new List<Pet>();
 	[InverseProperty(nameof(Event.PetCoffeeShop))]
 	public IList<Event> Events { get; set; } = new List<Event>();
-	[InverseProperty(nameof(Floor.PetCoffeeShop))]
-	public IList<Floor> Floors { get; set; } = new List<Floor>();
+	[InverseProperty(nameof(Area.PetCoffeeShop))]
+	public IList<Area> Floors { get; set; } = new List<Area>();
 
 }

@@ -18,7 +18,7 @@ public interface IUnitOfWork
 	IDiaryRepository  DiaryRepository { get; }
 	IEventFieldRepsitory EventFieldRepsitory { get; }
 	IEventRepository EventRepository { get; }
-	IFloorRepsitory FloorRepository { get; }
+	IAreaRepsitory FloorRepository { get; }
 	IFollowEventRepository FollowEventRepository { get; }
 	IItemRepository ItemRepository { get; }
 	ILikeRepository LikeRepository { get; }

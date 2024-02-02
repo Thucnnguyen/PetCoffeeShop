@@ -20,7 +20,7 @@ public class Reservation : BaseAuditableEntity
 	public string? Rate { get; set; }
 	public string? Comment { get; set; }
 
-	public long FloorId { get; set; }
-	public Floor Floor { get; set; }
+	public long? FloorId { get; set; }
+	public Area? Area { get; set; }
 
 }

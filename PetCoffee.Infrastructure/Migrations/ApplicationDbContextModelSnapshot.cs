@@ -26,7 +26,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Avatar")
@@ -57,9 +56,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime?>("EndTimeBlockPost")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("EndTimePackage")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("FullName")
                         .HasColumnType("longtext");
 
@@ -71,6 +67,9 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.Property<string>("OTP")
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("OTPExpired")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -89,9 +88,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("StartTimePackage")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -105,6 +101,31 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasIndex("PetCoffeeShopId");
 
                     b.ToTable("Account");
+                });
+
+            modelBuilder.Entity("PetCoffee.Domain.Entities.Area", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("PetcoffeeShopId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TotalSeat")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetcoffeeShopId");
+
+                    b.ToTable("Area");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Category", b =>
@@ -315,31 +336,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.ToTable("EventFields");
                 });
 
-            modelBuilder.Entity("PetCoffee.Domain.Entities.Floor", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("longtext");
-
-                    b.Property<long>("PetcoffeeShopId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("TotalSeat")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PetcoffeeShopId");
-
-                    b.ToTable("Floor");
-                });
-
             modelBuilder.Entity("PetCoffee.Domain.Entities.FollowEvent", b =>
                 {
                     b.Property<long>("EventId")
@@ -487,6 +483,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<long?>("AreaId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -516,6 +515,8 @@ namespace PetCoffee.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AreaId");
 
                     b.HasIndex("CreatedById");
 
@@ -722,6 +723,9 @@ namespace PetCoffee.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<long?>("AreaId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -747,7 +751,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("FloorId")
+                    b.Property<long?>("FloorId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Note")
@@ -770,9 +774,9 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedById");
+                    b.HasIndex("AreaId");
 
-                    b.HasIndex("FloorId");
+                    b.HasIndex("CreatedById");
 
                     b.ToTable("Order");
                 });
@@ -953,6 +957,17 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("PetCoffeeShop");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.Area", b =>
+                {
+                    b.HasOne("PetCoffee.Domain.Entities.PetCoffeeShop", "PetCoffeeShop")
+                        .WithMany("Floors")
+                        .HasForeignKey("PetcoffeeShopId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PetCoffeeShop");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.Category", b =>
                 {
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
@@ -1038,17 +1053,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("Event");
                 });
 
-            modelBuilder.Entity("PetCoffee.Domain.Entities.Floor", b =>
-                {
-                    b.HasOne("PetCoffee.Domain.Entities.PetCoffeeShop", "PetCoffeeShop")
-                        .WithMany("Floors")
-                        .HasForeignKey("PetcoffeeShopId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PetCoffeeShop");
-                });
-
             modelBuilder.Entity("PetCoffee.Domain.Entities.FollowEvent", b =>
                 {
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
@@ -1115,6 +1119,10 @@ namespace PetCoffee.Infrastructure.Migrations
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Pet", b =>
                 {
+                    b.HasOne("PetCoffee.Domain.Entities.Area", "Area")
+                        .WithMany("Pets")
+                        .HasForeignKey("AreaId");
+
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById");
@@ -1124,6 +1132,8 @@ namespace PetCoffee.Infrastructure.Migrations
                         .HasForeignKey("PetCoffeeShopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Area");
 
                     b.Navigation("CreatedBy");
 
@@ -1204,19 +1214,17 @@ namespace PetCoffee.Infrastructure.Migrations
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Reservation", b =>
                 {
+                    b.HasOne("PetCoffee.Domain.Entities.Area", "Area")
+                        .WithMany("Reservations")
+                        .HasForeignKey("AreaId");
+
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
                         .WithMany("Reservations")
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("PetCoffee.Domain.Entities.Floor", "Floor")
-                        .WithMany("Reservations")
-                        .HasForeignKey("FloorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Area");
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("Floor");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.SubmittingEvent", b =>
@@ -1333,6 +1341,13 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("SubmittingEvents");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.Area", b =>
+                {
+                    b.Navigation("Pets");
+
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.Category", b =>
                 {
                     b.Navigation("PostCategories");
@@ -1350,11 +1365,6 @@ namespace PetCoffee.Infrastructure.Migrations
             modelBuilder.Entity("PetCoffee.Domain.Entities.EventField", b =>
                 {
                     b.Navigation("SubmittingEventFields");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.Floor", b =>
-                {
-                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Item", b =>

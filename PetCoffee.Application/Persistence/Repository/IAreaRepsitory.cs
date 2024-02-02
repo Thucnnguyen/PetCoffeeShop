@@ -2,6 +2,6 @@
 
 namespace PetCoffee.Application.Persistence.Repository;
 
-public interface IFloorRepsitory : IBaseRepository<Floor>
+public interface IAreaRepsitory : IBaseRepository<Area>
 {
 }
