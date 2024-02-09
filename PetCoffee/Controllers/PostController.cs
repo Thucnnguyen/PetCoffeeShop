@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OpenAI_API.Completions;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Handlers;
 using PetCoffee.Application.Features.Auth.Models;
+using PetCoffee.Application.Features.Post.Command;
+using PetCoffee.Application.Features.Post.Model;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,7 +31,8 @@ namespace PetCoffee.API.Controllers
 
 		// POST api/<PostController>
 		[HttpPost]
-		public async Task<ActionResult<bool>> Post([FromBody] EvaluatePostCommand request )
+		[Authorize]
+		public async Task<ActionResult<PostResponse>> Post([FromForm] CreatePostCommand request )
 		{
 			var response = await Mediator.Send(request);
 			return response;

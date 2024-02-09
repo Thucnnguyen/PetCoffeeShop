@@ -49,11 +49,13 @@ public class Account : BaseAuditableEntity
 	/*
 	 * for staff, manager
 	 */
-	public long? PetCafeShopId { get; set; }
+	public long? PetCoffeeShopId { get; set; }
 	public PetCoffeeShop? PetCoffeeShop { get; set; }
 
 	[Projectable]
 	public bool IsActive => Equals(AccountStatus.Active, Status);
+	[Projectable]
+	public bool IsVerify => Equals(AccountStatus.Verifying, Status);
 	[Projectable]
 	public bool IsAdmin => Equals(Role, Role.Admin);
 
@@ -61,7 +63,7 @@ public class Account : BaseAuditableEntity
 	public bool IsManager => Equals(Role, Role.Manager);
 
 	[Projectable]
-	public bool IsStaff => Equals(Role, Role.staff);
+	public bool IsStaff => Equals(Role, Role.Staff);
 
 	[Projectable]
 	public bool IsCustomer => Equals(Role, Role.Customer);
@@ -70,4 +72,6 @@ public class Account : BaseAuditableEntity
 	public bool IsBlockPost => EndTimeBlockPost != null && DateTime.Now <= EndTimeBlockPost;
 	[Projectable]
 	public bool IsBlockComment => EndTimeBlockComment != null && DateTime.Now <= EndTimeBlockComment;
+	[Projectable]
+	public bool IsOTPExpired => OTPExpired != null && DateTime.Now >= OTPExpired;
 }

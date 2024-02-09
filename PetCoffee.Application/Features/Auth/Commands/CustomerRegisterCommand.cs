@@ -1,10 +1,10 @@
-﻿
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using PetCoffee.Application.Features.Auth.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.Application.Features.Auth.Commands;
-
 
 public class CustomerRegisterCommandValidator : AbstractValidator<CustomerRegisterCommand>
 {
@@ -25,6 +25,7 @@ public class CustomerRegisterCommand : IRequest<AccessTokenResponse>
 	public string? FullName { get; set; }
 	public string? PhoneNumber { get; set; }
 	public string Password { get; set; }
+	[EmailAddress]
 	public string Email { get; set; }
-	public string? Avatar { get; set; }
+	public IFormFile? Avatar { get; set; }
 }

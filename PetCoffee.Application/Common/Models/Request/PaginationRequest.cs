@@ -1,13 +1,9 @@
 ﻿using LinqKit;
 using PetCoffee.Application.Common.Constants;
 using PetCoffee.Application.Common.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PetCoffee.Application.Common.Models.Request
 {
@@ -39,7 +35,7 @@ namespace PetCoffee.Application.Common.Models.Request
 
         protected Expression<Func<T, bool>> Expression = PredicateBuilder.New<T>(true);
 
-        public abstract Expression<Func<T, bool>> GetExpressions();
+        //public abstract Expression<Func<T, bool>> GetExpressions();
 
         public Func<IQueryable<T>, IOrderedQueryable<T>>? GetOrder()
         {

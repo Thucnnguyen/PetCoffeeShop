@@ -9,7 +9,7 @@ using System.Text;
 
 namespace PetCoffee.Infrastructure.Services;
 
-public class CurrentPrincipleService : ICurrentPrincipleService
+public class CurrentPrincipleService : ICurrentPrincipalService
 {
 	private readonly IHttpContextAccessor _accessor;
 	public CurrentPrincipleService(IHttpContextAccessor httpContextAccessor)

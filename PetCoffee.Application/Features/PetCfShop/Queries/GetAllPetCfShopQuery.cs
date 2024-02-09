@@ -13,42 +13,42 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Formats.Asn1.AsnWriter;
 
-namespace PetCoffee.Application.Features.PetCfShop.Queries
+namespace PetCoffee.Application.Features.PetCfShop.Queries;
+
+public class GetAllPetCfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>>
 {
-    public class GetAllPetCfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>>
+    private string? _search;
+
+    public string? Search
     {
-        private string? _search;
+        get => _search;
+        set => _search = value?.Trim().ToLower();
+    }
 
-        public string? Search
+    public ShopStatus? Status { get; set; }
+
+    public string? Address { get; set; }
+	public double Latitude { get; set; }
+	public double Longitude { get; set; }
+
+	public Expression<Func<PetCoffeeShop, bool>> GetExpressions()
+    {
+        if (Search is not null)
         {
-            get => _search;
-            set => _search = value?.Trim().ToLower();
+            Expression = Expression.And(store => (store.Location != null && store.Location.ToLower().Contains(Search)) ||
+                                                 store.Name.ToLower().Contains(Search));
         }
 
-        public ShopStatus? Status { get; set; }
-
-        public string? Address { get; set; }
-        public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
+        if (Status is not null)
         {
-            if (Search is not null)
-            {
-                Expression = Expression.And(store => (store.Location != null && store.Location.ToLower().Contains(Search)) ||
-                                                     store.Name.ToLower().Contains(Search));
-            }
-
-            if (Status is not null)
-            {
-                Expression = Expression.And(store => Equals(Status, store.Status));
-            }
-
-            if (Address is not null)
-            {
-                Expression = Expression.And(store => store.Location != null && store.Location.ToLower().Contains(Address.ToLower().Trim()));
-            }
-
-
-            return Expression;
+            Expression = Expression.And(store => Equals(Status, store.Status));
         }
+
+        if (Address is not null)
+        {
+            Expression = Expression.And(store => store.Location != null && store.Location.ToLower().Contains(Address.ToLower().Trim()));
+        }
+
+        return Expression;
     }
 }
-    

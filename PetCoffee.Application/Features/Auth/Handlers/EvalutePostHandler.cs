@@ -1,7 +1,4 @@
-﻿
-
-using MediatR;
-using OpenAI_API.Completions;
+﻿using MediatR;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Service;
 

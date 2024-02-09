@@ -1,9 +1,17 @@
 ﻿
 using AutoMapper;
 using PetCoffee.Application.Features.Auth.Commands;
+using PetCoffee.Application.Features.Auth.Models;
+using PetCoffee.Application.Features.Pet.Commands;
+using PetCoffee.Application.Features.Pet.Models;
+using PetCoffee.Application.Features.PetCfShop.Commands;
 using PetCoffee.Application.Features.PetCfShop.Models;
+using PetCoffee.Application.Features.Post.Command;
+using PetCoffee.Application.Features.Post.Model;
+using PetCoffee.Application.Features.Post.Models;
+using PetCoffee.Application.Features.PostCategory.Commands;
+using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Domain.Entities;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace PetCoffee.Application.Common.Mapping;
 
@@ -11,9 +19,30 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        //Account
         CreateMap<CustomerRegisterCommand,Account>().ReverseMap();
+        CreateMap<AccountResponse,Account>().ReverseMap();
+        CreateMap<AccountForPostModel,Account>().ReverseMap();
+            
 
         // pet cafe shop
-        CreateMap<PetCoffeeShop, PetCoffeeShopResponse>();
-    }
+        CreateMap<PetCoffeeShop, PetCoffeeShopResponse>().ReverseMap();
+        CreateMap<CreatePetCfShopCommand, PetCoffeeShop>().ReverseMap();
+            
+            
+		//category
+		CreateMap<Category,PostCategoryResponse>().ReverseMap();
+		CreateMap<Category, CreatePostCategoryCommand>().ReverseMap();
+
+        //post
+        CreateMap<PostResponse, Post>().ReverseMap();
+        CreateMap<CreatePostCommand, Post>().ReverseMap();
+        CreateMap<PetCoffeeShop, CoffeeshopForPostModel>().ReverseMap();
+        CreateMap<Category, CategoryForPostModel>().ReverseMap();
+
+		//pets
+		CreateMap<PetResponse, Pet>().ReverseMap();
+		CreateMap<CreatePetCommand, Pet>().ReverseMap();
+
+	}
 }

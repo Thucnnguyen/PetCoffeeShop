@@ -19,7 +19,9 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
 	public async Task<Account> GetUserByUserNameAndPassword(string email, string passowrd)
 	{
 		var user = await _dbContext.Accounts
-									.FirstOrDefaultAsync(a => a.Email.Equals(email) && a.IsActive && a.LoginMethod == LoginMethod.UserNamePass);
+									.FirstOrDefaultAsync(a => a.Email.Equals(email) 
+														&& (a.IsActive || a.IsVerify)
+														&& a.LoginMethod == LoginMethod.UserNamePass);
 		return user;
 	}
 }

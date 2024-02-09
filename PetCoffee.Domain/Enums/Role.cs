@@ -8,7 +8,7 @@ public enum Role
 	Admin = 0,
 
 	[Description("Nhân viên cafe")]
-	staff = 1,
+	Staff = 1,
 
 	[Description("Chủ cafe")]
 	Manager = 2,

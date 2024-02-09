@@ -34,4 +34,5 @@ public interface IUnitOfWork
 	ITransactionRepository TransactionRepository { get; }
 	IVaccinationRepository VaccinationRepository { get; }
 	IWalletRepository WalletRepsitory { get; }
+	IPostCoffeeShopRepository PostCoffeeShopRepository { get; }
 }

@@ -1,4 +1,5 @@
-﻿using PetCoffee.Domain.Enums;
+﻿using EntityFrameworkCore.Projectables;
+using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,15 +20,15 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public string Phone {  get; set; }
 	public string Email { get; set; }
 	public string Location { get; set; }
-	public double? Latitude { get; set; }
-	public double? Longitude { get; set; }
+	public double Latitude { get; set; }
+	public double Longitude { get; set; }
 	public ShopStatus Status { get; set; } = ShopStatus.Active;
 	public DateTime? StartTime { get; set; }
 	public DateTime? EndTime { get;set; }
 	[InverseProperty(nameof(Account.PetCoffeeShop))]
 	public IList<Account> Staffs { get; set; } = new List<Account>();
-	[InverseProperty(nameof(Post.PetCoffeeShop))]
-	public IList<Post> Posts  { get; set; } = new List<Post>();
+	[InverseProperty(nameof(PostPetCoffeeShop.Shop))]
+	public IList<PostPetCoffeeShop> PostPetCoffeeShops { get; set; } = new List<PostPetCoffeeShop>();
 
 	[InverseProperty(nameof(Pet.PetCoffeeShop))]
 	public IList<Pet> Pets { get; set; } = new List<Pet>();
@@ -36,4 +37,6 @@ public class PetCoffeeShop : BaseAuditableEntity
 	[InverseProperty(nameof(Area.PetCoffeeShop))]
 	public IList<Area> Floors { get; set; } = new List<Area>();
 
+	[Projectable]
+	public bool IsBuyPackage =>  DateTime.Now <= EndTime;
 }

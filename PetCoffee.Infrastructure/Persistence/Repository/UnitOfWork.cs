@@ -71,6 +71,7 @@ public class UnitOfWork : IUnitOfWork
 	private ITransactionRepository? _transactionRepository;
 	private IVaccinationRepository? _vaccinationRepository;
 	private IWalletRepository? _walletRepsitory;
+	private IPostCoffeeShopRepository? _postCoffeeShopRepository;
 
 	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
 	public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_dbContext);
@@ -94,6 +95,5 @@ public class UnitOfWork : IUnitOfWork
 	public ITransactionRepository TransactionRepository => _transactionRepository ??= new TransactionRepository(_dbContext);
 	public IVaccinationRepository VaccinationRepository => _vaccinationRepository ??= new VaccinationRepository(_dbContext);
 	public IWalletRepository WalletRepsitory => _walletRepsitory ??= new WalletRepository(_dbContext);
-
-
+	public IPostCoffeeShopRepository PostCoffeeShopRepository => _postCoffeeShopRepository ??= new PostPetCoffeeShopRepository(_dbContext);
 }

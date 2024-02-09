@@ -9,15 +9,20 @@ public class Pet : BaseAuditableEntity
 	[Key]
 	public long Id { get; set; }
 	public string Name { get; set; }
-	public int Age { get; set; }
-	public string? Image {  get; set; }
+	public int? BirthYear { get; set; }
+	public double? Weight { get; set; }
+
+	public string? Avatar {  get; set; }
+	public string? Backgound { get; set; }
+	public string? Description { get; set; }
+	public PetType PetType { get; set; }
 	public PetStatus PetStatus { get; set; } = PetStatus.Active;
-	public long PetCafeShopId { get; set; }
+	public long PetCoffeeShopId { get; set; }
 	public PetCoffeeShop PetCoffeeShop { get; set; }
 	public long? AreaId { get; set; }
 	public Area? Area { get; set; }
 	[InverseProperty(nameof(Vaccination.Pet))]
-	public IList<Vaccination> Comments { get; set; } = new List<Vaccination>();
-	[InverseProperty(nameof(Diary.Pet))]
-	public IList<Diary> Diaries { get; set; } = new List<Diary>();
+	public IList<Vaccination> Vaccinations { get; set; } = new List<Vaccination>();
+	[InverseProperty(nameof(Moment.Pet))]
+	public IList<Moment> Moments { get; set; } = new List<Moment>();
 }

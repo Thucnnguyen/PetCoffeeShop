@@ -21,4 +21,6 @@ public class AzureSettings
 	
 	[Required]
 	public string BlobConnectionString { get; set; }
+	[Required]
+	public string LogicAppUrl { get; set; }
 }

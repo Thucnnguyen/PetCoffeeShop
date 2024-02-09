@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using PetCoffee.Application.Common.Constantsl;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Commands;
@@ -15,16 +16,18 @@ namespace PetCoffee.Application.Features.Auth.Handlers;
 public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, AccessTokenResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IAzureService _azureService;
 	private readonly IJwtService _jwtService;
 	private readonly IMapper _mapper;
 
-	public CustomerRegisterHandler(IUnitOfWork unitOfWork, IJwtService jwtService,IMapper mapper)
-    {
-        _unitOfWork = unitOfWork;
+	public CustomerRegisterHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper, IAzureService azureService)
+	{
+		_unitOfWork = unitOfWork;
 		_jwtService = jwtService;
 		_mapper = mapper;
-    }
-    public async Task<AccessTokenResponse> Handle(CustomerRegisterCommand request, CancellationToken cancellationToken)
+		_azureService = azureService;
+	}
+	public async Task<AccessTokenResponse> Handle(CustomerRegisterCommand request, CancellationToken cancellationToken)
 	{
 		var isExisted = _unitOfWork.AccountRepository.IsExisted(a => a.Email.Equals(request.Email));
 		if(isExisted)
@@ -35,12 +38,25 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		var hasPassword = HashHelper.HashPassword(request.Password);
 		var account = _mapper.Map<Account>(request);
 
+		var url = "";
+		if (request.Avatar != null)
+		{
+			await _azureService.CreateBlob(request.Avatar.FileName, request.Avatar);
+			url = await _azureService.GetBlob(request.Avatar.FileName);
+		}
+
 		account.Password = hasPassword;
 		account.Role = Role.Customer;
 		account.LoginMethod = LoginMethod.UserNamePass;
+		account.OTP = TokenUltils.GenerateOTPCode(6);
+		account.OTPExpired = DateTime.Now.AddDays(1);
+		account.Avatar = url;
+
 		var newAccount = await _unitOfWork.AccountRepository.AddAsync(account);
 		await _unitOfWork.SaveChangesAsync();
-
+		//send email
+		var EmailContent = string.Format(EmailConstant.EmailForm, account.FullName, account.OTP);
+		await _azureService.SendEmail(account.Email, EmailContent, EmailConstant.EmailSubject);
 		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(newAccount));
 		return resp;
 	}

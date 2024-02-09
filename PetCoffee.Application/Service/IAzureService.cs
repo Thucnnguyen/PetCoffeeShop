@@ -8,4 +8,5 @@ public interface IAzureService
     public Task<string> Translate(string content, string to);
     public Task<string> CreateBlob(string name, IFormFile file);
     public Task<string> GetBlob(string name);
+    public Task<bool> SendEmail(string to, string content,string subject);
 }

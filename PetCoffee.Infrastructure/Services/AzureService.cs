@@ -7,6 +7,8 @@ using PetCoffee.Infrastructure.Common.Constant;
 using Microsoft.AspNetCore.Http;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using OpenAI_API.Moderation;
+using System.Net;
 
 namespace PetCoffee.Infrastructure.Services;
 
@@ -27,7 +29,6 @@ public class AzureService : IAzureService
 	{
 		BlobContainerClient blobContainerClient = _blobClient.GetBlobContainerClient(AzureConstant.ContainerName);
 		var blobClient = blobContainerClient.GetBlobClient(name);
-		//if(blobClient != null) { name +=}
 
 		var httpHeaders = new BlobHttpHeaders()
 		{
@@ -58,6 +59,36 @@ public class AzureService : IAzureService
 			return false;
 		}
 		return true;
+	}
+
+	public async Task<bool> SendEmail(string to, string content, string subject)
+	{
+		
+		var JsonData = JsonConvert.SerializeObject(new
+		{
+			to = to,
+			content = content,
+			subject = subject
+		});
+		string result;
+		using (var client = new HttpClient())
+		using (var request = new HttpRequestMessage())
+		{
+			// Build the request.
+			request.Method = HttpMethod.Post;
+			request.RequestUri = new Uri(_settings.LogicAppUrl);
+			request.Content = new StringContent(JsonData, Encoding.UTF8, "application/json");
+
+			// Send the request and get response.
+			HttpResponseMessage response = await client.SendAsync(request).ConfigureAwait(true);
+			// Read response as a string.
+			var statusCode = response.StatusCode;
+			if (statusCode == HttpStatusCode.Accepted)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public async Task<string> Translate(string content, string to)

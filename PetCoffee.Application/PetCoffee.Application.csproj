@@ -13,11 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Models\Request\" />
-    <Folder Include="Features\Auth\Queries\" />
-    <Folder Include="Features\PostCategory\Commands\" />
-    <Folder Include="Features\PostCategory\Handlers\" />
-    <Folder Include="Features\PostCategory\Models\" />
-    <Folder Include="Features\PostCategory\Queries\" />
+    <Folder Include="Features\Post\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +25,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
     <PackageReference Include="OpenAI" Version="1.10.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.8" />
   </ItemGroup>
 
 </Project>

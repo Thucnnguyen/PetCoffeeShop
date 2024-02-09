@@ -5,49 +5,69 @@ using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
-namespace PetCoffee.Application.Features.PetCfShop.Handlers
+
+namespace PetCoffee.Application.Features.PetCfShop.Handlers;
+
+public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>>
 {
-    public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>>
+	private const Double RADIUS = 6378.16;
+	private const double PI = Math.PI / 180;
+
+	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    public GetAllPetCfShopHandler(
+    IUnitOfWork unitOfWork,
+        IMapper mapper)
     {
-        private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
-        public GetAllPetCfShopHandler(
-        IUnitOfWork unitOfWork,
-            IMapper mapper)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
-
-        public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>> Handle(GetAllPetCfShopQuery request,
-            CancellationToken cancellationToken)
-        {
-            var stores = await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-                predicate: request.GetExpressions(),
-                orderBy: request.GetOrder(),
-                includes: new List<Expression<Func<PetCoffeeShop, object>>>()
-                {
-                //store => store.Location,
-                //    store => store.Location.Province,
-                //store => store.Location.District,
-                //store => store.Location.Ward,
-                },
-                disableTracking: true
-            );
-
-            return new PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>(
-                stores,
-                request.PageNumber,
-                request.PageSize,
-                entity => _mapper.Map<PetCoffeeShopResponse>(entity));
-        }
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
+
+    public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>> Handle(GetAllPetCfShopQuery request,
+        CancellationToken cancellationToken)
+    {
+        var stores = await _unitOfWork.PetCoffeeShopRepository.GetAsync(
+            predicate: request.GetExpressions(),
+            includes: new List<Expression<Func<PetCoffeeShop, object>>>()
+            {
+                shop => shop.CreatedBy
+            },
+            disableTracking: true
+        );
+
+		var response = new List<PetCoffeeShopResponse>();
+
+		foreach (var store in stores)
+		{
+			var storeRes = _mapper.Map<PetCoffeeShopResponse>(store);
+			storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
+			response.Add(storeRes);
+		}
+		response = response.OrderBy(x => x.Distance).ToList();
+		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>(
+			response,
+			response.Count(),
+            request.PageNumber,
+            request.PageSize);
+    }
+    private double CalculateDistance(double userLatitude,double userLongitude, double ShopLatitude,double ShopLongitude)
+    {
+		double dlon = Radians(ShopLongitude - userLongitude);
+		double dlat = Radians(ShopLatitude - userLatitude);
+
+		double a = (Math.Sin(dlat / 2) * Math.Sin(dlat / 2)) + Math.Cos(Radians(userLatitude)) * Math.Cos(Radians(ShopLatitude)) * (Math.Sin(dlon / 2) * Math.Sin(dlon / 2));
+		double angle = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+		return angle * RADIUS;
+	}
+	/// <summary>
+	/// Convert degrees to Radians
+	/// </summary>
+	/// <param name="x">Degrees</param>
+	/// <returns>The equivalent in radians</returns>
+	public static double Radians(double x)
+	{
+		return x * PI / 180;
+	}
 }

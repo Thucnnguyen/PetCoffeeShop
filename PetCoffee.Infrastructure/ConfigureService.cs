@@ -11,6 +11,7 @@ using OpenAI_API;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Infrastructure.Persistence.Context;
+using PetCoffee.Infrastructure.Persistence.Interceptors;
 using PetCoffee.Infrastructure.Persistence.Repository;
 using PetCoffee.Infrastructure.Services;
 using PetCoffee.Infrastructure.Settings;
@@ -37,11 +38,13 @@ public static class ConfigureService
 		});
 
 		//add scoped
-		services.AddScoped<ICurrentPrincipleService, CurrentPrincipleService>();
+		services.AddScoped<ICurrentPrincipalService, CurrentPrincipleService>();
+		services.AddScoped<ICurrentAccountService, CurrentAccountService>();
 		services.AddScoped<IChatgptService, ChatgptService>();
 		services.AddScoped<IAzureService, AzureService>();
 		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 		//config azure settings
@@ -88,22 +91,19 @@ public static class ConfigureService
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<JwtSettings>>().Value);
 
-		services.AddAuthentication(options =>
-		{
-			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-		})
+		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer(options =>
 			{
 				using var sc = services.BuildServiceProvider().CreateScope();
 				var settings = sc.ServiceProvider.GetRequiredService<JwtSettings>();
 
 				// Validate JWT Token
-				options.TokenValidationParameters = new TokenValidationParameters()
+				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateLifetime = true,
 					ValidateIssuerSigningKey = true,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Key)),
+					ValidateIssuer = false,
+					ValidateAudience = false,
 				};
 			});
 		return services;
