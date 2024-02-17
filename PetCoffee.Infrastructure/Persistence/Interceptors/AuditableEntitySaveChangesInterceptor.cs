@@ -35,13 +35,13 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 		{
 			if (entry.State == EntityState.Added)
 			{
-				entry.Entity.CreatedById = currentAccountId;
+				entry.Entity.CreatedById = currentAccountId.Value;
 				entry.Entity.CreatedAt = DateTime.UtcNow;
 			}
 
 			if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
 			{
-				entry.Entity.CreatedById = currentAccountId;
+				entry.Entity.CreatedById = currentAccountId.Value;
 				entry.Entity.CreatedAt = DateTime.UtcNow;
 			}
 		}

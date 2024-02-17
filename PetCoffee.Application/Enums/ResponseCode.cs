@@ -13,19 +13,20 @@ public enum ResponseCode
 	[Description("Mã đã hết hạn")] OptExpired = 5,
 	[Description("Tài khoản đã kích hoạt")] AccountIsActived = 6,
 	[Description("Tài khoản không tồn tại")] AccountNotExist = 7,
+	[Description("Tài khoản không có quyền")] PermissionDenied = 8,
 
-	[Description("Email đã tồn tại")] AccountIsExisted = 8,
-	[Description("Tài Khoản hoặc mật khẩu sai")] LoginFailed = 9,
+	[Description("Email đã tồn tại")] AccountIsExisted = 9,
+	[Description("Tài Khoản hoặc mật khẩu sai")] LoginFailed = 10,
 
 	//PostCategory
-	[Description("Tên đã tồn tại")] PostCategoryIsExisted = 10,
-	[Description("Category Không tồn tại")] PostCategoryNotExisted = 11,
+	[Description("Tên đã tồn tại")] PostCategoryIsExisted = 11,
+	[Description("Category Không tồn tại")] PostCategoryNotExisted = 12,
 
 	//Post
 
 	//shop
-	[Description("Cửa hàng Không tồn tại")] ShopNotExisted = 12,
+	[Description("Cửa hàng Không tồn tại")] ShopNotExisted = 13,
 	//pet
-	[Description("Pet Không tồn tại")] PetNotExisted = 13,
+	[Description("Pet Không tồn tại")] PetNotExisted = 14,
 
 }

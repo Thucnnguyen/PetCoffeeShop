@@ -1,17 +1,18 @@
 using EntityFrameworkCore.Projectables;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
 public class BaseAuditableEntity
 {
     public DateTime CreatedAt { get; set; } = DateTime.Now;
-	public long? CreatedById { get; set; }
+	[ForeignKey("CreatedBy")]
+	public long CreatedById { get; set; }
+	public Account CreatedBy { get; set; }
 
-	public Account? CreatedBy { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
-    public DateTime UpdatedAt { get; set; } 
-
-    public DateTime? DeletedAt { get; set; }
+	public DateTime? DeletedAt { get; set; }
     
 
 

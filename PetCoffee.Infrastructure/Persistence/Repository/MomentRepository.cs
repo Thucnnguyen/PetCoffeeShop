@@ -4,11 +4,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 
 namespace PetCoffee.Infrastructure.Persistence.Repository;
 
-public class DiaryRepository : BaseRepository<Moment>, IDiaryRepository
+public class MomentRepository : BaseRepository<Moment>, IMomentRepository
 {
 	private readonly ApplicationDbContext _dbContext;
 
-	public DiaryRepository(ApplicationDbContext dbContext) : base(dbContext)
+	public MomentRepository(ApplicationDbContext dbContext) : base(dbContext)
 	{
 		_dbContext = dbContext;
 	}

@@ -7,7 +7,6 @@ namespace PetCoffee.Application.Common.Models.Response
         public DateTime CreatedAt { get; set; }
 
         public long? CreatedById { get; set; }
-
         public DateTime UpdatedAt { get; set; }
 
         public long? UpdatedBy { get; set; }

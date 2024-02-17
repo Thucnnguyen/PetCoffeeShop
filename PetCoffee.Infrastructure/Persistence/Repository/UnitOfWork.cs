@@ -52,7 +52,7 @@ public class UnitOfWork : IUnitOfWork
 	private IAccountRepository? _accountRepository;
 	private ICategoryRepository? _categoryRepository;
 	private ICommentRepository? _commentRepository;
-	private IDiaryRepository? _diaryRepository;
+	private IMomentRepository? _momentRepository;
 	private IEventFieldRepsitory? _eventFieldRepsitory;
 	private IEventRepository? _eventRepository;
 	private IAreaRepsitory? _floorRepository;
@@ -76,7 +76,7 @@ public class UnitOfWork : IUnitOfWork
 	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
 	public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_dbContext);
 	public ICommentRepository CommentRepository => _commentRepository ??= new CommentRepository(_dbContext);
-	public IDiaryRepository DiaryRepository => _diaryRepository ??= new DiaryRepository(_dbContext);
+	public IMomentRepository MomentRepository => _momentRepository ??= new MomentRepository(_dbContext);
 	public IEventFieldRepsitory EventFieldRepsitory => _eventFieldRepsitory ??= new EventFieldRepsitory(_dbContext);
 	public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_dbContext);
 	public IAreaRepsitory FloorRepository => _floorRepository ??= new AreaRepository(_dbContext);

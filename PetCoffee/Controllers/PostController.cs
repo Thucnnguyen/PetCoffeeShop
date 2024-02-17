@@ -6,50 +6,40 @@ using PetCoffee.Application.Features.Auth.Handlers;
 using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Post.Command;
 using PetCoffee.Application.Features.Post.Model;
+using PetCoffee.Application.Features.Post.Queries;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace PetCoffee.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("/api/v1")]
 	[ApiController]
 	public class PostController : ApiControllerBase
 	{
 		// GET: api/<PostController>
-		[HttpGet]
+		[HttpGet("/posts")]
+		[Authorize]
 		public IEnumerable<string> Get()
 		{
 			return new string[] { "value1", "value2" };
 		}
 
 		// GET api/<PostController>/5
-		[HttpGet("{id}")]
-		public string Get(int id)
+		[HttpGet("currentAccounts/posts")]
+		[Authorize]
+		public async Task<ActionResult<IList<PostResponse>>> GetPostCreateByCurrentAccount([FromQuery]GetPostCreatedByCurrentAccountIdQuery request)
 		{
-			return "value";
+			var response = await Mediator.Send(request);
+			return Ok(response);
 		}
 
 		// POST api/<PostController>
-		[HttpPost]
+		[HttpPost("posts")]
 		[Authorize]
 		public async Task<ActionResult<PostResponse>> Post([FromForm] CreatePostCommand request )
 		{
 			var response = await Mediator.Send(request);
 			return response;
-		}
-
-		// PUT api/<PostController>/5
-		[HttpPost("file")]
-		public async Task<ActionResult<string>> PostFile([FromForm] FileCommand request)
-		{
-			var response = await Mediator.Send(request);
-			return response;
-		}
-
-		// DELETE api/<PostController>/5
-		[HttpDelete("{id}")]
-		public void Delete(int id)
-		{
 		}
 	}
 }

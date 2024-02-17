@@ -2,4 +2,5 @@
 
 public enum MomentType
 {
+	None = 0,
 }

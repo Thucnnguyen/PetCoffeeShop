@@ -25,15 +25,9 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 
 	public async Task<PostResponse> Handle(CreatePostCommand request, CancellationToken cancellationToken)
 	{
-		//upload img
-		var url = "";
-		if (request.Image != null)
-		{
-			await _azureService.CreateBlob(request.Image.FileName, request.Image);
-			url = await _azureService.GetBlob(request.Image.FileName);
-		}
+		
 		var newPost = _mapper.Map<Domain.Entities.Post>(request);
-		newPost.Image = url;
+		newPost.Image = await _azureService.UpdateloadImages(request.Image);
 		await _unitOfWork.PostRepository.AddAsync(newPost);
 		await _unitOfWork.SaveChangesAsync();
 
@@ -75,9 +69,9 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 				{
 					continue;
 				}
-
 			}
 		}
+
 		await _unitOfWork.SaveChangesAsync();
 		var response = _mapper.Map<PostResponse>(newPost);
 		var curAccount = await _currentAccountService.GetCurrentAccount();

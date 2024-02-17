@@ -15,7 +15,7 @@ public interface IUnitOfWork
 	IAccountRepository AccountRepository { get; }
 	ICategoryRepository CategoryRepository { get; }
 	ICommentRepository CommentRepository { get; }
-	IDiaryRepository  DiaryRepository { get; }
+	IMomentRepository MomentRepository { get; }
 	IEventFieldRepsitory EventFieldRepsitory { get; }
 	IEventRepository EventRepository { get; }
 	IAreaRepsitory FloorRepository { get; }

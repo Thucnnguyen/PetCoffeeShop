@@ -7,7 +7,6 @@ using PetCoffee.Infrastructure.Common.Constant;
 using Microsoft.AspNetCore.Http;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using OpenAI_API.Moderation;
 using System.Net;
 
 namespace PetCoffee.Infrastructure.Services;
@@ -116,5 +115,22 @@ public class AzureService : IAzureService
 
 		}
 		return result;
+	}
+
+	public async Task<string> UpdateloadImages(IList<IFormFile>? images)
+	{
+		if (images == null || images.Count == 0)
+		{
+			return "";
+		}
+
+		var urls = new List<string>();
+		foreach (var img in images)
+		{
+			await CreateBlob(img.FileName, img);
+			urls.Add(await GetBlob(img.FileName));
+		}
+
+		return string.Join(";", urls);
 	}
 }

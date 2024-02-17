@@ -2,6 +2,8 @@
 using AutoMapper;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Models;
+using PetCoffee.Application.Features.Memory.Commands;
+using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.PetCfShop.Commands;
@@ -44,5 +46,11 @@ public class MappingProfile : Profile
 		CreateMap<PetResponse, Pet>().ReverseMap();
 		CreateMap<CreatePetCommand, Pet>().ReverseMap();
 
+        //moment
+        CreateMap<MomentResponse, Moment>().ReverseMap();
+        CreateMap<CreateMomentCommand, Moment>().ReverseMap();
+		//comment 
+		CreateMap<Comment, CommentForPost>()
+			.ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.CreatedBy.FullName));
 	}
 }
