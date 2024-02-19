@@ -10,7 +10,9 @@ public class CustomerRegisterCommandValidator : AbstractValidator<CustomerRegist
 {
     public CustomerRegisterCommandValidator()
     {
-		RuleFor(model => model.Password).NotEmpty();
+		RuleFor(model => model.Password).NotEmpty().WithMessage("Password không được để trống");
+		RuleFor(model => model.Password).MinimumLength(6).WithMessage("Password có độ dài tối thiểu là 6");
+
 		RuleFor(model => model.Email).NotEmpty();
 
 		RuleFor(model => model.PhoneNumber)
