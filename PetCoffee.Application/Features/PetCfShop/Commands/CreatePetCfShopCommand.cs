@@ -11,6 +11,9 @@ public class CreatePetcfShopValidation : AbstractValidator<CreatePetCfShopComman
     public CreatePetcfShopValidation()
     {
 		RuleFor(model => model.Email).NotEmpty();
+		RuleFor(model => model.TaxCode)
+			.MinimumLength(10)
+			.WithMessage("Mã số thuế có độ dài tối thiểu là 10");
 
 		RuleFor(model => model.Phone)
 		.NotEmpty()
@@ -32,6 +35,7 @@ public class CreatePetCfShopCommand : IRequest<PetCoffeeShopResponse>
 	public string? FbUrl { get; set; }
 	public string? InstagramUrl { get; set; }
 	public string Location { get; set; }
+	public string TaxCode { get; set; }
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
 }

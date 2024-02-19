@@ -36,7 +36,7 @@ public class Account : BaseAuditableEntity
 	public IList<Notification> Notifications { get; set; } = new List<Notification>();
 	[InverseProperty(nameof(Like.CreatedBy))]
 	public IList<Like> Likes { get; set; } = new List<Like>();	
-	[InverseProperty(nameof(SubmittingEvent.Sender))]
+	[InverseProperty(nameof(SubmittingEvent.CreatedBy))]
 	public IList<SubmittingEvent> SubmittingEvents { get; set; } = new List<SubmittingEvent>();
 	[InverseProperty(nameof(FollowEvent.CreatedBy))]
 	public IList<FollowEvent> FollowEvents { get; set; } = new List<FollowEvent>();

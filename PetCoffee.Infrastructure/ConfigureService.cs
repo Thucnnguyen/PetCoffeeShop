@@ -43,10 +43,17 @@ public static class ConfigureService
 		services.AddScoped<IChatgptService, ChatgptService>();
 		services.AddScoped<IAzureService, AzureService>();
 		services.AddScoped<IJwtService, JwtService>();
+		services.AddScoped<IVietQrService, VietQrService>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
+		//config VietQr
+		services.AddOptions<VietQrSettings>()
+			.BindConfiguration(VietQrSettings.ConfigSection)
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+		services.AddSingleton(sp => sp.GetRequiredService<IOptions<VietQrSettings>>().Value);
 		//config azure settings
 		services.AddOptions<AzureSettings>()
 			.BindConfiguration(AzureSettings.ConfigSection)

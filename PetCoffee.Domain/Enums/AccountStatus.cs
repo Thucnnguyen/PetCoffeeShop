@@ -9,7 +9,7 @@ public enum AccountStatus
 	[Description("Đang hoạt động")]
 	Active = 0,
 
-	[Description("Ngưng hoạt động")]
+	[Description("Ngừng hoạt động")]
 	Inactive = 1,
 
 	[Description("Mới khởi tạo")]

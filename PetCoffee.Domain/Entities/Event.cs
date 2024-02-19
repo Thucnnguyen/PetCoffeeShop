@@ -14,7 +14,7 @@ public class Event : BaseAuditableEntity
 	public DateTime EndTime { get; set; }
 	public string? Location { get; set; }
 
-	public long PetCafeShopId { get; set; }
+	public long PetCoffeeShopId { get; set; }
 	public PetCoffeeShop PetCoffeeShop { get; set; }
 
 	[InverseProperty(nameof(SubmittingEvent.Event))]

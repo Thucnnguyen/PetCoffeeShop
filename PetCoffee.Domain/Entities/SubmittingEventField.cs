@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.Domain.Entities;
 
-public class SubmittingEventField
+public class SubmittingEventField : BaseAuditableEntity
 {
 	[Key]
 	public long Id { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Pet.Queries;
 using PetCoffee.Application.Features.PetCfShop.Commands;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
@@ -15,20 +16,20 @@ namespace PetCoffee.API.Controllers
     public class PetCoffeeShopController : ApiControllerBase
     {
         // get all paging
-        [HttpGet("Petcoffeeshops")]
+        [HttpGet("petcoffeeshops")]
         public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>>> GetAllPetCfShop(
 			[FromQuery] GetAllPetCfShopQuery request)
         {
             return await Mediator.Send(request);
         }
-		[HttpGet("Petcoffeeshops/{Id}")]
+		[HttpGet("petcoffeeshops/{Id}")]
 		public async Task<ActionResult< PetCoffeeShopResponse>> GetPetCfShopById(
 			[FromQuery] GetPetCoffeeShopByIdQuery request)
 		{
 			return await Mediator.Send(request);
 		}
 
-		[HttpPost("Petcoffeeshops")]
+		[HttpPost("petcoffeeshops")]
         [Authorize(Roles ="Customer")]
 		public async Task<ActionResult< PetCoffeeShopResponse>> AddPetCfShop(
         [FromForm] CreatePetCfShopCommand request)
@@ -36,17 +37,24 @@ namespace PetCoffee.API.Controllers
 			return await Mediator.Send(request);
 		}
 
-		[HttpPut("Petcoffeeshops")]
+		[HttpPut("petcoffeeshops")]
 		[Authorize]
 		public async Task<ActionResult<PetCoffeeShopResponse>> UpdatePetCfShop(
 		[FromForm] UpdateCoffeeShopCommand request)
 		{
 			return await Mediator.Send(request);
 		}
-		[HttpGet("Accounts/Petcoffeeshops")]
+		[HttpGet("accounts/petcoffeeshops")]
 		[Authorize]
 		public async Task<ActionResult<PetCoffeeShopResponse>> GetCoffeeShopResponse(
-		[FromForm] GetPetCfShopForCurrentAccount request)
+		[FromForm] GetPetCfShopForCurrentAccountQuery request)
+		{
+			return await Mediator.Send(request);
+		}
+
+		[HttpGet("petcoffeeshops/taxcode/{TaxCode}")]
+		public async Task<ActionResult<TaxCodeResponse>> CheckTaxCode(
+		[FromRoute] CheckTaxCodeQuery request)
 		{
 			return await Mediator.Send(request);
 		}

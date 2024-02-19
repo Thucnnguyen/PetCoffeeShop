@@ -10,7 +10,7 @@ using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
 
-public class GetShopForCurrentAccountHandler : IRequestHandler<GetPetCfShopForCurrentAccount, PetCoffeeShopResponse>
+public class GetShopForCurrentAccountHandler : IRequestHandler<GetPetCfShopForCurrentAccountQuery, PetCoffeeShopResponse>
 {
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +23,7 @@ public class GetShopForCurrentAccountHandler : IRequestHandler<GetPetCfShopForCu
 		_currentAccountService = currentAccountService;
 	}
 
-	public async Task<PetCoffeeShopResponse> Handle(GetPetCfShopForCurrentAccount request, CancellationToken cancellationToken)
+	public async Task<PetCoffeeShopResponse> Handle(GetPetCfShopForCurrentAccountQuery request, CancellationToken cancellationToken)
     {
         var CurrentAccount = await _currentAccountService.GetCurrentAccount();
         if (CurrentAccount == null)
