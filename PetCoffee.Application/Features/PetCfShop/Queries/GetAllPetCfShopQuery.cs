@@ -5,13 +5,7 @@ using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace PetCoffee.Application.Features.PetCfShop.Queries;
 
@@ -31,7 +25,7 @@ public class GetAllPetCfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<P
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
 
-	public Expression<Func<PetCoffeeShop, bool>> GetExpressions()
+	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
     {
         if (Search is not null)
         {

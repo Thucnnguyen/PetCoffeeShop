@@ -9,8 +9,9 @@ namespace PetCoffee.Domain.Enums;
 
 public enum PostStatus
 {
-	[Description("Bản nháp")]
-	Draft = 0,
-	[Description("Công khai")]
-	Published = 1,
+	[Description("kích hoạt")]
+	Active = 1,
+
+	[Description("không hoạt động")]
+	Intactive = 0,
 }

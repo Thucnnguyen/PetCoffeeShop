@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
+using PetCoffee.Application.Common.Enums;
+using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Post.Command;
 using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Models;
@@ -25,7 +27,15 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 
 	public async Task<PostResponse> Handle(CreatePostCommand request, CancellationToken cancellationToken)
 	{
-		
+		var curAccount = await _currentAccountService.GetCurrentAccount();
+		if (curAccount == null)
+		{
+			throw new ApiException(ResponseCode.AccountNotExist);
+		}
+		if (curAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
 		var newPost = _mapper.Map<Domain.Entities.Post>(request);
 		newPost.Image = await _azureService.UpdateloadImages(request.Image);
 		await _unitOfWork.PostRepository.AddAsync(newPost);
@@ -74,7 +84,6 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 
 		await _unitOfWork.SaveChangesAsync();
 		var response = _mapper.Map<PostResponse>(newPost);
-		var curAccount = await _currentAccountService.GetCurrentAccount();
 		response.CreatedById = curAccount.CreatedById;
 		response.Account = _mapper.Map<AccountForPostModel>(curAccount);
 

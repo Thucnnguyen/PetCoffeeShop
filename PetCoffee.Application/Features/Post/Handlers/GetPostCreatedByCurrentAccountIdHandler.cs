@@ -10,6 +10,7 @@ using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Enums;
 using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Post.Handlers;
@@ -36,7 +37,7 @@ public class GetPostCreatedByCurrentAccountIdHandler : IRequestHandler<GetPostCr
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
 
-		var Posts = _unitOfWork.PostRepository.Get(p => p.CreatedById == currentAccount.Id)
+		var Posts = _unitOfWork.PostRepository.Get(p => p.CreatedById == currentAccount.Id && p.Status == PostStatus.Active)
 				.Include(p => p.Comments)
 				.ThenInclude(com => com.CreatedBy)
 				.Include(p => p.PostCategories)

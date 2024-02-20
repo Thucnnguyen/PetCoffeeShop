@@ -27,8 +27,13 @@ public class GetAccountInformationHandler : IRequestHandler<GetAccountInformatio
 		var currentAccount = await _unitOfWork.AccountRepository.GetByIdAsync(request.Id);
 		if (currentAccount == null)
 		{
-			throw new ApiException(ResponseCode.Unauthorized);
+			throw new ApiException(ResponseCode.AccountNotExist);
 		}
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+
 		var response = _mapper.Map<AccountResponse>(currentAccount);
 		return response;
 	}

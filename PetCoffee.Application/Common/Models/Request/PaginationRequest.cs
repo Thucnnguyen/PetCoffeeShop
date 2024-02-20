@@ -35,7 +35,7 @@ namespace PetCoffee.Application.Common.Models.Request
 
         protected Expression<Func<T, bool>> Expression = PredicateBuilder.New<T>(true);
 
-        //public abstract Expression<Func<T, bool>> GetExpressions();
+        public abstract Expression<Func<T, bool>> GetExpressions();
 
         public Func<IQueryable<T>, IOrderedQueryable<T>>? GetOrder()
         {
