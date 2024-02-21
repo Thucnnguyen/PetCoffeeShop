@@ -29,5 +29,7 @@ public class CustomerRegisterCommand : IRequest<AccessTokenResponse>
 	public string Password { get; set; }
 	[EmailAddress]
 	public string Email { get; set; }
+	public string? Location { get; set; }
 	public IFormFile? Avatar { get; set; }
+	public IFormFile? Background { get; set; }
 }

@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Models;
@@ -9,7 +8,7 @@ using PetCoffee.Application.Features.Auth.Queries;
 
 namespace PetCoffee.API.Controllers
 {
-	[Route("api/[controller]")]
+	[Route("api/v1/auth")]
 	[ApiController]
 	public class AuthController : ApiControllerBase
 	{
@@ -20,19 +19,44 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
-		[HttpGet("Resend/OTP")]
+		[HttpGet("resend/OTP")]
 		[Authorize]
 		public async Task<ActionResult<bool>> Resend([FromQuery] ResendOTPQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
+
+		[HttpGet("checkemail/{Email}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> CheckEmail([FromRoute] CheckEmailExistQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
+		[HttpGet("forgotpassword/resend/OTP")]
+		[Authorize]
+		public async Task<ActionResult<bool>> ResendOTPForForgotPassword([FromQuery] ResendOTPQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
+		[HttpPut("forgotpassword/password")]
+		public async Task<ActionResult<bool>> ChangePasswordForForgotPassword([FromBody] ChangePasswordForForgotCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
 		[HttpGet("")]
 		[Authorize]
 		public async Task<ActionResult<AccountResponse>> GetCurrentAccount([FromQuery] GetCurrentAccountInfomationQuery request)
 		{
 			return await Mediator.Send(request);
 		}
+
 		[HttpGet("{Id}")]
 		[Authorize]
 		public async Task<ActionResult<AccountResponse>> GetAccount([FromRoute] GetAccountInformationByIdQuery request)
@@ -41,14 +65,14 @@ namespace PetCoffee.API.Controllers
 		}
 
 		// POST api/<ValuesController>
-		[HttpPost("Resgister")]
+		[HttpPost("register")]
 		public async Task<ActionResult<AccessTokenResponse>> ResgisterCustommer([FromForm] CustomerRegisterCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
 
-		[HttpPost("Verify/OTP")]
+		[HttpPost("verify/OTP")]
 		[Authorize]
 		public async Task<ActionResult<bool>> VerifyCustommer([FromBody] VerifyAccountCommand request)
 		{
@@ -56,6 +80,21 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
-		
+		[HttpPut("")]
+		[Authorize]
+		public async Task<ActionResult<AccountResponse>> UpdateAccount([FromForm] UpdateAccountCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
+		[HttpPut("password")]
+		[Authorize]
+		public async Task<ActionResult<AccountResponse>> UpdatePassword([FromBody] UpdatePasswordCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
 	}
 }

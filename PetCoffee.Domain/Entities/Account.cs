@@ -38,8 +38,8 @@ public class Account : BaseAuditableEntity
 	public IList<Like> Likes { get; set; } = new List<Like>();	
 	[InverseProperty(nameof(SubmittingEvent.CreatedBy))]
 	public IList<SubmittingEvent> SubmittingEvents { get; set; } = new List<SubmittingEvent>();
-	[InverseProperty(nameof(FollowEvent.CreatedBy))]
-	public IList<FollowEvent> FollowEvents { get; set; } = new List<FollowEvent>();
+	[InverseProperty(nameof(JoinEvent.CreatedBy))]
+	public IList<JoinEvent> FollowEvents { get; set; } = new List<JoinEvent>();
 	[InverseProperty(nameof(Reservation.CreatedBy))]
 	public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
 	[InverseProperty(nameof(Comment.CreatedBy))]

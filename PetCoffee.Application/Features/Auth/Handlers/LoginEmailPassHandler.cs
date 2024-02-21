@@ -12,13 +12,13 @@ using System.Security.Principal;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 
-public class LoginUsernamePassHandler : IRequestHandler<LoginUsernamePassCommand, AccessTokenResponse>
+public class LoginEmailPassHandler : IRequestHandler<LoginUsernamePassCommand, AccessTokenResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IJwtService _jwtService;
 	private readonly IMapper _mapper;
 
-	public LoginUsernamePassHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper)
+	public LoginEmailPassHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper)
 	{
 		_unitOfWork = unitOfWork;
 		_jwtService = jwtService;

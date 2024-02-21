@@ -36,7 +36,7 @@ public class PetCoffeeShop : BaseAuditableEntity
 	[InverseProperty(nameof(Event.PetCoffeeShop))]
 	public IList<Event> Events { get; set; } = new List<Event>();
 	[InverseProperty(nameof(Area.PetCoffeeShop))]
-	public IList<Area> Floors { get; set; } = new List<Area>();
+	public IList<Area> Areas { get; set; } = new List<Area>();
 
 	[Projectable]
 	public bool IsBuyPackage =>  DateTime.Now <= EndTime;

@@ -6,7 +6,7 @@ using PetCoffee.Infrastructure.Persistence.Context;
 
 namespace PetCoffee.Infrastructure.Persistence.Repository;
 
-public class FollowEventRepository : BaseRepository<FollowEvent>, IFollowEventRepository
+public class FollowEventRepository : BaseRepository<JoinEvent>, IFollowEventRepository
 {
 	private readonly ApplicationDbContext _dbContext;
 

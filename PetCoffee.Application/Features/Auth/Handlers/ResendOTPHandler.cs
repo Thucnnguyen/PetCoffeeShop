@@ -31,6 +31,10 @@ public class ResendOTPHandler : IRequestHandler<ResendOTPQuery, bool>
 	public async Task<bool> Handle(ResendOTPQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
+		if(currentAccount == null)
+		{
+			throw new ApiException(ResponseCode.AccountNotExist);
+		}
 		if (currentAccount.Status != AccountStatus.Verifying)
 		{
 			throw new ApiException(ResponseCode.AccountIsActived);

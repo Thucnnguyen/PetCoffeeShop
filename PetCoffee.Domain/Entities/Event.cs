@@ -21,6 +21,6 @@ public class Event : BaseAuditableEntity
 	public IList<SubmittingEvent> SubmittingEvents { get; set;}
 	[InverseProperty(nameof(EventField.Event))]
 	public IList<EventField> EventFields { get; set; }
-	[InverseProperty(nameof(FollowEvent.Event))]
-	public IList<FollowEvent> FollowEvents { get; set; }
+	[InverseProperty(nameof(JoinEvent.Event))]
+	public IList<JoinEvent> FollowEvents { get; set; }
 }

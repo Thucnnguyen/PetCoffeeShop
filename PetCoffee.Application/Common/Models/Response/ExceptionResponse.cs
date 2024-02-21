@@ -42,7 +42,7 @@ public class ExceptionResponse
 	{
 		ErrorCode = (int)ResponseCode.ValidationError;
 		Error = ResponseCode.ValidationError.GetDescription();
-		Message = exception.Message;
+		Message = exception.Message.Split(":")[2].Trim();
 		Details ??= new Dictionary<string, List<string>>();
 
 		foreach(var error in exception.Errors)

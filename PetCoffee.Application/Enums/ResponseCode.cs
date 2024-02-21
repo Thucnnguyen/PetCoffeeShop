@@ -18,18 +18,18 @@ public enum ResponseCode
 
 	[Description("Email đã tồn tại")] AccountIsExisted = 10,
 	[Description("Tài Khoản hoặc mật khẩu sai")] LoginFailed = 11,
-
+	[Description("Mật khẩu hiện tại bạn nhập sai vui lòng kiểm tra lại")] PassNotValid = 12,
 	//PostCategory
-	[Description("Tên đã tồn tại")] PostCategoryIsExisted = 12,
-	[Description("Category Không tồn tại")] PostCategoryNotExisted = 13,
+	[Description("Tên đã tồn tại")] PostCategoryIsExisted = 13,
+	[Description("Category Không tồn tại")] PostCategoryNotExisted = 14,
 
 	//Post
 
 	//shop
-	[Description("Cửa hàng Không tồn tại")] ShopNotExisted = 14,
+	[Description("Cửa hàng Không tồn tại")] ShopNotExisted = 15,
 	//TaxCode
-	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted = 15,
+	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted = 16,
 	//pet
-	[Description("Pet Không tồn tại")] PetNotExisted = 16,
+	[Description("Pet Không tồn tại")] PetNotExisted = 17,
 
 }

@@ -23,7 +23,7 @@ public class ApplicationDbContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		modelBuilder.Entity<FollowEvent>()
+		modelBuilder.Entity<JoinEvent>()
 			.HasKey(e => new { e.EventId, e.CreatedById });
 		modelBuilder.Entity<Like>()
 			.HasKey(e => new { e.CreatedById, e.PostId });
@@ -44,7 +44,7 @@ public class ApplicationDbContext : DbContext
 	public DbSet<Moment> Diaries => Set<Moment>();
     public DbSet<Event> Events => Set<Event>();
     public DbSet<EventField> EventFields => Set<EventField>();
-    public DbSet<FollowEvent> FollowEvents => Set<FollowEvent>();
+    public DbSet<JoinEvent> FollowEvents => Set<JoinEvent>();
     public DbSet<Item> Items => Set<Item>();
     public DbSet<Like> Like => Set<Like>();
     public DbSet<Notification> Notification => Set<Notification>();
