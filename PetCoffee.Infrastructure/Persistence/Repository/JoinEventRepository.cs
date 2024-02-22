@@ -6,11 +6,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 
 namespace PetCoffee.Infrastructure.Persistence.Repository;
 
-public class FollowEventRepository : BaseRepository<JoinEvent>, IFollowEventRepository
+public class JoinEventRepository : BaseRepository<JoinEvent>, IJoinEventRepository
 {
 	private readonly ApplicationDbContext _dbContext;
 
-	public FollowEventRepository(ApplicationDbContext dbContext) : base(dbContext)
+	public JoinEventRepository(ApplicationDbContext dbContext) : base(dbContext)
 	{
 		_dbContext = dbContext;
 	}

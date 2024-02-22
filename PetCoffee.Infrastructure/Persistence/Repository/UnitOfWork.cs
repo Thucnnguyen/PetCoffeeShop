@@ -56,7 +56,7 @@ public class UnitOfWork : IUnitOfWork
 	private IEventFieldRepsitory? _eventFieldRepsitory;
 	private IEventRepository? _eventRepository;
 	private IAreaRepsitory? _floorRepository;
-	private IFollowEventRepository _followEventRepository;
+	private IJoinEventRepository _JoinEventRepository;
 	private IItemRepository? _itemRepository;
 	private ILikeRepository? _likeRepository;
 	private INotificationRepository? _notificationRepository;	
@@ -72,6 +72,7 @@ public class UnitOfWork : IUnitOfWork
 	private IVaccinationRepository? _vaccinationRepository;
 	private IWalletRepository? _walletRepsitory;
 	private IPostCoffeeShopRepository? _postCoffeeShopRepository;
+	private IFollowPetCfShopRepository? _followPetCfShopRepository;
 
 	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
 	public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_dbContext);
@@ -80,7 +81,7 @@ public class UnitOfWork : IUnitOfWork
 	public IEventFieldRepsitory EventFieldRepsitory => _eventFieldRepsitory ??= new EventFieldRepsitory(_dbContext);
 	public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_dbContext);
 	public IAreaRepsitory FloorRepository => _floorRepository ??= new AreaRepository(_dbContext);
-	public IFollowEventRepository FollowEventRepository => _followEventRepository ??= new FollowEventRepository(_dbContext);
+	public IJoinEventRepository JoinEventRepository => _JoinEventRepository ??= new JoinEventRepository(_dbContext);
 	public IItemRepository ItemRepository => _itemRepository ??= new ItemRepository(_dbContext);
 	public ILikeRepository LikeRepository => _likeRepository ??= new LikeRepository(_dbContext);
 	public INotificationRepository NotificationRepository => _notificationRepository ??= new NotificationRepository(_dbContext);
@@ -96,4 +97,6 @@ public class UnitOfWork : IUnitOfWork
 	public IVaccinationRepository VaccinationRepository => _vaccinationRepository ??= new VaccinationRepository(_dbContext);
 	public IWalletRepository WalletRepsitory => _walletRepsitory ??= new WalletRepository(_dbContext);
 	public IPostCoffeeShopRepository PostCoffeeShopRepository => _postCoffeeShopRepository ??= new PostPetCoffeeShopRepository(_dbContext);
+
+	public IFollowPetCfShopRepository FollowPetCfShopRepository => _followPetCfShopRepository ??= new FollowPetCfShopRepository(_dbContext);;
 }

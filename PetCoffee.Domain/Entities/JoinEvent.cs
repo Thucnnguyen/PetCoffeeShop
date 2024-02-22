@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
-public class FollowEvent : BaseAuditableEntity
+public class JoinEvent : BaseAuditableEntity
 {
 	public long EventId { get; set; }
 

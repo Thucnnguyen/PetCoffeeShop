@@ -25,6 +25,8 @@ public class ApplicationDbContext : DbContext
 	{
 		modelBuilder.Entity<JoinEvent>()
 			.HasKey(e => new { e.EventId, e.CreatedById });
+		modelBuilder.Entity<FollowPetCfShop>()
+			.HasKey(e => new { e.ShopId, e.CreatedById });
 		modelBuilder.Entity<Like>()
 			.HasKey(e => new { e.CreatedById, e.PostId });
 		modelBuilder.Entity<PostCategory>()
@@ -57,6 +59,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Transaction> Transactions => Set<Transaction>();
     public DbSet<Wallet> Wallets => Set<Wallet>();
 	public DbSet<PostPetCoffeeShop> PostPetCoffeeShops => Set<PostPetCoffeeShop>();
+	public DbSet<FollowPetCfShop> FollowPetCfShops => Set<FollowPetCfShop>();
 
 
 }

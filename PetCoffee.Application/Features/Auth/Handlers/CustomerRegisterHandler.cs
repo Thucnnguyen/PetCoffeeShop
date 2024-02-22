@@ -38,11 +38,15 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		var hasPassword = HashHelper.HashPassword(request.Password);
 		var account = _mapper.Map<Account>(request);
 
-		var url = "";
 		if (request.Avatar != null)
 		{
 			await _azureService.CreateBlob(request.Avatar.FileName, request.Avatar);
-			url = await _azureService.GetBlob(request.Avatar.FileName);
+			account.Avatar = await _azureService.GetBlob(request.Avatar.FileName);
+		}
+		if (request.Background != null)
+		{
+			await _azureService.CreateBlob(request.Background.FileName, request.Background);
+			account.Background = await _azureService.GetBlob(request.Background.FileName);
 		}
 
 		account.Password = hasPassword;
@@ -50,7 +54,6 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		account.LoginMethod = LoginMethod.UserNamePass;
 		account.OTP = TokenUltils.GenerateOTPCode(6);
 		account.OTPExpired = DateTime.Now.AddDays(1);
-		account.Avatar = url;
 
 		var newAccount = await _unitOfWork.AccountRepository.AddAsync(account);
 		await _unitOfWork.SaveChangesAsync();

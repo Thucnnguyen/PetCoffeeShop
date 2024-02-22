@@ -39,13 +39,32 @@ public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, Pagi
 
 		var response = new List<PetCoffeeShopResponse>();
 
-		foreach (var store in stores)
+		if(request.Longitude == 0 || request.Latitude == 0)
 		{
-			var storeRes = _mapper.Map<PetCoffeeShopResponse>(store);
-			storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
-			response.Add(storeRes);
+			foreach (var store in stores)
+			{
+				var storeRes = _mapper.Map<PetCoffeeShopResponse>(store);
+				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+				response.Add(storeRes);
+			}
 		}
-		response = response.OrderBy(x => x.Distance).ToList();
+		else
+		{
+			foreach (var store in stores)
+			{
+				var storeRes = _mapper.Map<PetCoffeeShopResponse>(store);
+				storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
+				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+				response.Add(storeRes);
+			}
+		}
+		if(request.Longitude == 0 || request.Latitude == 0)
+		{
+			response = response.OrderBy(x => x.Distance).ThenBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
+		}
+
+		response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
+
 		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>(
 			response,
 			response.Count(),
