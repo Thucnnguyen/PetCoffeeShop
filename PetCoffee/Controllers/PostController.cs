@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI_API.Completions;
 using PetCoffee.Application.Common.Models.Response;
@@ -8,9 +10,11 @@ using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Features.Post.Command;
+using PetCoffee.Application.Features.Post.Commands;
 using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -46,5 +50,19 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
-	}
+
+        [HttpPut("{id:long}/posts/status")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<bool>> UpdatePostStatus([FromRoute] long id, [FromBody] UpdatePostStatusCommand request)
+        {
+            request.Id = id;
+            var response = await Mediator.Send(request);
+            return response;
+            //await Mediator.Send(command);
+            //return new StatusResponse(true);
+        }
+
+
+
+    }
 }

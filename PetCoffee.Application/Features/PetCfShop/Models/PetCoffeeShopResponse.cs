@@ -25,6 +25,6 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
         public DateTime? EndTime { get; set; }
 
         public double? Distance { get; set; }
-        public double? TotalFollow { get; set; };
+        public double? TotalFollow { get; set; }
     }
 }
