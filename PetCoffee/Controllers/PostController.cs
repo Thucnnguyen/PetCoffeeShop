@@ -7,6 +7,7 @@ using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Handlers;
 using PetCoffee.Application.Features.Auth.Models;
+using PetCoffee.Application.Features.Pet.Queries;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Features.Post.Command;
@@ -58,11 +59,20 @@ namespace PetCoffee.API.Controllers
             request.Id = id;
             var response = await Mediator.Send(request);
             return response;
-            //await Mediator.Send(command);
-            //return new StatusResponse(true);
+           
         }
 
+        //get post by id 
 
+        [HttpGet("/posts/{id:long}")]
+        public async Task<ActionResult<PostResponse>> GetPost([FromRoute] long id, [FromQuery] GetPostByIdQuery request)
+        {
+            var query = new GetPostByIdQuery
+            {
+                Id = id,
+            };
+            return await Mediator.Send(request);
+        }
 
     }
 }
