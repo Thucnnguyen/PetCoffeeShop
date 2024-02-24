@@ -43,18 +43,21 @@ namespace PetCoffee.Application.Features.Post.Handlers
             }
 
             
-            var followedShopIds = await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.CreatedById == currentAccount.Id);
+            var followedShopIds = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.CreatedById == currentAccount.Id)).ToList();
          
-            var postsQuery = await _unitOfWork.PostRepository.GetAsync(
+            var postsQuery =  _unitOfWork.PostRepository.Get(
               predicate: request.GetExpressions(),
-
               disableTracking: true
-            );
+            ).Include(p => p.Comments)
+			.ThenInclude(com => com.CreatedBy)
+			.Include(p => p.PostCategories)
+			.ThenInclude(c => c.Category)
+			.Include(p => p.PostPetCoffeeShops)
+			.ThenInclude(shop => shop.Shop)
+			.Include(p => p.CreatedBy).AsQueryable();
             
             if (followedShopIds.Any())
             {
-
-
                 postsQuery = postsQuery
           
           .OrderByDescending(post => post.PostPetCoffeeShops.Any(pcs => followedShopIds.Select(f => f.ShopId).Contains(pcs.ShopId)))
@@ -83,7 +86,6 @@ namespace PetCoffee.Application.Features.Post.Handlers
                 response.Count(),
                 request.PageNumber,
                 request.PageSize);
-
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -11,7 +9,6 @@ using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
-using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Post.Handlers;
 

@@ -396,5 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-et --hard HEAD~1
 tatus post
+et --hard HEAD~1
+

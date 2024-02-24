@@ -26,6 +26,7 @@ namespace PetCoffee.API.Controllers
 	{
 		// GET: api/<PostController>
 		[HttpGet("/posts")]
+		[Authorize]
 		//[Authorize]
         public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPost(
             [FromQuery] GetAllPostQuery request)
