@@ -40,6 +40,7 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 		}
 
 		var NewPetCoffeeShop = _mapper.Map<PetCoffeeShop>(request);
+		NewPetCoffeeShop.Type = request.ShopType;
 		//check TaxCode 
 		var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
 

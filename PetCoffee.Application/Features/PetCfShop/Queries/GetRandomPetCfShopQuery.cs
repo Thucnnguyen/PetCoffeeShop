@@ -1,5 +1,4 @@
 ﻿
-
 using LinqKit;
 using MediatR;
 using PetCoffee.Application.Common.Models.Request;
@@ -11,19 +10,10 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.PetCfShop.Queries;
 
-public class GetMostPopularPetcfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
+public class GetRandomPetCfShopQuery : IRequest<IList<PetCoffeeShopForCardResponse>>
 {
-
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
+	public int Size { get; set; }
 	public ShopType? ShopType { get; set; }
-	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
-	{
-		if (ShopType is not null)
-		{
-			Expression = Expression.And(store => Equals(ShopType, store.Type));
-		}
-
-		return Expression;
-	}
 }

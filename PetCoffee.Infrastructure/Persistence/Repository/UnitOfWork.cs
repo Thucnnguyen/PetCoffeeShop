@@ -98,5 +98,5 @@ public class UnitOfWork : IUnitOfWork
 	public IWalletRepository WalletRepsitory => _walletRepsitory ??= new WalletRepository(_dbContext);
 	public IPostCoffeeShopRepository PostCoffeeShopRepository => _postCoffeeShopRepository ??= new PostPetCoffeeShopRepository(_dbContext);
 
-	public IFollowPetCfShopRepository FollowPetCfShopRepository => _followPetCfShopRepository ??= new FollowPetCfShopRepository(_dbContext);;
+	public IFollowPetCfShopRepository FollowPetCfShopRepository => _followPetCfShopRepository ??= new FollowPetCfShopRepository(_dbContext);
 }

@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using PetCoffee.Application.Features.PetCfShop.Models;
+using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.Application.Features.PetCfShop.Commands;
@@ -38,4 +39,5 @@ public class CreatePetCfShopCommand : IRequest<PetCoffeeShopResponse>
 	public string TaxCode { get; set; }
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
+	public ShopType ShopType { get; set; }
 }

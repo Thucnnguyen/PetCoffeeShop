@@ -1,15 +1,15 @@
 ﻿
+
 using AutoMapper;
 using MediatR;
-using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Domain.Entities;
+using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
 
-public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetcfShopQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
+public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery, IList<PetCoffeeShopForCardResponse>>
 {
 	private const Double RADIUS = 6378.16;
 	private const double PI = Math.PI / 180;
@@ -17,22 +17,27 @@ public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetc
 	private readonly IMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
 
-	public GetMostPopularPetcfShopHandler(IMapper mapper, IUnitOfWork unitOfWork)
+	public GetRandomPetCfShopHandler(IMapper mapper, IUnitOfWork unitOfWork)
 	{
 		_mapper = mapper;
 		_unitOfWork = unitOfWork;
 	}
 
-	public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetMostPopularPetcfShopQuery request, CancellationToken cancellationToken)
+	public async Task<IList<PetCoffeeShopForCardResponse>> Handle(GetRandomPetCfShopQuery request, CancellationToken cancellationToken)
 	{
-
-		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-			predicate: request.GetExpressions(),
-			disableTracking: true
-		)).ToList();
+		int TotalShop = 0;
+		if(request.ShopType != null)
+		{
+			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s =>s.Type == request.ShopType);
+		}
+		else
+		{
+			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync();
+		}
 		var response = new List<PetCoffeeShopForCardResponse>();
+		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync()).ToList();
 
-		if (request.Longitude == 0 || request.Latitude == 0)
+		if (TotalShop < request.Size)
 		{
 			foreach (var store in stores)
 			{
@@ -40,27 +45,23 @@ public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetc
 				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
 				response.Add(storeRes);
 			}
+			return response;
 		}
-		else
+
+		int skip = new Random().Next(0, TotalShop - request.Size);
+		var randomShop = stores.Skip(skip)
+						   .Take(request.Size)
+						   .ToList();
+
+		foreach (var store in randomShop)
 		{
-			foreach (var store in stores)
-			{
-				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
-				storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
-				storeRes.TotalFollow = storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
-
-				response.Add(storeRes);
-			}
+			var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+			storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+			response.Add(storeRes);
 		}
-		response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
+		return response;
 
-		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
-			response,
-			response.Count(),
-			request.PageNumber,
-			request.PageSize);
 	}
-
 	private double CalculateDistance(double userLatitude, double userLongitude, double ShopLatitude, double ShopLongitude)
 	{
 		double dlon = Radians(ShopLongitude - userLongitude);

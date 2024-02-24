@@ -8,7 +8,7 @@ using PetCoffee.Application.Features.Auth.Queries;
 
 namespace PetCoffee.API.Controllers
 {
-	[Route("api/v1/auth")]
+	[Route("api/v1/auths")]
 	[ApiController]
 	public class AuthController : ApiControllerBase
 	{
@@ -28,7 +28,6 @@ namespace PetCoffee.API.Controllers
 		}
 
 		[HttpGet("checkemail/{Email}")]
-		[Authorize]
 		public async Task<ActionResult<bool>> CheckEmail([FromRoute] CheckEmailExistQuery request)
 		{
 			var response = await Mediator.Send(request);
@@ -36,8 +35,7 @@ namespace PetCoffee.API.Controllers
 		}
 
 		[HttpGet("forgotpassword/resend/OTP")]
-		[Authorize]
-		public async Task<ActionResult<bool>> ResendOTPForForgotPassword([FromQuery] ResendOTPQuery request)
+		public async Task<ActionResult<bool>> ResendOTPForForgotPassword([FromQuery] SendOTPForForgotPasswordCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
@@ -72,14 +70,19 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
-		[HttpPost("verify/OTP")]
+		[HttpPost("verify/otp")]
 		[Authorize]
 		public async Task<ActionResult<bool>> VerifyCustommer([FromBody] VerifyAccountCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
-
+		[HttpPost("forgotpassword/verify/otp")]
+		public async Task<ActionResult<bool>> VerifyForForgotPassword([FromBody] VerifiedOTPForForgotPasswordCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 		[HttpPut("")]
 		[Authorize]
 		public async Task<ActionResult<AccountResponse>> UpdateAccount([FromForm] UpdateAccountCommand request)

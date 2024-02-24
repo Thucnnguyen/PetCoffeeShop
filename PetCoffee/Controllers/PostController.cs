@@ -1,12 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using OpenAI_API.Completions;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Auth.Commands;
-using PetCoffee.Application.Features.Auth.Handlers;
-using PetCoffee.Application.Features.Auth.Models;
-using PetCoffee.Application.Features.PetCfShop.Models;
-using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Features.Post.Command;
 using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
