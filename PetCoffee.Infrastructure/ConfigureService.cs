@@ -46,7 +46,8 @@ public static class ConfigureService
 		services.AddScoped<IVietQrService, VietQrService>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<AuditableEntitySaveChangesInterceptor>();
-		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddScoped<SoftDeleteInterceptor>();
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 		//config VietQr
 		services.AddOptions<VietQrSettings>()
