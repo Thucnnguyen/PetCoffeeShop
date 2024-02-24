@@ -13,10 +13,8 @@
 
   <ItemGroup>
     <Folder Include="Common\Models\Request\" />
-    <Folder Include="Features\Comment\Handlers\" />
-    <Folder Include="Features\Comment\Commands\" />
-    <Folder Include="Features\Comment\Models\" />
     <Folder Include="Features\Comment\Queries\" />
+    <Folder Include="Features\FollowShop\" />
   </ItemGroup>
 
   <ItemGroup>

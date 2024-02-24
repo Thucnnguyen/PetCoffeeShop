@@ -1,5 +1,4 @@
-﻿
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using PetCoffee.Application.Features.Auth.Models;
 
