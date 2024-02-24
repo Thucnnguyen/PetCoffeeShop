@@ -47,32 +47,9 @@ public class GetPostCreatedByCurrentAccountIdHandler : IRequestHandler<GetPostCr
 		{
 			return new List<PostResponse>();
 		}
-		var response = new List<PostResponse>();
+		var response = Posts.Select(post => _mapper.Map<PostResponse>(post)).ToList();
 
-		foreach (var post in Posts)
-		{
-			var postResponse = _mapper.Map<PostResponse>(post);
-			
-			if (post.Comments != null )
-			{
-				postResponse.Comments = post.Comments.ToList().Select(c => _mapper.Map<CommentForPost>(c)).ToList();
-			}
-
-			if (post.PostCategories != null)
-			{
-				postResponse.Categories = post.PostCategories.Select(c => _mapper.Map<CategoryForPostModel>(c.Category)).ToList();
-			}
-
-			if (post.PostPetCoffeeShops != null)
-			{
-				postResponse.PetCoffeeShops = post.PostPetCoffeeShops.Select(c => _mapper.Map<CoffeeshopForPostModel>(c.Shop)).ToList();
-			}
-			if(post.CreatedBy != null)
-			{
-				postResponse.Account = _mapper.Map<AccountForPostModel>(post.CreatedBy);
-			}
-			response.Add(postResponse);
-		}
+		
 		return response;
 	}
 }

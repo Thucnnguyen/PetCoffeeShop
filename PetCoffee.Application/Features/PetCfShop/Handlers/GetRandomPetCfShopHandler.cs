@@ -5,7 +5,6 @@ using MediatR;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
 
@@ -42,6 +41,7 @@ public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery
 			foreach (var store in stores)
 			{
 				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+				storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
 				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
 				response.Add(storeRes);
 			}
@@ -56,6 +56,7 @@ public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery
 		foreach (var store in randomShop)
 		{
 			var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+			storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
 			storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
 			response.Add(storeRes);
 		}

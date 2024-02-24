@@ -4,19 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Post.Handlers
 {
@@ -77,9 +68,6 @@ namespace PetCoffee.Application.Features.Post.Handlers
                 .AsNoTracking()
                 .Select(post => _mapper.Map<PostResponse>(post))
                 .ToListAsync();
-
-          
-
             
             return new PaginationResponse<Domain.Entities.Post, PostResponse>(
                 response,

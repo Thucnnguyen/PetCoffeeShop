@@ -40,11 +40,15 @@ public class MappingProfile : Profile
 		CreateMap<Category, CreatePostCategoryCommand>().ReverseMap();
 
         //post
-        CreateMap<PostResponse, Post>().ReverseMap();
+        //CreateMap<PostResponse, Post>().ReverseMap();
         CreateMap<CreatePostCommand, Post>().ReverseMap();
         CreateMap<PetCoffeeShop, CoffeeshopForPostModel>().ReverseMap();
         CreateMap<Category, CategoryForPostModel>().ReverseMap();
-
+		CreateMap<Post, PostResponse>()
+			   .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
+			   .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories))
+			   .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops))
+			   .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
 		//pets
 		CreateMap<PetResponse, Pet>().ReverseMap();
 		CreateMap<CreatePetCommand, Pet>().ReverseMap();
