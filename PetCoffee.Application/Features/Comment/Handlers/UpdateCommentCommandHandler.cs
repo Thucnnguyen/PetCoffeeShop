@@ -1,6 +1,4 @@
-﻿
-
-using MediatR;
+﻿using MediatR;
 using PetCoffee.Application.Features.Comment.Models;
 using AutoMapper;
 using PetCoffee.Application.Persistence.Repository;

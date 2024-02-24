@@ -23,10 +23,10 @@ public enum ResponseCode
 	[Description("Tên đã tồn tại")] PostCategoryIsExisted,
 	[Description("Category Không tồn tại")] PostCategoryNotExisted,
 
-	//Post
-
-	//shop
-	[Description("Cửa hàng Không tồn tại")] ShopNotExisted,
+    //Post
+    [Description("Post không tồn tại")] PostNotExist,
+    //shop
+    [Description("Cửa hàng Không tồn tại")] ShopNotExisted,
 	//TaxCode
 	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted,
 	//pet
