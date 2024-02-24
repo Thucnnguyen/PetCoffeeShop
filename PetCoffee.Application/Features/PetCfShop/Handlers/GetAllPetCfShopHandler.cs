@@ -5,12 +5,11 @@ using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Domain.Entities;
-using System.Linq.Expressions;
-
+using System.Security.Cryptography.X509Certificates;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
 
-public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>>
+public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
 {
 	private const Double RADIUS = 6378.16;
 	private const double PI = Math.PI / 180;
@@ -25,25 +24,22 @@ public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, Pagi
         _mapper = mapper;
     }
 
-    public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>> Handle(GetAllPetCfShopQuery request,
+    public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetAllPetCfShopQuery request,
         CancellationToken cancellationToken)
     {
-        var stores = await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-            predicate: request.GetExpressions(),
-            includes: new List<Expression<Func<PetCoffeeShop, object>>>()
-            {
-                shop => shop.CreatedBy
-            },
-            disableTracking: true
-        );
+		
+		var stores =(await _unitOfWork.PetCoffeeShopRepository.GetAsync(
+			predicate: request.GetExpressions(),
+			disableTracking: true
+		)).ToList();
 
-		var response = new List<PetCoffeeShopResponse>();
+		var response = new List<PetCoffeeShopForCardResponse>();
 
 		if(request.Longitude == 0 || request.Latitude == 0)
 		{
 			foreach (var store in stores)
 			{
-				var storeRes = _mapper.Map<PetCoffeeShopResponse>(store);
+				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
 				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
 				response.Add(storeRes);
 			}
@@ -52,25 +48,27 @@ public class GetAllPetCfShopHandler : IRequestHandler<GetAllPetCfShopQuery, Pagi
 		{
 			foreach (var store in stores)
 			{
-				var storeRes = _mapper.Map<PetCoffeeShopResponse>(store);
+				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
 				storeRes.Distance = CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
-				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+				storeRes.TotalFollow = storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+
 				response.Add(storeRes);
 			}
 		}
 		if(request.Longitude == 0 || request.Latitude == 0)
 		{
-			response = response.OrderBy(x => x.Distance).ThenBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
+			response = response.OrderBy(x => x.Distance).ThenBy(x => x.CreatedAt).ToList();
 		}
+			
+		response = response.OrderBy(x => x.CreatedAt).ToList();
 
-		response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
-
-		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopResponse>(
+		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
 			response,
 			response.Count(),
             request.PageNumber,
             request.PageSize);
     }
+
     private double CalculateDistance(double userLatitude,double userLongitude, double ShopLatitude,double ShopLongitude)
     {
 		double dlon = Radians(ShopLongitude - userLongitude);

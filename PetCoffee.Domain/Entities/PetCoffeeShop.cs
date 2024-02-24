@@ -24,6 +24,7 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
 	public ShopStatus Status { get; set; } = ShopStatus.Active;
+	public ShopType Type { get; set; }
 	public DateTime? StartTime { get; set; }
 	public DateTime? EndTime { get;set; }
 	[InverseProperty(nameof(Account.PetCoffeeShop))]

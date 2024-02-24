@@ -1,6 +1,7 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Domain.Enums;
-
+using System.Text.Json.Serialization;
 
 namespace PetCoffee.Application.Features.PetCfShop.Models
 {
@@ -20,11 +21,18 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
         public string Location { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public ShopStatus Status { get; set; } = ShopStatus.Active;
+
+		[JsonConverter(typeof(JsonStringEnumConverter))]
+		public ShopStatus Status { get; set; } = ShopStatus.Active;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ShopType Type { get; set; }
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 
         public double? Distance { get; set; }
         public double? TotalFollow { get; set; }
+        public bool IsFollow {  get; set; }
+        public AccountForPostModel? CreatedBy { get; set; }
+
     }
 }

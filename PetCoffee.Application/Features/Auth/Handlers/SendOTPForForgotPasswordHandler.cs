@@ -33,7 +33,7 @@ public class SendOTPForForgotPasswordHandler : IRequestHandler<SendOTPForForgotP
 	{
 		var AccountIsExist = await _unitOfWork.AccountRepository.GetAsync(a => a.Email == request.Email);
 
-		if (AccountIsExist == null)
+		if (AccountIsExist == null || !AccountIsExist.Any())
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
