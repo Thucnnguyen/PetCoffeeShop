@@ -31,6 +31,7 @@ public class MappingProfile : Profile
 
         // pet cafe shop
         CreateMap<PetCoffeeShop, PetCoffeeShopResponse>().ReverseMap();
+        CreateMap<PetCoffeeShop, PetCoffeeShopForCardResponse>().ReverseMap();
         CreateMap<CreatePetCfShopCommand, PetCoffeeShop>().ReverseMap();
             
             

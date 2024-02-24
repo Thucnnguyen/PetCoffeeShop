@@ -1,7 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using PetCoffee.Application.Features.Auth.Commands;
+﻿using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.PostCategory.Queries;
