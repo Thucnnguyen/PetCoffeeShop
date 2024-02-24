@@ -43,23 +43,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
             }
             //var response = new PostResponse();
             var postResponse = _mapper.Map<PostResponse>(Posts);
-            if (Posts.Comments != null)
-            {
-                postResponse.Comments = Posts.Comments.ToList().Select(c => _mapper.Map<CommentForPost>(c)).ToList();
-            }
-            if (Posts.PostCategories != null)
-            {
-                postResponse.Categories = Posts.PostCategories.Select(c => _mapper.Map<CategoryForPostModel>(c.Category)).ToList();
-            }
-
-            if (Posts.PostPetCoffeeShops != null)
-            {
-                postResponse.PetCoffeeShops = Posts.PostPetCoffeeShops.Select(c => _mapper.Map<CoffeeshopForPostModel>(c.Shop)).ToList();
-            }
-            if (Posts.CreatedBy != null)
-            {
-                postResponse.Account = _mapper.Map<AccountForPostModel>(Posts.CreatedBy);
-            }
+            
 
             return postResponse;
 

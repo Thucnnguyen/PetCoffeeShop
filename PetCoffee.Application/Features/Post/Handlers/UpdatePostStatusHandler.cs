@@ -35,8 +35,6 @@ namespace PetCoffee.Application.Features.Post.Handlers
                 throw new ApiException(ResponseCode.PostNotExist);
             }
 
-
-
             post.Status = request.Status;
             await _unitOfWork.PostRepository.UpdateAsync(post);
 

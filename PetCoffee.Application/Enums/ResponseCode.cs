@@ -35,4 +35,7 @@ public enum ResponseCode
 	[Description("Bài đăng Không tồn tại")] PostNotExisted,
 	//Comment
 	[Description("Bình luận Không tồn tại")] CommentNotExisted,
+	//follow
+	[Description("Theo dõi Không tồn tại")] FollowNotExisted,
+
 }
