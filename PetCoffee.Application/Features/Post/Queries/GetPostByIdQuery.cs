@@ -13,7 +13,5 @@ namespace PetCoffee.Application.Features.Post.Queries
     public class GetPostByIdQuery : IRequest<PostResponse>
     {
         public long Id { get; init; }
-
-
     }
 }

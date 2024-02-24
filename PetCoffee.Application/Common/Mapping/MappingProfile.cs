@@ -40,7 +40,6 @@ public class MappingProfile : Profile
 		CreateMap<Category, CreatePostCategoryCommand>().ReverseMap();
 
         //post
-        //CreateMap<PostResponse, Post>().ReverseMap();
         CreateMap<CreatePostCommand, Post>().ReverseMap();
         CreateMap<PetCoffeeShop, CoffeeshopForPostModel>().ReverseMap();
         CreateMap<Category, CategoryForPostModel>().ReverseMap();
