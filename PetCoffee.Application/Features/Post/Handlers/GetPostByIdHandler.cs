@@ -35,34 +35,6 @@ namespace PetCoffee.Application.Features.Post.Handlers
         public async Task<PostResponse> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
         {
 
-            //    var query = await _unitOfWork.PostRepository.GetAsync(
-            //    predicate: p => p.Id == request.Id,
-            //    includes: new List<Expression<Func<PetCoffee.Domain.Entities.Post, object>>>()
-            //    {
-            //        p => p.Comments,
-            //        p => p.Comments.,
-            //        locker => locker.Location.Province,
-            //        locker => locker.Location.District,
-            //        locker => locker.Location.Ward,
-            //        locker => locker.Store,
-            //        locker => locker.Store.Location,
-            //        locker => locker.Store.Location.Province,
-            //        locker => locker.Store.Location.District,
-            //        locker => locker.Store.Location.Ward,
-            //        locker => locker.OrderTypes,
-            //    },
-            //    disableTracking: true
-            //);
-
-
-            //    var locker = query.FirstOrDefault();
-            //    if (locker is null)
-            //    {
-            //        throw new ApiException(ResponseCode.LockerErrorNotFound);
-            //    }
-
-            //    Console.WriteLine(locker.Location.ToString());
-            //    return _mapper.Map<LockerDetailResponse>(locker);
             var Posts = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
             .Include(p => p.Comments)
             .ThenInclude(com => com.CreatedBy)

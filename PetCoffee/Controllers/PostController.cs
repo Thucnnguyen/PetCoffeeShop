@@ -34,6 +34,14 @@ namespace PetCoffee.API.Controllers
             return await Mediator.Send(request);
         }
 
+        [HttpGet("/posts/news-feed")]
+        [Authorize]
+        public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPostNewsFeed(
+        [FromQuery] GetPostsNewsFeedQuery request)
+        {
+            return await Mediator.Send(request);
+        }
+
         // GET api/<PostController>/5
         [HttpGet("currentAccounts/posts")]
 		[Authorize]
@@ -62,7 +70,7 @@ namespace PetCoffee.API.Controllers
            
         }
 
-        //get post by id 
+      
 
         [HttpGet("/posts/{id:long}")]
         public async Task<ActionResult<PostResponse>> GetPost([FromRoute] long id, [FromQuery] GetPostByIdQuery request)

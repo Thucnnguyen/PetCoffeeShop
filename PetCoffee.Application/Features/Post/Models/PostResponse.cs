@@ -16,4 +16,6 @@ public class PostResponse : BaseAuditableEntityResponse
 	public IList<CategoryForPostModel> Categories { get; set; } = new List<CategoryForPostModel>();
 	public IList<CoffeeshopForPostModel> PetCoffeeShops { get; set; } = new List<CoffeeshopForPostModel>();
 
+
+    public double? TotalLike { get; set; }
 }
