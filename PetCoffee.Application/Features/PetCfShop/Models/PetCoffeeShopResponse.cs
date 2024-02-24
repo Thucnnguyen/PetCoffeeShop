@@ -33,5 +33,6 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
         public double? TotalFollow { get; set; }
         public bool IsFollow {  get; set; }
         public AccountForPostModel? CreatedBy { get; set; }
+
     }
 }

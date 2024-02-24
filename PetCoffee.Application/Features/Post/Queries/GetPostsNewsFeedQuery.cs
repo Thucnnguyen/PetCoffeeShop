@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Post.Queries;
 
-public class GetPostNewsFeedQuery : PaginationRequest<Domain.Entities.Post>, IRequest<PaginationResponse<Domain.Entities.Post, PostResponse>>
+public class GetPostsNewsFeedQuery : PaginationRequest<Domain.Entities.Post>, IRequest<PaginationResponse<Domain.Entities.Post, PostResponse>>
 {
 	private string? _search;
 
