@@ -13,4 +13,5 @@ public class CommentResponse : BaseAuditableEntityResponse
 	public long PostId { get; set; }
 	public long? ParentCommentId { get; set; }
 	public AccountForPostModel Account { get; set; }
+	public long TotalSubComments { get; set; } =0;
 }

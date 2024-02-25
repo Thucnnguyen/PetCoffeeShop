@@ -44,9 +44,8 @@ public class MappingProfile : Profile
         CreateMap<PetCoffeeShop, CoffeeshopForPostModel>().ReverseMap();
         CreateMap<Category, CategoryForPostModel>().ReverseMap();
 		CreateMap<Post, PostResponse>()
-			   .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
-			   .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories))
-			   .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops))
+			   .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories.Select(pc => pc.Category)))
+			   .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops.Select(ppc => ppc.Shop)))
 			   .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
 		//pets
 		CreateMap<PetResponse, Pet>().ReverseMap();
@@ -59,6 +58,7 @@ public class MappingProfile : Profile
 		CreateMap<Comment, CommentForPost>()
 			.ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.CreatedBy.FullName));
         CreateMap<Comment, CreateCommentCommand>().ReverseMap();
-        CreateMap<Comment, CommentResponse>().ReverseMap();
+        CreateMap<Comment, CommentResponse>()
+			.ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy)).ReverseMap();
 	}
 }

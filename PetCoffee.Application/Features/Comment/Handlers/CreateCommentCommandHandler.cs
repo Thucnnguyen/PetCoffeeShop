@@ -9,7 +9,7 @@ using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
+
 
 namespace PetCoffee.Application.Features.Comment.Handlers;
 

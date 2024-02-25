@@ -39,8 +39,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
             var postsQuery =  _unitOfWork.PostRepository.Get(
               predicate: request.GetExpressions(),
               disableTracking: true
-            ).Include(p => p.Comments)
-			.ThenInclude(com => com.CreatedBy)
+            )
 			.Include(p => p.PostCategories)
 			.ThenInclude(c => c.Category)
 			.Include(p => p.PostPetCoffeeShops)

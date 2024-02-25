@@ -30,8 +30,6 @@ namespace PetCoffee.Application.Features.Post.Handlers
         {
 
             var Posts = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
-            .Include(p => p.Comments)
-            .ThenInclude(com => com.CreatedBy)
             .Include(p => p.PostCategories)
             .ThenInclude(c => c.Category)
             .Include(p => p.PostPetCoffeeShops)

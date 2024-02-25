@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Post.Model;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
@@ -35,8 +34,6 @@ public class GetPostCreatedByCurrentAccountIdHandler : IRequestHandler<GetPostCr
 		}
 
 		var Posts = _unitOfWork.PostRepository.Get(p => p.CreatedById == currentAccount.Id && p.Status == PostStatus.Active)
-				.Include(p => p.Comments)
-				.ThenInclude(com => com.CreatedBy)
 				.Include(p => p.PostCategories)
 				.ThenInclude(c => c.Category)
 				.Include(p => p.PostPetCoffeeShops)
