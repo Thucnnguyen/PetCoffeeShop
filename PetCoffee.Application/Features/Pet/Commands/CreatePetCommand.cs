@@ -12,7 +12,7 @@ public class CreatePetCommand : IRequest<PetResponse>
 	public double? Weight { get; set; }
 	public string? Description { get; set; }
 	public PetType PetType { get; set; }
-
+	public PetGender Gender { get; set; }
 	public IFormFile? Avatar { get; set; }
 	public IFormFile? Backgound { get; set; }
 }
