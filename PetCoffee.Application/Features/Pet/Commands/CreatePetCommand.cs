@@ -14,5 +14,5 @@ public class CreatePetCommand : IRequest<PetResponse>
 	public PetType PetType { get; set; }
 	public PetGender Gender { get; set; }
 	public IFormFile? Avatar { get; set; }
-	public IFormFile? Backgound { get; set; }
+	public IList<IFormFile>? Backgrounds { get; set; }
 }

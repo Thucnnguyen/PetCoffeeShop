@@ -1,6 +1,4 @@
-﻿
-
-using MediatR;
+﻿using MediatR;
 using PetCoffee.Application.Features.Auth.Queries;
 using PetCoffee.Application.Persistence.Repository;
 

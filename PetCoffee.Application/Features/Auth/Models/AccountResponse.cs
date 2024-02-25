@@ -17,4 +17,5 @@ public class AccountResponse
 	public AccountStatus Status { get; set; }
 	public DateTime? EndTimeBlockPost { get; set; }
 	public DateTime? EndTimeBlockComment { get; set; } 
+	public long TotalIsFollowing { get; set; } = 0;
 }

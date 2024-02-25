@@ -7,8 +7,6 @@ using PetCoffee.Application.Features.PetCfShop.Commands;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using System.Security.Cryptography.X509Certificates;
 using TmsApi.Common;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;

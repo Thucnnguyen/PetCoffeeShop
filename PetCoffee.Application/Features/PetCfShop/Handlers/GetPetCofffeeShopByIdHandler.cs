@@ -9,6 +9,7 @@ using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Shared.Ultils;
 using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
@@ -51,7 +52,10 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 		var response = _mapper.Map<PetCoffeeShopResponse>(CurrentShop);
-
+		if(request.Longitude != 0 && request.Latitude != 0)
+		{
+			response.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, CurrentShop.Latitude, CurrentShop.Longitude);
+		}
 		response.IsFollow = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(s => s.CreatedById == CurrentUser.Id && s.ShopId == CurrentShop.Id)).Any();
 		response.CreatedBy = _mapper.Map<AccountForPostModel>(CurrentShop.CreatedBy);
 		return response;

@@ -1,6 +1,6 @@
 namespace LockerService.Shared.Utils;
 
-public class CodeUtils
+public class CodeUltils
 {
     private const string AllowedCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

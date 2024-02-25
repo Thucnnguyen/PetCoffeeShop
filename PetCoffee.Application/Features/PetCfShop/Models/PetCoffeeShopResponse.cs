@@ -29,8 +29,8 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
         public DateTime? StartTime { get; set; }
         public DateTime? EndTime { get; set; }
 
-        public double? Distance { get; set; }
-        public double? TotalFollow { get; set; }
+        public double? Distance { get; set; } = 0;
+        public double? TotalFollow { get; set; } = 0;
         public bool IsFollow {  get; set; }
         public AccountForPostModel? CreatedBy { get; set; }
 

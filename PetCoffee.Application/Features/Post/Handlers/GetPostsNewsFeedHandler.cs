@@ -40,6 +40,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
               predicate: request.GetExpressions(),
               disableTracking: true
             )
+            .Include(p => p.Comments)
 			.Include(p => p.PostCategories)
 			.ThenInclude(c => c.Category)
 			.Include(p => p.PostPetCoffeeShops)
@@ -63,10 +64,13 @@ namespace PetCoffee.Application.Features.Post.Handlers
             }
 
             
-            var response = await postsQuery
-                .AsNoTracking()
-                .Select(post => _mapper.Map<PostResponse>(post))
-                .ToListAsync();
+            var response = new List<PostResponse>();
+            foreach ( var post in postsQuery )
+            {
+                var postResponse = _mapper.Map<PostResponse>( post );
+                postResponse.TotalComment = post.Comments.Count();
+                response.Add( postResponse );
+            }
             
             return new PaginationResponse<Domain.Entities.Post, PostResponse>(
                 response,

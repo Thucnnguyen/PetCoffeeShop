@@ -2,5 +2,7 @@
 
 public enum MomentType
 {
-	None = 0,
+	Playing,
+	Eating,
+	Walking
 }

@@ -21,7 +21,7 @@ namespace PetCoffee.Application.Features.Post.Queries
         {
             if (Search is not null)
             {
-                Expression = Expression.And(post => (post.Title != null && post.Title.ToLower().Contains(Search)));
+                Expression = Expression.And(post => (post.Content != null && post.Content.ToLower().Contains(Search)));
             }
 
             return Expression;

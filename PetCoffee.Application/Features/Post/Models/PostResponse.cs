@@ -7,7 +7,6 @@ namespace PetCoffee.Application.Features.Post.Model;
 public class PostResponse : BaseAuditableEntityResponse
 {
 	public long Id { get; set; }
-	public string? Title { get; set; }
 	public string? Content { get; set; }
 	public PostStatus Status { get; set; }
 	public string? Image {  get; set; } 
@@ -17,4 +16,5 @@ public class PostResponse : BaseAuditableEntityResponse
 
 
     public double? TotalLike { get; set; }
+    public double? TotalComment { get; set; }
 }

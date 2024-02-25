@@ -48,10 +48,9 @@ public class CreatePetHandler : IRequestHandler<CreatePetCommand, PetResponse>
 			NewPet.Avatar = await _azureService.GetBlob(request.Avatar.FileName);
 		}
 		//upload avatar
-		if (request.Backgound != null)
+		if (request.Backgrounds != null)
 		{
-			await _azureService.CreateBlob(request.Avatar.FileName, request.Avatar);
-			NewPet.Backgound = await _azureService.GetBlob(request.Avatar.FileName);
+			NewPet.Backgound = await _azureService.UpdateloadImages(request.Backgrounds);
 		}
 
 		await _unitOfWork.PetRepository.AddAsync(NewPet);

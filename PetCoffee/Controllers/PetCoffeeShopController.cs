@@ -16,13 +16,13 @@ namespace PetCoffee.API.Controllers
     public class PetCoffeeShopController : ApiControllerBase
     {
         // get all paging
-        [HttpGet("petcoffeeshops")]
-		[Authorize]
-        public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetPetCfShops(
-			[FromQuery] GetAllPetCfShopQuery request)
-        {
-            return await Mediator.Send(request);
-		}
+  //      [HttpGet("petcoffeeshops")]
+		//[Authorize]
+  //      public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetPetCfShops(
+		//	[FromQuery] GetAllPetCfShopQuery request)
+  //      {
+  //          return await Mediator.Send(request);
+		//}
 
 		[HttpGet("petcoffeeshops/popular")]
 		[Authorize]
@@ -39,10 +39,10 @@ namespace PetCoffee.API.Controllers
 			return Ok(await Mediator.Send(request));
 		}
 
-		[HttpGet("petcoffeeshops/{Id}")]
+		[HttpGet("petcoffeeshops")]
 		[Authorize]
 		public async Task<ActionResult< PetCoffeeShopResponse>> GetPetCfShopById(
-			[FromRoute] GetPetCoffeeShopByIdQuery request)
+			[FromQuery] GetPetCoffeeShopByIdQuery request)
 		{
 			return await Mediator.Send(request);
 		}

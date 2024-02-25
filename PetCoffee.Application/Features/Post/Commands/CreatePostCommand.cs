@@ -8,7 +8,6 @@ namespace PetCoffee.Application.Features.Post.Command;
 
 public class CreatePostCommand : IRequest<PostResponse>
 {
-	public string Title { get; set; }
 	public string Content { get; set; }
 	public IList<IFormFile>? Image {  get; set; }
 	public IList<long>? CategoryIds { get; set; }

@@ -15,5 +15,6 @@ public class PetResponse : BaseAuditableEntityResponse
 	public string? Description { get; set; }
 	public PetStatus PetStatus { get; set; }
 	public PetType PetType { get; set; }
+	public PetGender Gender { get; set; }
 	public long PetCafeShopId { get; set; }
 }
