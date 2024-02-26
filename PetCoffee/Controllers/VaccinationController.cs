@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.Pet.Models;
+using PetCoffee.Application.Features.PetCfShop.Commands;
+using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Application.Features.Vaccination.Queries;
@@ -28,6 +30,14 @@ namespace PetCoffee.API.Controllers
         public async Task<ActionResult<VaccinationResponse>> AddVacction([FromForm] AddVaccinationCommand command)
         {
             return await Mediator.Send(command);
+        }
+
+        [HttpPut("Vaccination")]
+        [Authorize]
+        public async Task<ActionResult<VaccinationResponse>> UpdateVaccination(
+            [FromForm] UpdateVaccinationCommand request)
+        {
+            return await Mediator.Send(request);
         }
     }
 }
