@@ -6,6 +6,7 @@ using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
 using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Comment.Queries;
+using PetCoffee.Application.Features.FollowShop.Commands;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.PostCategory.Queries;
@@ -43,6 +44,16 @@ namespace PetCoffee.API.Controllers
             return await Mediator.Send(request);
         }
 
-        
+
+        [HttpDelete("Area/{AreaId}")]
+        [Authorize]
+        public async Task<ActionResult<bool>> DeleteArea([FromRoute] DeleteAreaCommand request)
+        {
+            var response = await Mediator.Send(request);
+            return response;
+        }
+
+
+
     }
 }
