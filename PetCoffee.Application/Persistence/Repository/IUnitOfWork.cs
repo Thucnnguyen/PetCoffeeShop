@@ -18,7 +18,7 @@ public interface IUnitOfWork
 	IMomentRepository MomentRepository { get; }
 	IEventFieldRepsitory EventFieldRepsitory { get; }
 	IEventRepository EventRepository { get; }
-	IAreaRepsitory FloorRepository { get; }
+	IAreaRepsitory AreaRepsitory { get; }
 	IJoinEventRepository JoinEventRepository { get; }
 	IItemRepository ItemRepository { get; }
 	ILikeRepository LikeRepository { get; }

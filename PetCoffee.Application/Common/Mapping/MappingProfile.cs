@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using PetCoffee.Application.Features.Areas.Models;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Comment.Commands;
@@ -23,11 +24,16 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+
+
         //Account
         CreateMap<CustomerRegisterCommand,Account>().ReverseMap();
         CreateMap<AccountResponse,Account>().ReverseMap();
         CreateMap<AccountForPostModel,Account>().ReverseMap();
-            
+
+        //Area
+        CreateMap<AreaResponse, Area>().ReverseMap();
+
 
         // pet cafe shop
         CreateMap<PetCoffeeShop, PetCoffeeShopResponse>().ReverseMap();

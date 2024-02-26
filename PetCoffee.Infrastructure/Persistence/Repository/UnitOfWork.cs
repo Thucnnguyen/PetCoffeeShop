@@ -55,7 +55,7 @@ public class UnitOfWork : IUnitOfWork
 	private IMomentRepository? _momentRepository;
 	private IEventFieldRepsitory? _eventFieldRepsitory;
 	private IEventRepository? _eventRepository;
-	private IAreaRepsitory? _floorRepository;
+	private IAreaRepsitory? _areaRepsitory;
 	private IJoinEventRepository _JoinEventRepository;
 	private IItemRepository? _itemRepository;
 	private ILikeRepository? _likeRepository;
@@ -80,7 +80,7 @@ public class UnitOfWork : IUnitOfWork
 	public IMomentRepository MomentRepository => _momentRepository ??= new MomentRepository(_dbContext);
 	public IEventFieldRepsitory EventFieldRepsitory => _eventFieldRepsitory ??= new EventFieldRepsitory(_dbContext);
 	public IEventRepository EventRepository => _eventRepository ??= new EventRepository(_dbContext);
-	public IAreaRepsitory FloorRepository => _floorRepository ??= new AreaRepository(_dbContext);
+	public IAreaRepsitory AreaRepsitory => _areaRepsitory ??= new AreaRepository(_dbContext);
 	public IJoinEventRepository JoinEventRepository => _JoinEventRepository ??= new JoinEventRepository(_dbContext);
 	public IItemRepository ItemRepository => _itemRepository ??= new ItemRepository(_dbContext);
 	public ILikeRepository LikeRepository => _likeRepository ??= new LikeRepository(_dbContext);
