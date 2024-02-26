@@ -39,5 +39,14 @@ namespace PetCoffee.API.Controllers
         {
             return await Mediator.Send(request);
         }
+
+        [HttpDelete("Vaccination/{VaccinationId}")]
+        [Authorize]
+        public async Task<ActionResult<bool>> DeleteVaccination([FromRoute] DeleteVaccinationCommand request)
+        {
+            var response = await Mediator.Send(request);
+            return response;
+        }
+
     }
 }
