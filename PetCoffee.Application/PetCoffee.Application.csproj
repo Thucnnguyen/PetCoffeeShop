@@ -14,6 +14,7 @@
   <ItemGroup>
     <Folder Include="Common\Models\Request\" />
     <Folder Include="Features\FollowShop\Models\" />
+    <Folder Include="Features\Vaccination\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

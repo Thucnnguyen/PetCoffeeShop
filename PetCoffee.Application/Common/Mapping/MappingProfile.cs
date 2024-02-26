@@ -15,6 +15,7 @@ using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
+using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Common.Mapping;
@@ -50,6 +51,9 @@ public class MappingProfile : Profile
 		//pets
 		CreateMap<PetResponse, Pet>().ReverseMap();
 		CreateMap<CreatePetCommand, Pet>().ReverseMap();
+
+        //Vaccination
+        CreateMap<VaccinationResponse, Vaccination>().ReverseMap();
 
         //moment
         CreateMap<MomentResponse, Moment>().ReverseMap();
