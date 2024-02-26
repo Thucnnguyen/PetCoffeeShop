@@ -4,9 +4,13 @@ namespace PetCoffee.Application.Common.Enums;
 
 public enum ResponseCode
 {
-	//Auth
+    //Area
 
-	[Description("Có lỗi xảy ra")] CommonError,
+    [Description("Area không tồn tại")] AreaNotExist,
+
+    //Auth
+
+    [Description("Có lỗi xảy ra")] CommonError,
 	[Description("Lỗi định dạng dữ liệu")] ValidationError,
 	[Description("Tài khoản không được xác thực")] Unauthorized,
 	[Description("Tài khoản không được phép truy cập tài nguyên này")] Forbidden,

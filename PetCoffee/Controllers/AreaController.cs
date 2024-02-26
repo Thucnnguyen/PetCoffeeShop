@@ -13,7 +13,7 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1")]
     [ApiController]
     public class AreaController : ApiControllerBase
     {
@@ -26,12 +26,23 @@ namespace PetCoffee.API.Controllers
             return response;
         }
 
-        
-        //[HttpPost("")]
 
-        //public async Task<ActionResult<PostCategoryResponse>> Post([FromBody] CreatePostCategoryCommand request)
-        //{
-        //    return await Mediator.Send(request);
-        //}
+        [HttpPost("Areas")]
+        [Authorize]
+
+        public async Task<ActionResult<AreaResponse>> Post([FromForm] CreateAreaCommand request)
+        {
+            return await Mediator.Send(request);
+        }
+
+        [HttpPut("Areas")]
+        [Authorize]
+
+        public async Task<ActionResult<AreaResponse>> Put([FromForm] UpdateAreaCommand request)
+        {
+            return await Mediator.Send(request);
+        }
+
+
     }
 }
