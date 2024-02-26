@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.Pet.Models;
+using PetCoffee.Application.Features.Vaccination.Commands;
+using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Application.Features.Vaccination.Queries;
 
 namespace PetCoffee.API.Controllers
@@ -10,12 +12,22 @@ namespace PetCoffee.API.Controllers
     public class VaccinationController : ApiControllerBase
     {
 
+
         [HttpGet("Pets/{PetId}/Vaccinations")]
         //[Authorize]
-        public async Task<ActionResult<IList<PetResponse>>> GetVaccinationsByPetId([FromRoute] GetVaccinationsByPetIdQuery request)
+        public async Task<ActionResult<IList<VaccinationResponse>>> GetVaccinationsByPetId([FromRoute] GetVaccinationsByPetIdQuery request)
         {
             var response = await Mediator.Send(request);
             return Ok(response);
+        }
+
+        //create vaccation for specific pet
+
+        [HttpPost("Vaccination")]
+        [Authorize]
+        public async Task<ActionResult<VaccinationResponse>> AddVacction([FromForm] AddVaccinationCommand command)
+        {
+            return await Mediator.Send(command);
         }
     }
 }
