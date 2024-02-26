@@ -15,6 +15,7 @@ public class PostResponse : BaseAuditableEntityResponse
 	public IList<CoffeeshopForPostModel> PetCoffeeShops { get; set; } = new List<CoffeeshopForPostModel>();
 
 
-    public double? TotalLike { get; set; }
-    public double? TotalComment { get; set; }
+	public double? TotalLike { get; set; } = 0;
+	public double? TotalComment { get; set; } = 0;
+	public bool IsLiked { get; set; } = false;
 }

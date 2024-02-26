@@ -32,7 +32,7 @@ public class CreatePetCfShopCommand : IRequest<PetCoffeeShopResponse>
 	public string Phone { get; set; }
 	public IFormFile? Avatar { get; set; }
 	public IFormFile? Background { get; set; }
-	public string? WebUrl { get; set; }
+	public string? WebsiteUrl { get; set; }
 	public string? FbUrl { get; set; }
 	public string? InstagramUrl { get; set; }
 	public string Location { get; set; }

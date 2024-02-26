@@ -29,12 +29,15 @@ public class UpdateCoffeeShopHandler : IRequestHandler<UpdateCoffeeShopCommand, 
 	public async Task<PetCoffeeShopResponse> Handle(UpdateCoffeeShopCommand request, CancellationToken cancellationToken)
 	{
 		var CurrentAccount = await _currentAccountService.GetCurrentAccount();
-		if (CurrentAccount.PetCoffeeShopId == null || CurrentAccount.PetCoffeeShopId != request.Id)
+		if (CurrentAccount.PetCoffeeShopId == null)
 		{
 			throw new ApiException(ResponseCode.Forbidden);
 		}
-
-		var updateShop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(request.Id);
+		if (CurrentAccount.PetCoffeeShopId == null)
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		}
+		var updateShop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(CurrentAccount.PetCoffeeShopId);
 		if(updateShop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);

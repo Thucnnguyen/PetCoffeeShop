@@ -32,7 +32,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
             if (post is null)
             {
-                throw new ApiException(ResponseCode.PostNotExist);
+                throw new ApiException(ResponseCode.PostNotExisted);
             }
 
             post.Status = request.Status;

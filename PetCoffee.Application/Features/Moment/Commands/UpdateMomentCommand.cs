@@ -6,11 +6,12 @@ using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Moment.Commands;
 
-public class UpdateaMomentCommand : IRequest<MomentResponse>
+public class UpdateMomentCommand : IRequest<MomentResponse>
 {
+	public long Id { get; set; }
 	public string? Content { get; set; }
 	public string? ImageUrl { get; set; }
 	public IList<IFormFile>? NewImages { get; set; }
-	public MomentType MomentType { get; set; }
-	public bool IsPublic { get; set; } = true;
+	public MomentType? MomentType { get; set; }
+	public bool? IsPublic { get; set; }
 }

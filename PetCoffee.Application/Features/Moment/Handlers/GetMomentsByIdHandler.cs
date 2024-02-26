@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
@@ -8,8 +6,7 @@ using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Moment.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using System.Data.Entity;
+
 
 namespace PetCoffee.Application.Features.Moment.Handlers;
 

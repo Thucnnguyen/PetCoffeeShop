@@ -37,7 +37,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
             .Include(p => p.CreatedBy).FirstOrDefaultAsync();
             if (Posts == null)
             {
-                throw new ApiException(ResponseCode.PostNotExist);
+                throw new ApiException(ResponseCode.PostNotExisted);
             }
             //var response = new PostResponse();
             var postResponse = _mapper.Map<PostResponse>(Posts);

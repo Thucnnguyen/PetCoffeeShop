@@ -23,8 +23,6 @@ public enum ResponseCode
 	[Description("Tên đã tồn tại")] PostCategoryIsExisted,
 	[Description("Category Không tồn tại")] PostCategoryNotExisted,
 
-    //Post
-    [Description("Post không tồn tại")] PostNotExist,
     //shop
     [Description("Cửa hàng Không tồn tại")] ShopNotExisted,
 	//TaxCode
@@ -37,5 +35,8 @@ public enum ResponseCode
 	[Description("Bình luận Không tồn tại")] CommentNotExisted,
 	//follow
 	[Description("Theo dõi Không tồn tại")] FollowNotExisted,
+	//moment
+	[Description("Khoảnh khắc Không tồn tại")] MomentNotExisted,
+
 
 }

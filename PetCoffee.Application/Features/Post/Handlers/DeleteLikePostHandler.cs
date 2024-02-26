@@ -1,30 +1,29 @@
 ﻿
-
 using AutoMapper;
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.FollowShop.Commands;
+using PetCoffee.Application.Features.Post.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 
-namespace PetCoffee.Application.Features.FollowShop.Handlers;
+namespace PetCoffee.Application.Features.Post.Handlers;
 
-internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand, bool>
+public class DeleteLikePostHandler : IRequestHandler<DeleteLikePostCommand, bool>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly ICurrentAccountService _currentAccountService;
 
-	public CreateFollowShopHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+	public DeleteLikePostHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_currentAccountService = currentAccountService;
 	}
 
-	public async Task<bool> Handle(CreateFollowShopCommand request, CancellationToken cancellationToken)
+	public async Task<bool> Handle(DeleteLikePostCommand request, CancellationToken cancellationToken)
 	{
 		var curAccount = await _currentAccountService.GetCurrentAccount();
 		if (curAccount == null)
@@ -36,17 +35,14 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var post = await _unitOfWork.PostRepository.GetByIdAsync(request.PetCoffeeShopId);
-		if (post == null)
+		var LikePost = await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == request.PostId && l.CreatedById == curAccount.Id);
+		if (!LikePost.Any())
 		{
-			throw new ApiException(ResponseCode.PostNotExisted);
+			return false;
 		}
 
-		var NewFollowShop = new FollowPetCfShop() { ShopId = request.PetCoffeeShopId };
-
-		await _unitOfWork.FollowPetCfShopRepository.AddAsync(NewFollowShop);
+		await _unitOfWork.LikeRepository.DeleteAsync(new Like { PostId = request.PostId, CreatedById = curAccount.Id });
 		await _unitOfWork.SaveChangesAsync();
-
 		return true;
 	}
 }

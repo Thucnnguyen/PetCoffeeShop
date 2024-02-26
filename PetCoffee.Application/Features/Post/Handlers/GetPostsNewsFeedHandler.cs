@@ -8,6 +8,7 @@ using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PetCoffee.Application.Features.Post.Handlers
 {
@@ -40,6 +41,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
               predicate: request.GetExpressions(),
               disableTracking: true
             )
+            .Include(p => p.Likes)
             .Include(p => p.Comments)
 			.Include(p => p.PostCategories)
 			.ThenInclude(c => c.Category)
@@ -65,10 +67,12 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
             
             var response = new List<PostResponse>();
-            foreach ( var post in postsQuery )
+            foreach ( var post in postsQuery.ToList())
             {
                 var postResponse = _mapper.Map<PostResponse>( post );
                 postResponse.TotalComment = post.Comments.Count();
+                postResponse.TotalLike = post.Likes.Count();
+                postResponse.IsLiked = (await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == post.Id && l.CreatedById == currentAccount.Id)).Any();
                 response.Add( postResponse );
             }
             

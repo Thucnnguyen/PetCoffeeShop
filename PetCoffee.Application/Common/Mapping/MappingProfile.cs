@@ -11,6 +11,7 @@ using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.PetCfShop.Commands;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Post.Command;
+using PetCoffee.Application.Features.Post.Commands;
 using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.PostCategory.Commands;
@@ -60,5 +61,8 @@ public class MappingProfile : Profile
         CreateMap<Comment, CreateCommentCommand>().ReverseMap();
         CreateMap<Comment, CommentResponse>()
 			.ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy)).ReverseMap();
+		//like
+		CreateMap<CreateLikePostCommand, Like>().ReverseMap();
+
 	}
 }

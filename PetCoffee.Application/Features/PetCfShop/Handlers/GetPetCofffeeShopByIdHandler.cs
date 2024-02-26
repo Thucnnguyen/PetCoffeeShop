@@ -56,6 +56,7 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		{
 			response.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, CurrentShop.Latitude, CurrentShop.Longitude);
 		}
+		response.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == request.Id);
 		response.IsFollow = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(s => s.CreatedById == CurrentUser.Id && s.ShopId == CurrentShop.Id)).Any();
 		response.CreatedBy = _mapper.Map<AccountForPostModel>(CurrentShop.CreatedBy);
 		return response;
