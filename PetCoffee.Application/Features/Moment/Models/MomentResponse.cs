@@ -1,10 +1,10 @@
 ﻿
-using PetCoffee.Domain.Entities;
+using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Memory.Models;
 
-public class MomentResponse : BaseAuditableEntity
+public class MomentResponse : BaseAuditableEntityResponse
 {
 	public long Id { get; set; }
 	public string? Content { get; set; }

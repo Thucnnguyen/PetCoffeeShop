@@ -4,27 +4,26 @@ using AutoMapper;
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.Pet.Models;
-using PetCoffee.Application.Features.Pet.Queries;
+using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
 
-internal class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
+public class DeletePetHandler : IRequestHandler<DeletePetCommand, bool>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly ICurrentAccountService _currentAccountService;
 
-	public GetPetByIdHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+	public DeletePetHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_currentAccountService = currentAccountService;
 	}
 
-	public async Task<PetResponse> Handle(GetPetByIdQuery request, CancellationToken cancellationToken)
+	public async Task<bool> Handle(DeletePetCommand request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -35,14 +34,23 @@ internal class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
+		var pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
 
-		var Pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
-		
-
-		if (Pet == null) 
+		if (pet == null)
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
-		return _mapper.Map<PetResponse>(Pet);
+		if (currentAccount.PetCoffeeShopId != pet.PetCoffeeShopId)
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		}
+
+		pet.DeletedAt = DateTime.UtcNow;
+
+		await _unitOfWork.PetRepository.UpdateAsync(pet);
+		await _unitOfWork.SaveChangesAsync();
+
+		return true;
+
 	}
 }

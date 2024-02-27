@@ -22,7 +22,7 @@ namespace PetCoffee.Application.Features.Areas.Commands
                {
                    if (command.Description == null && command.Image == null)
                    {
-                       context.AddFailure("Có ít một nhất nội dung hoặc ảnh");
+                       context.AddFailure("Có ít nhất một nội dung hoặc ảnh");
                    }
                });
         }

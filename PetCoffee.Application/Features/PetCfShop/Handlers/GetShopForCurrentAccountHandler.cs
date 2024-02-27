@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.PetCfShop.Models;
@@ -36,12 +37,17 @@ public class GetShopForCurrentAccountHandler : IRequestHandler<GetPetCfShopForCu
             throw new ApiException(ResponseCode.ShopNotExisted);
         }
 
-        var CurrentShop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(CurrentAccount.PetCoffeeShopId);
+        var CurrentShop = await _unitOfWork.PetCoffeeShopRepository.Get(p => p.Id == CurrentAccount.PetCoffeeShopId)
+                                                                    .Include(p => p.Follows)
+                                                                    .FirstOrDefaultAsync();
         if (CurrentShop == null)
         {
             throw new ApiException(ResponseCode.ShopNotExisted);
         }
 
-        return _mapper.Map<PetCoffeeShopResponse>(CurrentShop);
+        var response = _mapper.Map<PetCoffeeShopResponse>(CurrentShop);
+        response.TotalFollow = CurrentShop.Follows.Count();
+
+		return response;
     }
 }

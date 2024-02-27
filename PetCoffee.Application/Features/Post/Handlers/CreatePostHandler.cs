@@ -84,7 +84,7 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 
 		await _unitOfWork.SaveChangesAsync();
 		var response = _mapper.Map<PostResponse>(newPost);
-		response.CreatedById = curAccount.CreatedById;
+		response.CreatedById = curAccount.Id;
 		response.Account = _mapper.Map<AccountForPostModel>(curAccount);
 
 		if(listShop.Count > 0)

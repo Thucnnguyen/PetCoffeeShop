@@ -1,7 +1,8 @@
 ﻿
+
 namespace PetCoffee.Application.Features.Events.Models;
 
-public class EventResponse
+public class EventForCardResponse
 {
 	public long Id { get; set; }
 	public string? Title { get; set; }
@@ -11,7 +12,5 @@ public class EventResponse
 	public DateTime StartTime { get; set; }
 	public DateTime EndTime { get; set; }
 	public string? Location { get; set; }
-	public long PetCoffeeShopId { get; set; }
-	public int TotalJoinEvent { get; set; } = 0;
-	public List<FieldEventResponseForEventResponse>? Fields { get; set; }
+	public long TotalJoinEvent { get; set; } = 0;
 }

@@ -62,7 +62,8 @@ public class MappingProfile : Profile
 			   .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops.Select(ppc => ppc.Shop)))
 			   .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
 		//pets
-		CreateMap<PetResponse, Pet>().ReverseMap();
+		CreateMap<PetResponse, Pet>().ReverseMap()
+			    .ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound));
 		CreateMap<CreatePetCommand, Pet>().ReverseMap();
 
         //Vaccination
@@ -82,7 +83,9 @@ public class MappingProfile : Profile
 		CreateMap<CreateLikePostCommand, Like>().ReverseMap();
 		//Event
 		CreateMap<CreateEventCommand, Event>().ReverseMap();
+		CreateMap<EventForCardResponse, Event>().ReverseMap();
 		CreateMap<EventResponse, Event>().ReverseMap();
+        //eventfield
 		CreateMap<CreateFieldEvent, EventField>().ReverseMap();
 		CreateMap<FieldEventResponseForEventResponse, EventField>().ReverseMap();
 

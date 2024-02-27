@@ -19,8 +19,8 @@ namespace PetCoffee.Application.Features.Vaccination.Commands
     {
         public AddVaccinationCommandValidator()
         {
-            RuleFor(command => command.VacciniationDate)
-            .Must((command, VacciniationDate) => VacciniationDate < command.ExpireTime)
+            RuleFor(command => command.vaccinationdate)
+			.Must((command, VacciniationDate) => VacciniationDate < command.ExpireTime)
             .WithMessage("Vaccination date must be smaller than Expire time.");
         }
     }
@@ -28,7 +28,7 @@ namespace PetCoffee.Application.Features.Vaccination.Commands
     {
 
         //[SwaggerSchema(Format = "date-time")]
-        public DateTime VacciniationDate { get; set; }
+        public DateTime vaccinationdate { get; set; }
         //[SwaggerSchema(Format = "date-time")]
         public DateTime ExpireTime { get; set; }
         public VaccinationType VaccinationType { get; set; }

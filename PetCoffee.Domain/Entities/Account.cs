@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace PetCoffee.Domain.Entities;
 
 [Table("Account")]
-public class Account : BaseAuditableEntity
+public class Account 
 {
 	[Key]
 	public long Id { get; set; }
@@ -21,6 +21,7 @@ public class Account : BaseAuditableEntity
 	public string? Description { get; set; }
 	public string? Address { get; set; }
     public LoginMethod LoginMethod { get; set; }
+    public GenderAccount Gender { get; set; }
 
     public Role Role { get; set; }
 	public AccountStatus Status { get; set; } = AccountStatus.Verifying;
@@ -29,6 +30,15 @@ public class Account : BaseAuditableEntity
 	public DateTime? LastLogin { get; set; }
 	public DateTime? EndTimeBlockPost { get; set; }
 	public DateTime? EndTimeBlockComment { get; set; }
+
+	public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+	public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+	public DateTime? DeletedAt { get; set; }
+
+	[Projectable]
+	public bool Deleted => DeletedAt != null;
 
 	[InverseProperty(nameof(Post.CreatedBy))]
 	public IList<Post> Posts { get; set; } = new List<Post>();

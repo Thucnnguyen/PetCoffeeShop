@@ -8,7 +8,7 @@ public class Vaccination
 {
 	[Key]
 	public long Id { get; set; }	
-	public DateTime VacciniationDate { get; set; }
+	public DateTime vaccinationdate { get; set; }
 	public DateTime ExpireTime { get; set; }
 	public VaccinationType VaccinationType { get; set; }
 	public string? PhotoEvidence { get; set; }

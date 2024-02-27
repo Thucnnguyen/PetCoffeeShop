@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCoffee.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240227094841_updateRelationShipFollowAndShop")]
+    partial class updateRelationShipFollowAndShop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<long?>("CreatedById")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
@@ -55,9 +61,6 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.Property<string>("FullName")
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Gender")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("LastLogin")
                         .HasColumnType("datetime(6)");
@@ -92,6 +95,8 @@ namespace PetCoffee.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
 
                     b.HasIndex("PetCoffeeShopId");
 
@@ -531,9 +536,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<int>("PetType")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Spayed")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -563,9 +565,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("BackgroundUrl")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("ClosedTime")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -581,6 +580,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("EndTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("FbUrl")
                         .HasColumnType("longtext");
@@ -602,15 +604,12 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("OpeningTime")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("ParkingType")
-                        .HasColumnType("int");
-
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("StartTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -971,7 +970,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<int>("VaccinationType")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("vaccinationdate")
+                    b.Property<DateTime>("VacciniationDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
@@ -1016,9 +1015,15 @@ namespace PetCoffee.Infrastructure.Migrations
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Account", b =>
                 {
+                    b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
                     b.HasOne("PetCoffee.Domain.Entities.PetCoffeeShop", "PetCoffeeShop")
                         .WithMany("Staffs")
                         .HasForeignKey("PetCoffeeShopId");
+
+                    b.Navigation("CreatedBy");
 
                     b.Navigation("PetCoffeeShop");
                 });

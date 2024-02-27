@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCoffee.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240227164223_updateDb")]
+    partial class updateDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -971,7 +974,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<int>("VaccinationType")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("vaccinationdate")
+                    b.Property<DateTime>("VacciniationDate")
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");

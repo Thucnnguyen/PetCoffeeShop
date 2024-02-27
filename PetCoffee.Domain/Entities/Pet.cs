@@ -17,6 +17,7 @@ public class Pet : BaseAuditableEntity
 	public string? Description { get; set; }
 	public PetType PetType { get; set; }
 	public PetStatus PetStatus { get; set; } = PetStatus.Active;
+	public bool Spayed { get; set; } = false;
 	public long PetCoffeeShopId { get; set; }
 	public PetCoffeeShop PetCoffeeShop { get; set; }
 	public long? AreaId { get; set; }

@@ -6,7 +6,6 @@ using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Pet.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
@@ -27,16 +26,20 @@ public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, ILis
 	public async Task<IList<PetResponse>> Handle(GetPetsByShopIdQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
-		if (currentAccount.PetCoffeeShopId == null)
+		if (currentAccount == null)
 		{
-			throw new ApiException(ResponseCode.ShopNotExisted);
+			throw new ApiException(ResponseCode.AccountNotExist);
 		}
-		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == currentAccount.PetCoffeeShopId && s.Status == ShopStatus.Active);
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.ShopId );
 		if (PetCoffeeShop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
-		var Pets = await _unitOfWork.PetRepository.GetAsync(p => p.PetCoffeeShopId == request.ShopId);
+		var Pets = await _unitOfWork.PetRepository.GetAsync(p => p.PetCoffeeShopId == request.ShopId && !p.Deleted);
 		var response = Pets.Select(p => _mapper.Map<PetResponse>(p)).ToList();	
 		return response;
 	}

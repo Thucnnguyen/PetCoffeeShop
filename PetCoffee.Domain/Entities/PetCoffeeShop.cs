@@ -24,9 +24,10 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
 	public ShopStatus Status { get; set; } = ShopStatus.Active;
+	public ParkingType ParkingType { get; set; } = ParkingType.street;
 	public ShopType Type { get; set; }
-	public DateTime? StartTime { get; set; }
-	public DateTime? EndTime { get;set; }
+	public DateTime? OpeningTime { get; set; }
+	public DateTime? ClosedTime { get;set; }
 	[InverseProperty(nameof(Account.PetCoffeeShop))]
 	public IList<Account> Staffs { get; set; } = new List<Account>();
 	[InverseProperty(nameof(PostPetCoffeeShop.Shop))]
@@ -38,7 +39,9 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public IList<Event> Events { get; set; } = new List<Event>();
 	[InverseProperty(nameof(Area.PetCoffeeShop))]
 	public IList<Area> Areas { get; set; } = new List<Area>();
+	[InverseProperty(nameof(FollowPetCfShop.Shop))]
+	public IList<FollowPetCfShop> Follows { get; set; } = new List<FollowPetCfShop>();
 
 	[Projectable]
-	public bool IsBuyPackage =>  DateTime.Now <= EndTime;
+	public bool IsBuyPackage =>  DateTime.Now <= ClosedTime;
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.Events.Commands;
-using PetCoffee.Application.Features.Events.Handlers;
 using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Events.Queries;
 
@@ -30,6 +29,13 @@ namespace PetCoffee.API.Controllers
 		[HttpGet("events/{EventId}")]
 		[Authorize]
 		public async Task<ActionResult<EventResponse>> GetEvent([FromRoute] GetEventByIdQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+		[HttpGet("petcoffeeshops/{ShopId}/events")]
+		[Authorize]
+		public async Task<ActionResult<List<EventForCardResponse>>> GetEventByShopId([FromRoute] GetEventsByShopIdQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;

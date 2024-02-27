@@ -6,9 +6,9 @@ using PetCoffee.Domain.Entities;
 using System.Linq.Expressions;
 
 
-namespace PetCoffee.Application.Features.Areas.Commands
+namespace PetCoffee.Application.Features.Areas.Queries
 {
-    public class GetAreaByPetCfShopIdQuery : PaginationRequest<Domain.Entities.Area>, IRequest<PaginationResponse<Domain.Entities.Area, AreaResponse>>
+    public class GetAreaByPetCfShopIdQuery : PaginationRequest<Area>, IRequest<PaginationResponse<Area, AreaResponse>>
     {
         public long ShopId { get; set; }
         public override Expression<Func<Area, bool>> GetExpressions()

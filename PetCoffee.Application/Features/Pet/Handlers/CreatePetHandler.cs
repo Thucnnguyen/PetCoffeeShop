@@ -7,7 +7,6 @@ using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
-using System.Security.Policy;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
 
@@ -56,7 +55,7 @@ public class CreatePetHandler : IRequestHandler<CreatePetCommand, PetResponse>
 			await _azureService.CreateBlob(request.Avatar.FileName, request.Avatar);
 			NewPet.Avatar = await _azureService.GetBlob(request.Avatar.FileName);
 		}
-		//upload avatar
+		//upload Backgrounds
 		if (request.Backgrounds != null)
 		{
 			NewPet.Backgound = await _azureService.UpdateloadImages(request.Backgrounds);
@@ -67,7 +66,7 @@ public class CreatePetHandler : IRequestHandler<CreatePetCommand, PetResponse>
 		var response = _mapper.Map<PetResponse>(NewPet);
 
 		response.CreatedById = currentAccount.Id;
-		response.PetCafeShopId = currentAccount.PetCoffeeShopId.Value;
+		response.PetCoffeeShopId = currentAccount.PetCoffeeShopId.Value;
 
 		return response;
 	}

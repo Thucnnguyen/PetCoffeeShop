@@ -4,20 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Comment.Queries;
+using PetCoffee.Application.Features.Areas.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+
 
 namespace PetCoffee.Application.Features.Areas.Handlers
 {

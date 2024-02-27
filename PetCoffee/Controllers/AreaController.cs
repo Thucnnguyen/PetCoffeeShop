@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
+using PetCoffee.Application.Features.Areas.Queries;
 using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Comment.Queries;
 using PetCoffee.Application.Features.FollowShop.Commands;
