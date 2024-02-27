@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Common\Models\Request\" />
+    <Folder Include="Features\Areas\Queries\" />
     <Folder Include="Features\FollowShop\Models\" />
   </ItemGroup>
 

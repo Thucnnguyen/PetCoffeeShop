@@ -15,5 +15,5 @@ public class CreatePostCategoryValidation : AbstractValidator<CreatePostCategory
 }
 public class CreatePostCategoryCommand : IRequest<PostCategoryResponse>
 {
-	public string Name { get; set; }
+    public string Name { get; set; }
 }
