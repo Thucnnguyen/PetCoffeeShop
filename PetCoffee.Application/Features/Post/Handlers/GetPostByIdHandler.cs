@@ -8,6 +8,7 @@ using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 
 
@@ -28,22 +29,30 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
         public async Task<PostResponse> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
         {
+			var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
+			if (currentAccount == null)
+			{
+				throw new ApiException(ResponseCode.AccountNotExist);
+			}
 
-            var Posts = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
+			var post = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
             .Include(p => p.PostCategories)
             .ThenInclude(c => c.Category)
             .Include(p => p.PostPetCoffeeShops)
             .ThenInclude(shop => shop.Shop)
             .Include(p => p.CreatedBy).FirstOrDefaultAsync();
-            if (Posts == null)
+
+            if (post == null)
             {
                 throw new ApiException(ResponseCode.PostNotExisted);
             }
             //var response = new PostResponse();
-            var postResponse = _mapper.Map<PostResponse>(Posts);
-            
+            var postResponse = _mapper.Map<PostResponse>(post);
+			postResponse.TotalComment = post.Comments.Count();
+			postResponse.TotalLike = post.Likes.Count();
+			postResponse.IsLiked = (await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == post.Id && l.CreatedById == currentAccount.Id)).Any();
 
-            return postResponse;
+			return postResponse;
 
         }
     }

@@ -16,7 +16,7 @@ namespace PetCoffee.API.Controllers
 	public class PostController : ApiControllerBase
 	{
 		// GET: api/<PostController>
-		[HttpGet("/posts")]
+		[HttpGet("posts")]
 		[Authorize]
 		//[Authorize]
         public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPost(
@@ -25,7 +25,7 @@ namespace PetCoffee.API.Controllers
             return await Mediator.Send(request);
         }
 
-        [HttpGet("/posts/news-feed")]
+        [HttpGet("posts/news-feed")]
         [Authorize]
         public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPostNewsFeed(
         [FromQuery] GetPostsNewsFeedQuery request)
@@ -75,7 +75,7 @@ namespace PetCoffee.API.Controllers
             return response;
         }
 
-        [HttpGet("/posts/{Id:long}")]
+        [HttpGet("posts/{Id:long}")]
         [Authorize]
         public async Task<ActionResult<PostResponse>> GetPost([FromRoute] GetPostByIdQuery request)
         {

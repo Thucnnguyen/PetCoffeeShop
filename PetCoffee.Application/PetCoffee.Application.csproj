@@ -13,9 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Common\Models\Request\" />
-    <Folder Include="Features\Event\Handlers\" />
-    <Folder Include="Features\Event\Models\" />
-    <Folder Include="Features\Event\Queries\" />
     <Folder Include="Features\FollowShop\Models\" />
   </ItemGroup>
 

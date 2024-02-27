@@ -29,14 +29,23 @@ public class CreatePetHandler : IRequestHandler<CreatePetCommand, PetResponse>
 	public async Task<PetResponse> Handle(CreatePetCommand request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
-		if(currentAccount.PetCoffeeShopId == null)
+		if (currentAccount == null)
 		{
-			throw new ApiException(ResponseCode.ShopNotExisted);
+			throw new ApiException(ResponseCode.AccountNotExist);
 		}
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+
 		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == currentAccount.PetCoffeeShopId && s.Status == ShopStatus.Active);
 		if (PetCoffeeShop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
+		}
+		if (currentAccount.PetCoffeeShopId == null)
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
 		}
 
 		var NewPet = _mapper.Map<Domain.Entities.Pet>(request);

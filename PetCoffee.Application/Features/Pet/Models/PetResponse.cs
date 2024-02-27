@@ -11,7 +11,7 @@ public class PetResponse : BaseAuditableEntityResponse
 	public double? Weight { get; set; }
 
 	public string? Avatar { get; set; }
-	public string? Backgound { get; set; }
+	public string? Backgrounds { get; set; }
 	public string? Description { get; set; }
 	public PetStatus PetStatus { get; set; }
 	public PetType PetType { get; set; }

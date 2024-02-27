@@ -41,5 +41,12 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
+		[HttpDelete("comments/{CommentId}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> DeleteComment([FromRoute] DeleteCommentCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 	}
 }

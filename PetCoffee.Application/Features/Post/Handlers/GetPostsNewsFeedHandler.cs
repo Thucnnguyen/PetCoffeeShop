@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OpenAI_API.Images;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -67,18 +68,24 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
             
             var response = new List<PostResponse>();
-            foreach ( var post in postsQuery.ToList())
+
+            var postResponses = postsQuery
+                .Skip((request.PageNumber - 1) * request.PageSize)
+				.Take(request.PageSize)
+				.ToList();
+
+			foreach ( var post in postResponses)
             {
                 var postResponse = _mapper.Map<PostResponse>( post );
                 postResponse.TotalComment = post.Comments.Count();
                 postResponse.TotalLike = post.Likes.Count();
-                postResponse.IsLiked = (await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == post.Id && l.CreatedById == currentAccount.Id)).Any();
+                postResponse.IsLiked = post.Likes.FirstOrDefault(l =>  l.CreatedById == currentAccount.Id) != null;
                 response.Add( postResponse );
             }
             
             return new PaginationResponse<Domain.Entities.Post, PostResponse>(
                 response,
-                response.Count(),
+				postsQuery.Count(),
                 request.PageNumber,
                 request.PageSize);
         }

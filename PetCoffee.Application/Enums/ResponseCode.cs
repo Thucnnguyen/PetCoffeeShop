@@ -37,6 +37,8 @@ public enum ResponseCode
 	[Description("Theo dõi Không tồn tại")] FollowNotExisted,
 	//moment
 	[Description("Khoảnh khắc Không tồn tại")] MomentNotExisted,
+	//event
+	[Description("Sự kiện Không tồn tại")] EventNotExisted,
 
 
 }

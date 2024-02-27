@@ -4,6 +4,8 @@ using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Comment.Commands;
 using PetCoffee.Application.Features.Comment.Models;
+using PetCoffee.Application.Features.Events.Commands;
+using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Memory.Commands;
 using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Pet.Commands;
@@ -63,6 +65,12 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy)).ReverseMap();
 		//like
 		CreateMap<CreateLikePostCommand, Like>().ReverseMap();
+		//Event
+		CreateMap<CreateEventCommand, Event>().ReverseMap();
+		CreateMap<EventResponse, Event>().ReverseMap();
+		CreateMap<CreateFieldEvent, EventField>().ReverseMap();
+		CreateMap<FieldEventResponseForEventResponse, EventField>().ReverseMap();
+
 
 	}
 }
