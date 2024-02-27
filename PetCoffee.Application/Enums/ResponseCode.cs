@@ -33,8 +33,12 @@ public enum ResponseCode
 	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted,
 	//pet
 	[Description("Pet Không tồn tại")] PetNotExisted,
-	//Post
-	[Description("Bài đăng Không tồn tại")] PostNotExisted,
+
+    //Vaccination
+    [Description("Vaccination Không tồn tại")] VaccinationNotExisted,
+
+    //Post
+    [Description("Bài đăng Không tồn tại")] PostNotExisted,
 	//Comment
 	[Description("Bình luận Không tồn tại")] CommentNotExisted,
 	//follow
