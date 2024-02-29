@@ -36,7 +36,7 @@ public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, EventRespo
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var getEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId)
+		var getEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId && !e.Deleted)
 															.Include(e => e.EventFields)
 															.Include(e => e.SubmittingEvents)
 															.FirstOrDefaultAsync();

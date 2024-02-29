@@ -36,7 +36,7 @@ public class GetEventsByShopIdHandler : IRequestHandler<GetEventsByShopIdQuery, 
 		}
 
 
-		var events = await _unitOfWork.EventRepository.Get(e => e.PetCoffeeShopId == request.ShopId)
+		var events = await _unitOfWork.EventRepository.Get(e => e.PetCoffeeShopId == request.ShopId && !e.Deleted)
 															.Include(e => e.SubmittingEvents)
 															.ToListAsync();
 

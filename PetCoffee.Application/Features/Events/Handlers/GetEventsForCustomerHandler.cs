@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -40,8 +41,10 @@ public class GetEventsForCustomerHandler : IRequestHandler<GetEventsForCustomerQ
 
 		var followedShopIds = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.CreatedById == currentAccount.Id)).ToList();
 
+		var Expression = request.GetExpressions().And(e => !e.Deleted);
+
 		var eventQuery = _unitOfWork.EventRepository.Get(
-			  predicate: request.GetExpressions(),
+			  predicate: Expression,
 			  disableTracking: true
 			)
 			.Include(e => e.EventFields)

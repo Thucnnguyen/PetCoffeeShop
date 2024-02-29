@@ -22,7 +22,7 @@ public class GetEventsForCustomerQuery : PaginationRequest<Event>, IRequest<Pagi
 	{
 		if(Search is not null)
 		{
-			Expression = Expression.And(e => e.Title.ToLower().Contains(Search) || e.Description.ToLower().Contains(Search));
+			Expression = Expression.And(e => e.Title.ToLower().Contains(Search) || e.Description.ToLower().Contains(Search) );
 		}
 		return Expression;
 	}

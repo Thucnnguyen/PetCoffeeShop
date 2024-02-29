@@ -11,8 +11,8 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240227170141_changeFieldNameInVaccination")]
-    partial class changeFieldNameInVaccination
+    [Migration("20240229034956_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -202,9 +202,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -769,7 +766,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PostID");
 
-                    b.ToTable("Setting");
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Reservation", b =>
@@ -872,6 +869,9 @@ namespace PetCoffee.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Answer")
+                        .HasColumnType("longtext");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -881,8 +881,22 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("EventFieldId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("FieldName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FieldValue")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsOptional")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("OptionValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
 
                     b.Property<string>("Submitcontent")
                         .HasColumnType("longtext");
@@ -896,8 +910,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("EventFieldId");
 
                     b.HasIndex("SubmittingEventId");
 
@@ -971,11 +983,11 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("PhotoEvidence")
                         .HasColumnType("longtext");
 
+                    b.Property<DateTime>("VaccinationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("VaccinationType")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("vaccinationdate")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1347,12 +1359,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("PetCoffee.Domain.Entities.EventField", "EventField")
-                        .WithMany("SubmittingEventFields")
-                        .HasForeignKey("EventFieldId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PetCoffee.Domain.Entities.SubmittingEvent", "SubmittingEvent")
                         .WithMany("SubmittingEventFields")
                         .HasForeignKey("SubmittingEventId")
@@ -1360,8 +1366,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("EventField");
 
                     b.Navigation("SubmittingEvent");
                 });
@@ -1461,11 +1465,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("FollowEvents");
 
                     b.Navigation("SubmittingEvents");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.EventField", b =>
-                {
-                    b.Navigation("SubmittingEventFields");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Item", b =>

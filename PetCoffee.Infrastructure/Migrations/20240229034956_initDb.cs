@@ -38,6 +38,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Address = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     LoginMethod = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
                     Role = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
                     OTP = table.Column<string>(type: "longtext", nullable: true)
@@ -46,21 +47,14 @@ namespace PetCoffee.Infrastructure.Migrations
                     LastLogin = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     EndTimeBlockPost = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     EndTimeBlockComment = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Account", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Account_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -73,7 +67,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -84,8 +78,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Categories_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -101,7 +94,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Description = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -112,8 +105,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Items_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -136,7 +128,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Level = table.Column<int>(type: "int", nullable: false),
                     AccountId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -153,8 +145,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Notification_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -182,15 +173,19 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    TaxCode = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Location = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Latitude = table.Column<double>(type: "double", nullable: false),
                     Longitude = table.Column<double>(type: "double", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    ParkingType = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    OpeningTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    ClosedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -201,8 +196,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_PetCoffeeShop_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -212,15 +206,13 @@ namespace PetCoffee.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Title = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Content = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<int>(type: "int", nullable: false),
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -231,8 +223,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Post_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -245,7 +236,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Balance = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     AccountId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -262,8 +253,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Wallet_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -300,8 +290,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Content = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: true)
@@ -310,10 +298,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Location = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    PetCafeShopId = table.Column<long>(type: "bigint", nullable: false),
                     PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -324,11 +311,38 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Event_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Event_PetCoffeeShop_PetCoffeeShopId",
                         column: x => x.PetCoffeeShopId,
+                        principalTable: "PetCoffeeShop",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "FollowPetCfShops",
+                columns: table => new
+                {
+                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    ShopId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FollowPetCfShops", x => new { x.ShopId, x.CreatedById });
+                    table.ForeignKey(
+                        name: "FK_FollowPetCfShops_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FollowPetCfShops_PetCoffeeShop_ShopId",
+                        column: x => x.ShopId,
                         principalTable: "PetCoffeeShop",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -348,7 +362,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     PostId = table.Column<long>(type: "bigint", nullable: false),
                     ParentCommentId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -359,8 +373,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Comment_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comment_Comment_ParentCommentId",
                         column: x => x.ParentCommentId,
@@ -410,7 +423,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     PostId = table.Column<long>(type: "bigint", nullable: false),
                     CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -421,8 +434,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_PostCategories_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PostCategories_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -445,7 +457,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     PostId = table.Column<long>(type: "bigint", nullable: false),
                     ShopId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -456,8 +468,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_PostPetCoffeeShops_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PostPetCoffeeShops_PetCoffeeShop_ShopId",
                         column: x => x.ShopId,
@@ -488,7 +499,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     TransactionStatus = table.Column<int>(type: "int", nullable: false),
                     TransactionType = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -499,8 +510,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Transaction_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Transaction_Items_ItemId",
                         column: x => x.ItemId,
@@ -543,7 +553,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     FloorId = table.Column<long>(type: "bigint", nullable: true),
                     AreaId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -554,8 +564,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Order_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Order_Area_AreaId",
                         column: x => x.AreaId,
@@ -574,6 +583,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     BirthYear = table.Column<int>(type: "int", nullable: true),
                     Weight = table.Column<double>(type: "double", nullable: true),
+                    Gender = table.Column<int>(type: "int", nullable: true),
                     Avatar = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Backgound = table.Column<string>(type: "longtext", nullable: true)
@@ -582,10 +592,11 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PetType = table.Column<int>(type: "int", nullable: false),
                     PetStatus = table.Column<int>(type: "int", nullable: false),
+                    Spayed = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
                     AreaId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -596,8 +607,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Pet_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Pet_Area_AreaId",
                         column: x => x.AreaId,
@@ -677,19 +687,19 @@ namespace PetCoffee.Infrastructure.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     EventId = table.Column<long>(type: "bigint", nullable: false),
-                    SenderId = table.Column<long>(type: "bigint", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SubmittingEvent", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubmittingEvent_Account_SenderId",
-                        column: x => x.SenderId,
+                        name: "FK_SubmittingEvent_Account_CreatedById",
+                        column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SubmittingEvent_Event_EventId",
                         column: x => x.EventId,
@@ -700,7 +710,7 @@ namespace PetCoffee.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Setting",
+                name: "Report",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -711,26 +721,25 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ReportCategory = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Setting", x => x.Id);
+                    table.PrimaryKey("PK_Report", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Setting_Account_CreatedById",
+                        name: "FK_Report_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Setting_Comment_CommentId",
+                        name: "FK_Report_Comment_CommentId",
                         column: x => x.CommentId,
                         principalTable: "Comment",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Setting_Post_PostID",
+                        name: "FK_Report_Post_PostID",
                         column: x => x.PostID,
                         principalTable: "Post",
                         principalColumn: "Id");
@@ -751,7 +760,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     MomentType = table.Column<int>(type: "int", nullable: false),
                     PetId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
@@ -762,8 +771,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Diaries_Account_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Diaries_Pet_PetId",
                         column: x => x.PetId,
@@ -779,7 +787,7 @@ namespace PetCoffee.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    VacciniationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    VaccinationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ExpireTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     VaccinationType = table.Column<int>(type: "int", nullable: false),
                     PhotoEvidence = table.Column<string>(type: "longtext", nullable: true)
@@ -804,20 +812,32 @@ namespace PetCoffee.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    EventFieldId = table.Column<long>(type: "bigint", nullable: false),
-                    SubmittingEventId = table.Column<long>(type: "bigint", nullable: false),
+                    FieldName = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FieldValue = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsOptional = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    OptionValue = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Answer = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Order = table.Column<int>(type: "int", nullable: false),
                     Submitcontent = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    SubmittingEventId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SubmittingEventField", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SubmittingEventField_EventFields_EventFieldId",
-                        column: x => x.EventFieldId,
-                        principalTable: "EventFields",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_SubmittingEventField_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SubmittingEventField_SubmittingEvent_SubmittingEventId",
                         column: x => x.SubmittingEventId,
@@ -826,11 +846,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Account_CreatedById",
-                table: "Account",
-                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Account_PetCoffeeShopId",
@@ -890,6 +905,11 @@ namespace PetCoffee.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_FollowEvents_CreatedById",
                 table: "FollowEvents",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FollowPetCfShops_CreatedById",
+                table: "FollowPetCfShops",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
@@ -968,19 +988,24 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "ShopId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Setting_CommentId",
-                table: "Setting",
+                name: "IX_Report_CommentId",
+                table: "Report",
                 column: "CommentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Setting_CreatedById",
-                table: "Setting",
+                name: "IX_Report_CreatedById",
+                table: "Report",
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Setting_PostID",
-                table: "Setting",
+                name: "IX_Report_PostID",
+                table: "Report",
                 column: "PostID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubmittingEvent_CreatedById",
+                table: "SubmittingEvent",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubmittingEvent_EventId",
@@ -988,14 +1013,9 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubmittingEvent_SenderId",
-                table: "SubmittingEvent",
-                column: "SenderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SubmittingEventField_EventFieldId",
+                name: "IX_SubmittingEventField_CreatedById",
                 table: "SubmittingEventField",
-                column: "EventFieldId");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubmittingEventField_SubmittingEventId",
@@ -1056,7 +1076,13 @@ namespace PetCoffee.Infrastructure.Migrations
                 name: "Diaries");
 
             migrationBuilder.DropTable(
+                name: "EventFields");
+
+            migrationBuilder.DropTable(
                 name: "FollowEvents");
+
+            migrationBuilder.DropTable(
+                name: "FollowPetCfShops");
 
             migrationBuilder.DropTable(
                 name: "Like");
@@ -1074,7 +1100,7 @@ namespace PetCoffee.Infrastructure.Migrations
                 name: "PostPetCoffeeShops");
 
             migrationBuilder.DropTable(
-                name: "Setting");
+                name: "Report");
 
             migrationBuilder.DropTable(
                 name: "SubmittingEventField");
@@ -1090,9 +1116,6 @@ namespace PetCoffee.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comment");
-
-            migrationBuilder.DropTable(
-                name: "EventFields");
 
             migrationBuilder.DropTable(
                 name: "SubmittingEvent");
