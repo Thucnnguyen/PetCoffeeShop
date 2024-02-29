@@ -1,4 +1,5 @@
-﻿using LinqKit;
+﻿
+using LinqKit;
 using MediatR;
 using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
@@ -8,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Events.Queries;
 
-public class GetEventsForCustomerQuery : PaginationRequest<Event>, IRequest<PaginationResponse<Event, EventResponse>>
+public class GetJoinEventForCustomerQuery : PaginationRequest<SubmittingEvent>, IRequest<PaginationResponse<SubmittingEvent, EventForCardResponse>>
 {
 	private string? _search;
 
@@ -18,11 +19,11 @@ public class GetEventsForCustomerQuery : PaginationRequest<Event>, IRequest<Pagi
 		set => _search = value?.Trim().ToLower();
 	}
 
-	public override Expression<Func<Event, bool>> GetExpressions()
+	public override Expression<Func<SubmittingEvent, bool>> GetExpressions()
 	{
-		if(Search is not null)
+		if (Search is not null)
 		{
-			Expression = Expression.And(e => e.Title.ToLower().Contains(Search) || e.Description.ToLower().Contains(Search));
+			Expression = Expression.And(e => e.Event.Title.ToLower().Contains(Search) || e.Event.Description.ToLower().Contains(Search));
 		}
 		return Expression;
 	}

@@ -1,4 +1,5 @@
 ﻿
+using LinqKit;
 using MediatR;
 using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
@@ -20,6 +21,17 @@ public class GetPostsNewsFeedQuery : PaginationRequest<Domain.Entities.Post>, IR
 
 	public override Expression<Func<Domain.Entities.Post, bool>> GetExpressions()
 	{
+		if(Search is not null)
+		{
+			if (Search is not null)
+			{
+				Expression = Expression.And(e => e.Content.ToLower().Contains(Search));
+			}
+		}
+		if (CategoryId > 0)
+		{
+			Expression = Expression.And(e => e.PostCategories.Where(p => p.CategoryId == CategoryId).Any() );
+		}
 		return Expression;
 	}
 }

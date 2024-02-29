@@ -25,7 +25,7 @@ namespace PetCoffee.Application.Features.Vaccination.Commands
     {
 
         public long Id { get; set; }
-        public DateTime? VacciniationDate { get; set; }
+        public DateTime? VaccinationDate { get; set; }
         
         public DateTime? ExpireTime { get; set; }
         public VaccinationType? VaccinationType { get; set; }

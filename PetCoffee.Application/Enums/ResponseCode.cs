@@ -47,6 +47,12 @@ public enum ResponseCode
 	[Description("Khoảnh khắc Không tồn tại")] MomentNotExisted,
 	//event
 	[Description("Sự kiện Không tồn tại")] EventNotExisted,
+	[Description("Sự kiện Không thể thay đổi vì đã quá thời gian bắt đầu")] EventCannotChanged,
+	//submitEvent
+	[Description("Gửi form tham gia event không hợp lệ vui lòng xem lại")] SubmittingEventNotCorrectForm,
+	[Description("Bạn đã tham gia event rồi")] SubmittingEventIsExist,
+	//EventField
+	[Description("Trường này không tồn tại")] EventFieldIsNotExist,
 
 
 }

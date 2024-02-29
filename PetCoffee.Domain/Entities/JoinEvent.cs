@@ -1,7 +1,4 @@
 ﻿
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace PetCoffee.Domain.Entities;
 
 public class JoinEvent : BaseAuditableEntity

@@ -9,7 +9,6 @@ using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PetCoffee.Application.Features.Post.Handlers
 {
@@ -34,9 +33,12 @@ namespace PetCoffee.Application.Features.Post.Handlers
             {
                 throw new ApiException(ResponseCode.AccountNotExist);
             }
+			if (currentAccount.IsVerify)
+			{
+				throw new ApiException(ResponseCode.AccountNotActived);
+			}
 
-            
-            var followedShopIds = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.CreatedById == currentAccount.Id)).ToList();
+			var followedShopIds = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.CreatedById == currentAccount.Id)).ToList();
          
             var postsQuery =  _unitOfWork.PostRepository.Get(
               predicate: request.GetExpressions(),
@@ -53,10 +55,9 @@ namespace PetCoffee.Application.Features.Post.Handlers
             if (followedShopIds.Any())
             {
                 postsQuery = postsQuery
-          
-          .OrderByDescending(post => post.PostPetCoffeeShops.Any(pcs => followedShopIds.Select(f => f.ShopId).Contains(pcs.ShopId)))
-          .ThenByDescending(post => post.Likes.Count) 
-          .ThenByDescending(post => post.CreatedAt); 
+                            .OrderByDescending(post => post.PostPetCoffeeShops.Any(pcs => followedShopIds.Select(f => f.ShopId).Contains(pcs.ShopId)))
+                            .ThenByDescending(post => post.Likes.Count) 
+                            .ThenByDescending(post => post.CreatedAt); 
             }
             else
             {

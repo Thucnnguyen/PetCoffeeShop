@@ -1,12 +1,11 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Events.Queries;
+using PetCoffee.Application.Features.SubmitttingEvents.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 
@@ -37,21 +36,22 @@ public class GetEventByIdHandler : IRequestHandler<GetEventByIdQuery, EventRespo
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		if (currentAccount.PetCoffeeShopId == null)
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		}
-
 		var getEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId)
 															.Include(e => e.EventFields)
+															.Include(e => e.SubmittingEvents)
 															.FirstOrDefaultAsync();
 		if (getEvent == null)
 		{
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
-		
+
 		var response = _mapper.Map<EventResponse>(getEvent);
-		response.Fields = getEvent.EventFields.Select(e => _mapper.Map<FieldEventResponseForEventResponse>(e)).ToList();
+		response.IsJoin = getEvent.SubmittingEvents.Any(e => e.CreatedById == currentAccount.Id);
+
+		if (getEvent.EventFields.Any())
+		{
+			response.Fields = getEvent.EventFields.Select(e => _mapper.Map<FieldEventResponseForEventResponse>(e)).ToList();
+		}
 		return response;
 	}
 }

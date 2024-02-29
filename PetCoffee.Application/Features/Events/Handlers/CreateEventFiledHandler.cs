@@ -8,7 +8,6 @@
 	using PetCoffee.Application.Persistence.Repository;
 	using PetCoffee.Application.Service;
 	using PetCoffee.Domain.Entities;
-	using System.Security.Policy;
 
 	namespace PetCoffee.Application.Features.Events.Handlers;
 

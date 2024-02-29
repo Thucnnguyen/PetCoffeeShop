@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
-[Table("Setting")]
 
+[Table("Report")]
 public class Report : BaseAuditableEntity
 {
 	[Key]

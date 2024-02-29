@@ -1,5 +1,7 @@
-﻿namespace PetCoffee.Application.Persistence.Repository;
+﻿using PetCoffee.Domain.Entities;
 
-public interface ISubmittingEventFieldRepository
+namespace PetCoffee.Application.Persistence.Repository;
+
+public interface ISubmittingEventFieldRepository : IBaseRepository<SubmittingEventField>
 {
 }

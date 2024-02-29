@@ -67,10 +67,13 @@ public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetc
 			}
 		}
 		response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
-
+		response = response
+			   .Skip((request.PageNumber - 1) * request.PageSize)
+			   .Take(request.PageSize)
+			   .ToList();
 		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
 			response,
-			response.Count(),
+			stores.Count(),
 			request.PageNumber,
 			request.PageSize);
 	}

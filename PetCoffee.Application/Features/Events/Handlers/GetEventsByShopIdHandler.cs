@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -9,7 +7,6 @@ using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Events.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System.Net.WebSockets;
 
 namespace PetCoffee.Application.Features.Events.Handlers;
 
@@ -43,12 +40,7 @@ public class GetEventsByShopIdHandler : IRequestHandler<GetEventsByShopIdQuery, 
 															.Include(e => e.SubmittingEvents)
 															.ToListAsync();
 
-		var response = events.Select(e =>
-		{
-			var eventResponse = _mapper.Map<EventForCardResponse>(e);
-			eventResponse.TotalJoinEvent = e.SubmittingEvents.Count();
-			return eventResponse;
-		}).ToList();
+		var response = events.Select(e =>_mapper.Map<EventForCardResponse>(e)).ToList();
 
 		return response;
 	}

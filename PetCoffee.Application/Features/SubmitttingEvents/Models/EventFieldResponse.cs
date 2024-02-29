@@ -1,7 +1,8 @@
 ﻿
-namespace PetCoffee.Application.Features.Events.Models;
 
-public class FieldEventResponseForEventResponse 
+namespace PetCoffee.Application.Features.SubmitttingEvents.Models;
+
+public class EventFieldResponse
 {
 	public long Id { get; set; }
 	public string FieldName { get; set; }
@@ -10,7 +11,6 @@ public class FieldEventResponseForEventResponse
 	public string? OptionValue { get; set; }
 	public string? Answer { get; set; }
 	public int Order { get; set; }
-	public long EventId { get; set; }
+	public long SubmittinhEventId { get; set; }
 	public string SubmmitContent { get; set; }
-
 }
