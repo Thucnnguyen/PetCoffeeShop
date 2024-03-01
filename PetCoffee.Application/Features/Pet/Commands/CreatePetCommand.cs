@@ -15,5 +15,5 @@ public class CreatePetCommand : IRequest<PetResponse>
 	public PetGender Gender { get; set; }
 	public IFormFile? Avatar { get; set; }
 	public bool Spayed { get; set; }= false;
-	public IList<IFormFile> Backgrounds { get; set; }
+	public IList<IFormFile>? Backgrounds { get; set; }
 }

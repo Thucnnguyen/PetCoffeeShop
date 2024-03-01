@@ -19,13 +19,15 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 	private readonly IAzureService _azureService;
 	private readonly IJwtService _jwtService;
 	private readonly IMapper _mapper;
+	private readonly ISchedulerService _schedulerService;
 
-	public CustomerRegisterHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper, IAzureService azureService)
+	public CustomerRegisterHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper, IAzureService azureService, ISchedulerService schedulerService)
 	{
 		_unitOfWork = unitOfWork;
 		_jwtService = jwtService;
 		_mapper = mapper;
 		_azureService = azureService;
+		_schedulerService = schedulerService;
 	}
 	public async Task<AccessTokenResponse> Handle(CustomerRegisterCommand request, CancellationToken cancellationToken)
 	{
@@ -60,6 +62,7 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		//send email
 		var EmailContent = string.Format(EmailConstant.EmailForm, account.FullName, account.OTP);
 		await _azureService.SendEmail(account.Email, EmailContent, EmailConstant.EmailSubject);
+		await _schedulerService.DeleteAccountNotVerify(account.Id,account.CreatedAt.AddDays(2));
 		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(newAccount));
 		return resp;
 	}

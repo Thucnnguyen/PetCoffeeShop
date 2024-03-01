@@ -54,5 +54,7 @@ public enum ResponseCode
 	//EventField
 	[Description("Trường này không tồn tại")] EventFieldIsNotExist,
 
+	//firebaseToken
+	[Description("Token của firbase không đúng")] FirebaseTokenNotValid,
 
 }

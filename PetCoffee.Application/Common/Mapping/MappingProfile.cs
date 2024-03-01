@@ -87,7 +87,8 @@ public class MappingProfile : Profile
 		CreateMap<EventForCardResponse, Event>().ReverseMap();
 		CreateMap<EventResponse, Event>();
 		CreateMap<Event, EventResponse>()
-				.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()));
+				.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()))
+				.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Deleted));
 				
 
 		//eventfield
@@ -104,8 +105,7 @@ public class MappingProfile : Profile
 		CreateMap<EventField, SubmittingEventField>()
 			 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-		CreateMap<SubmittingEventField, EventFieldResponse>()
-				.ForMember(dest => dest.SubmittinhEventId, opt => opt.MapFrom(src => src.Id));
+
 		CreateMap<SubmittingEventField, EventFieldResponse>()
 			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
 			.ForMember(dest => dest.FieldName, opt => opt.MapFrom(src => src.FieldName))
@@ -137,6 +137,7 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
 			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
 			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location))
+			.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
 			.ForMember(dest => dest.PetCoffeeShopId, opt => opt.MapFrom(src => src.Event.PetCoffeeShopId));
 
 		CreateMap<SubmittingEvent, EventForCardResponse>()
@@ -157,6 +158,7 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
 			.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
 			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+			.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
 			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
 	}
 }

@@ -1,5 +1,7 @@
 ﻿using Azure.Storage.Blobs;
+using FirebaseAdmin;
 using FluentValidation;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Azure.CognitiveServices.ContentModerator;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ using PetCoffee.Infrastructure.Persistence.Interceptors;
 using PetCoffee.Infrastructure.Persistence.Repository;
 using PetCoffee.Infrastructure.Services;
 using PetCoffee.Infrastructure.Settings;
+using Quartz;
 using System.Reflection;
 using System.Text;
 
@@ -36,15 +39,21 @@ public static class ConfigureService
 						 builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)); 
 			options.UseProjectables();
 		});
-
+		// config Quartz
+		services.AddQuartz(q =>
+		{
+            q.UseMicrosoftDependencyInjectionJobFactory();
+		});
 		//add scoped
 		services.AddScoped<ICurrentPrincipalService, CurrentPrincipleService>();
 		services.AddScoped<ICurrentAccountService, CurrentAccountService>();
 		services.AddScoped<IChatgptService, ChatgptService>();
 		services.AddScoped<IAzureService, AzureService>();
+		services.AddScoped<ISchedulerService, SchdulerService>();
 		services.AddScoped<IJwtService, JwtService>();
 		services.AddScoped<IVietQrService, VietQrService>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<IFirebaseService, FirebaseService>();
 		services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -90,7 +99,11 @@ public static class ConfigureService
 			.ValidateDataAnnotations()
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<FirebaseSettings>>().Value);
-	
+		
+		FirebaseApp.Create(new AppOptions
+			{
+				Credential = GoogleCredential.FromFile("petcoffeeshop.json"),
+			});
 		//config jwt
 		services.AddOptions<JwtSettings>()
 			.BindConfiguration(JwtSettings.ConfigSection)

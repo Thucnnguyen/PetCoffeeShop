@@ -76,6 +76,22 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
+		[HttpDelete("events/{EventId}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> DeleteEvent([FromRoute] DeleteEventCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
+		[HttpDelete("events-fields/{EventFieldId}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> DeleteEvent([FromRoute] DeleteEventFieldCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
 		[HttpGet("petcoffeeshops/{ShopId}/events")]
 		[Authorize]
 		public async Task<ActionResult<List<EventForCardResponse>>> GetEventByShopId([FromRoute] GetEventsByShopIdQuery request)

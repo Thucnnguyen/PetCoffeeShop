@@ -1,7 +1,9 @@
 ﻿
+using FirebaseAdmin.Auth;
+
 namespace PetCoffee.Application.Service;
 
 public interface IFirebaseService
 {
-	public Task<bool> VerifyFirebaseToken(string firebaseToken);
+	public Task<UserRecord?> VerifyFirebaseToken(string firebaseToken);
 }

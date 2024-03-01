@@ -8,7 +8,6 @@ using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Shared.Ultils;
-using System.Security.Principal;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 

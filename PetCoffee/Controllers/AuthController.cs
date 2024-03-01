@@ -13,12 +13,17 @@ namespace PetCoffee.API.Controllers
 	public class AuthController : ApiControllerBase
 	{
 		[HttpPost("login")]
-		public async Task<ActionResult<AccessTokenResponse>> LoginUsernameAndPassword([FromBody] LoginUsernamePassCommand request)
+		public async Task<ActionResult<AccessTokenResponse>> LoginEmailAndPassword([FromBody] LoginUsernamePassCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
-
+		[HttpPost("login/firebase")]
+		public async Task<ActionResult<AccessTokenResponse>> Loginfirebase([FromBody] VerifyFirebaseTokenCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 		[HttpGet("resend/OTP")]
 		[Authorize]
 		public async Task<ActionResult<bool>> Resend([FromQuery] ResendOTPQuery request)

@@ -44,7 +44,7 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 		//check TaxCode 
 		var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
 
-		if (TaxCodeResponse == null || TaxCodeResponse.Code == "52") 
+		if (TaxCodeResponse == null || TaxCodeResponse.Code == "51") 
 		{
 			throw new ApiException(ResponseCode.TaxCodeNotExisted);
 		}

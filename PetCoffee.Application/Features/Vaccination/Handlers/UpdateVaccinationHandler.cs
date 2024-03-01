@@ -8,11 +8,6 @@ using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TmsApi.Common;
 
 namespace PetCoffee.Application.Features.Vaccination.Handlers
@@ -22,13 +17,16 @@ namespace PetCoffee.Application.Features.Vaccination.Handlers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ICurrentAccountService _currentAccountService;
-        public UpdateVaccinationHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _currentAccountService = currentAccountService; 
-        }
-        public async Task<VaccinationResponse> Handle(UpdateVaccinationCommand request, CancellationToken cancellationToken)
+        private readonly IAzureService _azureService;
+
+		public UpdateVaccinationHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService, IAzureService azureService)
+		{
+			_unitOfWork = unitOfWork;
+			_mapper = mapper;
+			_currentAccountService = currentAccountService;
+			_azureService = azureService;
+		}
+		public async Task<VaccinationResponse> Handle(UpdateVaccinationCommand request, CancellationToken cancellationToken)
         {
             var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
             if (currentAccount == null)
@@ -46,7 +44,12 @@ namespace PetCoffee.Application.Features.Vaccination.Handlers
             }
             Assign.Partial(request, ExistedVaccination);
 
-            await _unitOfWork.VaccinationRepository.UpdateAsync(ExistedVaccination);
+			if (request.NewPhotoEvidence != null)
+			{
+				await _azureService.CreateBlob(request.NewPhotoEvidence.FileName, request.NewPhotoEvidence);
+				ExistedVaccination.PhotoEvidence = await _azureService.GetBlob(request.NewPhotoEvidence.FileName);
+			}
+			await _unitOfWork.VaccinationRepository.UpdateAsync(ExistedVaccination);
             await _unitOfWork.SaveChangesAsync();
             return _mapper.Map<VaccinationResponse>(ExistedVaccination);
         }

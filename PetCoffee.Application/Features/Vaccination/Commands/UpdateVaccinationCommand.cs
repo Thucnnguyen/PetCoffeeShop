@@ -29,7 +29,7 @@ namespace PetCoffee.Application.Features.Vaccination.Commands
         
         public DateTime? ExpireTime { get; set; }
         public VaccinationType? VaccinationType { get; set; }
-        public IFormFile? PhotoEvidence { get; set; }
+        public IFormFile? NewPhotoEvidence { get; set; }
         
         
     }
