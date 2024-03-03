@@ -7,6 +7,9 @@ using PetCoffee.Application.Features.Post.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.PostCategory.Queries;
 using PetCoffee.Application.Features.Report.Commands;
+using PetCoffee.Application.Features.Report.Models;
+using PetCoffee.Application.Features.Report.Queries;
+using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
 {
@@ -28,9 +31,15 @@ namespace PetCoffee.API.Controllers
         // view report of specific post  - role admin
         [HttpGet("/posts/{postId}/report")]
         [Authorize]
-        public async Task<ActionResult<IList<PostCategoryResponse>>> Get([FromQuery] GetAllCategoriesQuery request)
+        public async Task<ActionResult<IList<ReportResponse>>> Get([FromRoute] GetAllReportSpeicificPostQuery request)
         {
-            return Ok(await Mediator.Send(request));
+            
+            var response = await Mediator.Send(request);
+            return Ok(response);
+
+
+
+
         }
 
     }

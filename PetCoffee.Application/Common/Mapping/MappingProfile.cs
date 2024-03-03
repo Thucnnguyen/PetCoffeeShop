@@ -20,6 +20,7 @@ using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.Report.Commands;
+using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
@@ -86,6 +87,7 @@ public class MappingProfile : Profile
 
         //report
         CreateMap<CreateReportPostCommand, Report>().ReverseMap();
+        CreateMap<Report, ReportResponse>().ReverseMap();
 
         //Event
         CreateMap<CreateEventCommand, Event>().ReverseMap();

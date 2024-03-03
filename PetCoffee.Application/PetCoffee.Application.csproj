@@ -14,7 +14,6 @@
   <ItemGroup>
     <Folder Include="Common\Models\Request\" />
     <Folder Include="Features\FollowShop\Models\" />
-    <Folder Include="Features\Report\Queries\" />
     <Folder Include="Features\SubmitttingEvents\Queries\" />
   </ItemGroup>
 
