@@ -18,6 +18,7 @@ public class Report : BaseAuditableEntity
 	public Post? Post { get; set; }
 
 	public string? Reason { get; set; }
+	public ReportStatus Status { get; set; }
 	public ReportCategory ReportCategory { get; set; }
 
 }

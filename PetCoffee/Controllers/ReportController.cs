@@ -39,8 +39,6 @@ namespace PetCoffee.API.Controllers
             return Ok(response);
         }
 
-
-
         [HttpPost("/comments/{Id}/report")]
         [Authorize]
         public async Task<ActionResult<bool>> CreateReportCommentByCurrentAccount(
