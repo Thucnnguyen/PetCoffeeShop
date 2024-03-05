@@ -1,7 +1,6 @@
 ﻿
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -36,12 +35,22 @@ public class GetSubCommentByCommentIdHandler : IRequestHandler<GetSubCommentByCo
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		var Comments = _unitOfWork.CommentRepository.Get(c => c.ParentCommentId == request.CommentId).Include(c =>c.CreatedBy);
-		var response = Comments.Select(c => _mapper.Map<CommentResponse>(c)).ToList();
+		var Comments = await _unitOfWork.CommentRepository
+			.GetAsync(
+				predicate: c => c.ParentCommentId == request.CommentId,
+				includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Comment, object>>>
+				{
+					c =>c.CreatedBy,
+					c =>c.PetCoffeeShop
+				});
+
+		  
+
+
 		return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(
-			   response,
-			   response.Count(),
+			   Comments,
 			   request.PageNumber,
-			   request.PageSize);
+			   request.PageSize,
+			   comment => _mapper.Map<CommentResponse>(comment));
 	}
 }

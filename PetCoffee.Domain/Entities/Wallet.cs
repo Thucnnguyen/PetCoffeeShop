@@ -15,7 +15,11 @@ public class Wallet : BaseAuditableEntity
 	public Account Account { get; set; }
 	[InverseProperty(nameof(Transaction.Wallet))]
 	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
-	
+
+	[InverseProperty(nameof(WalletItem.Wallet))]
+	public IList<WalletItem> Items { get; set; } = new List<WalletItem>();
+
+
 	public Wallet()
 	{
 		Balance = 0;

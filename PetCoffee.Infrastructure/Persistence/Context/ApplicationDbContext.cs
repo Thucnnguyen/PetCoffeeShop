@@ -33,6 +33,12 @@ public class ApplicationDbContext : DbContext
 			.HasKey(e => new { e.PostId, e.CategoryId });
 		modelBuilder.Entity<PostPetCoffeeShop>()
 			.HasKey(e => new { e.PostId, e.ShopId });
+		modelBuilder.Entity<AccountShop>()
+			.HasKey(e => new { e.AccountId, e.ShopId });
+		modelBuilder.Entity<TransactionItem>()
+			.HasKey(e => new { e.TransactionId, e.ItemId });
+		modelBuilder.Entity<WalletItem>()
+			.HasKey(e => new { e.WalletId, e.ItemId });
 	}
 
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

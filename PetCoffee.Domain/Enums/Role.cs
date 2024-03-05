@@ -14,5 +14,8 @@ public enum Role
 	Manager = 2,
 
 	[Description("Khách hàng")]
-	Customer = 3
+	Customer = 3,
+
+	[Description("nhân viên platform")]
+	PlatforStaff = 4
 }

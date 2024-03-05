@@ -2,15 +2,15 @@
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
+using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Pet.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
 
-public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, IList<PetResponse>>
+public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, PaginationResponse<Domain.Entities.Pet, PetResponse>>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
@@ -23,7 +23,7 @@ public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, ILis
 		_mapper = mapper;
 	}
 
-	public async Task<IList<PetResponse>> Handle(GetPetsByShopIdQuery request, CancellationToken cancellationToken)
+	public async Task<PaginationResponse<Domain.Entities.Pet, PetResponse>> Handle(GetPetsByShopIdQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -34,13 +34,22 @@ public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, ILis
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.ShopId );
-		if (PetCoffeeShop == null)
+		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.ShopId);
+		if (!PetCoffeeShop.Any())
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
-		var Pets = await _unitOfWork.PetRepository.GetAsync(p => p.PetCoffeeShopId == request.ShopId && !p.Deleted);
-		var response = Pets.Select(p => _mapper.Map<PetResponse>(p)).ToList();	
-		return response;
+		var Pets = await _unitOfWork.PetRepository
+					.GetAsync(
+							predicate: p => p.PetCoffeeShopId == request.ShopId && !p.Deleted,
+							includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Pet, object>>>
+							{
+								p => p.Area
+							});
+		return new PaginationResponse<Domain.Entities.Pet, PetResponse>(
+				Pets,
+				request.PageNumber,
+				request.PageSize,
+				pet => _mapper.Map<PetResponse>(pet));
 	}
 }

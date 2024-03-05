@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Pet.Queries;
@@ -10,30 +11,45 @@ namespace PetCoffee.API.Controllers;
 [ApiController]
 public class PetController : ApiControllerBase
 {
-	[HttpPost("Pets")]
+	[HttpPost("pets")]
 	[Authorize]
 	public async Task<ActionResult<PetResponse>> CreatePet([FromForm] CreatePetCommand request)
 	{
 		var response = await Mediator.Send(request);
 		return response;
 	}
-	[HttpGet("PetCoffeeShops/{ShopId}/Pets")]
+	[HttpGet("petCoffeeShops/pets")]
 	[Authorize]
-	public async Task<ActionResult<IList<PetResponse>>> GetPetByShopId([FromRoute] GetPetsByShopIdQuery request)
+	public async Task<ActionResult<PaginationResponse<Domain.Entities.Pet, PetResponse>>> GetPetByShopId([FromQuery] GetPetsByShopIdQuery request)
 	{
 		var response = await Mediator.Send(request);
 		return Ok(response);
 	}
-	[HttpGet("Pets/{Id}")]
+	[HttpGet("area/pets")]
+	[Authorize]
+	public async Task<ActionResult<PaginationResponse<Domain.Entities.Pet, PetResponse>>> GetPetByAreaId([FromQuery] GetPetsByAreaIdQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+	[HttpGet("pets/{Id}")]
 	[Authorize]
 	public async Task<ActionResult<PetResponse>> GetPetById([FromRoute] GetPetByIdQuery request)
 	{
 		var response = await Mediator.Send(request);
 		return Ok(response);
 	}
-	[HttpPut("Pets")]
+	[HttpPut("pets")]
 	[Authorize]
-	public async Task<ActionResult<IList<PetResponse>>> UpdatePet([FromForm] UpdatePetCommand request)
+	public async Task<ActionResult<PetResponse>> UpdatePet([FromForm] UpdatePetCommand request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+
+	[HttpPut("areas/pets")]
+	[Authorize]
+	public async Task<ActionResult<bool>> UpdatePetArea([FromBody] UpdatePetAreaCommand request)
 	{
 		var response = await Mediator.Send(request);
 		return Ok(response);

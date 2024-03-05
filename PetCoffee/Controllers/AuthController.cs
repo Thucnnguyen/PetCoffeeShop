@@ -13,7 +13,7 @@ namespace PetCoffee.API.Controllers
 	public class AuthController : ApiControllerBase
 	{
 		[HttpPost("login")]
-		public async Task<ActionResult<AccessTokenResponse>> LoginEmailAndPassword([FromBody] LoginUsernamePassCommand request)
+		public async Task<ActionResult<AccessTokenResponse>> LoginEmailAndPassword([FromBody] LoginEmailPassCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;

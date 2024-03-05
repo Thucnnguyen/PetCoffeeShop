@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Post.Command;
 using PetCoffee.Application.Features.Post.Model;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Post.Handler;
 
@@ -17,12 +19,15 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 	private readonly IMapper _mapper;
 	private readonly IAzureService _azureService;
 	private readonly ICurrentAccountService _currentAccountService;
-	public CreatePostHandler(IUnitOfWork unitOfWork, IMapper mapper, IAzureService azureService, ICurrentAccountService currentAccountService)
+	private readonly INotifier _notifier;
+
+	public CreatePostHandler(IUnitOfWork unitOfWork, IMapper mapper, IAzureService azureService, ICurrentAccountService currentAccountService, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_azureService = azureService;
 		_currentAccountService = currentAccountService;
+		_notifier = notifier;
 	}
 
 	public async Task<PostResponse> Handle(CreatePostCommand request, CancellationToken cancellationToken)
@@ -36,8 +41,12 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
+
 		var newPost = _mapper.Map<Domain.Entities.Post>(request);
-		newPost.Image = await _azureService.UpdateloadImages(request.Image);
+		if (request.Image != null)
+		{
+			newPost.Image = await _azureService.UpdateloadImages(request.Image);
+		}
 		await _unitOfWork.PostRepository.AddAsync(newPost);
 		await _unitOfWork.SaveChangesAsync();
 
@@ -60,9 +69,9 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 
 		//add shop relationship
 		var listShop = new List<PetCoffeeShop>();
-		if (request.PetCafeShopIds != null && request.PetCafeShopIds.Any())
+		if (request.PetCafeShopTagIds != null && request.PetCafeShopTagIds.Any())
 		{
-			foreach (var shopId in request.PetCafeShopIds)
+			foreach (var shopId in request.PetCafeShopTagIds)
 			{
 				var shop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(shopId);
 				if (shop == null) continue;
@@ -78,23 +87,48 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 				catch (Exception ex)
 				{
 					continue;
+
 				}
 			}
 		}
 
 		await _unitOfWork.SaveChangesAsync();
-		var response = _mapper.Map<PostResponse>(newPost);
-		response.CreatedById = curAccount.Id;
-		response.Account = _mapper.Map<AccountForPostModel>(curAccount);
+		var newPostData = (await _unitOfWork.PostRepository
+				.GetAsync(
+					predicate: p => p.Id == newPost.Id,
+					includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Post, object>>>
+					{
+						p => p.CreatedBy,
+						p => p.PetCoffeeShop,
+					})).FirstOrDefault();
+		var response = _mapper.Map<PostResponse>(newPostData);
 
-		if(listShop.Count > 0)
+
+		if (listShop.Count > 0)
 		{
-			response.PetCoffeeShops = listShop.Select(s => _mapper.Map<CoffeeshopForPostModel>(s)).ToList();	
+			response.PetCoffeeShops = listShop.Select(s => _mapper.Map<CoffeeshopForPostModel>(s)).ToList();
 		}
 		if (listCategory.Count > 0)
 		{
 			response.Categories = listCategory.Select(s => _mapper.Map<CategoryForPostModel>(s)).ToList();
 		}
+
+		//if (newPostData != null)
+		//{
+		//	var follows = await _unitOfWork.FollowPetCfShopRepository.Get(a => a.ShopId == newPostData.ShopId)
+		//																.Include(a => a.CreatedBy)
+		//																.ToListAsync();
+		//	foreach (var acc in follows)
+		//	{
+		//		var notification = new Notification(
+		//			account: acc.CreatedBy,
+		//			type: NotificationType.NewPost,
+		//			entityType: EntityType.Post,
+		//			data: newPostData
+		//		);
+		//		await _notifier.NotifyAsync(notification, true);
+		//	}
+		//}
 
 		return response;
 	}

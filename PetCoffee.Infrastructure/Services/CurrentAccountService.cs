@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
@@ -30,7 +31,9 @@ public class CurrentAccountService : ICurrentAccountService
 		{
 			return null;
 		}
-		return await unitOfWork.AccountRepository.GetByIdAsync(currentAccountId);
+		return await unitOfWork.AccountRepository.Get(acc => acc.Id ==  currentAccountId)
+												.Include(acc => acc.AccountShops)
+												.FirstOrDefaultAsync();
 	}
 
 	public async Task<Account> GetRequiredCurrentAccount()

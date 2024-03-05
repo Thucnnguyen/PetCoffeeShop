@@ -56,11 +56,13 @@ public class Account
 	public IList<Comment> Comments { get; set; } = new List<Comment>();
 	[InverseProperty(nameof(Report.CreatedBy))]
 	public IList<Report> Reports { get; set; } = new List<Report>();
+	[InverseProperty(nameof(AccountShop.Account))]
+	public IList<AccountShop> AccountShops { get; set; } = new List<AccountShop>();
+
 	/*
 	 * for staff, manager
 	 */
-	public long? PetCoffeeShopId { get; set; }
-	public PetCoffeeShop? PetCoffeeShop { get; set; }
+
 
 	[Projectable]
 	public bool IsActive => Equals(AccountStatus.Active, Status);

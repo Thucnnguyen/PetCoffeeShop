@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Pet.Queries;
@@ -19,7 +18,7 @@ namespace PetCoffee.API.Controllers
 		[HttpGet("petcoffeeshops")]
 		[Authorize]
 		public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetPetCfShops(
-			[FromQuery] GetAllPetCfShopQuery request)
+			[FromQuery] GetAllPetCfShopRequestQuery request)
 		{
 			return await Mediator.Send(request);
 		}
@@ -48,7 +47,7 @@ namespace PetCoffee.API.Controllers
 		}
 
 		[HttpPost("petcoffeeshops")]
-        [Authorize(Roles ="Customer")]
+        [Authorize(Roles = "Customer,Manager")]
 		public async Task<ActionResult< PetCoffeeShopResponse>> AddPetCfShop(
         [FromForm] CreatePetCfShopCommand request)
 		{
@@ -62,6 +61,23 @@ namespace PetCoffee.API.Controllers
 		{
 			return await Mediator.Send(request);
 		}
+
+		[HttpPut("petcoffeeshops/status")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<bool>> UpdatePetCfShopStatus(
+		[FromForm] ChangePetCoffeeShopRequestStatusCommand request)
+		{
+			return await Mediator.Send(request);
+		}
+
+		[HttpGet("petcoffeeshops/processing")]
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetListOfProcessingShop(
+			[FromRoute] GetAllPetCfShopRequestQuery request)
+		{
+			return await Mediator.Send(request);
+		}
+
 		[HttpGet("accounts/petcoffeeshops")]
 		[Authorize]
 		public async Task<ActionResult<PetCoffeeShopResponse>> GetCoffeeShopResponse(

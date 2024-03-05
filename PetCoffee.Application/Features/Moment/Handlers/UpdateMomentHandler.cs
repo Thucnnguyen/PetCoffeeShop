@@ -34,6 +34,15 @@ public class UpdateMomentHandler : IRequestHandler<UpdateMomentCommand, MomentRe
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+
+		if (currentAccount.IsCustomer)
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		};
 		//check moment info
 		var UpdateMoment = await _unitOfWork.MomentRepository.Get(m => m.Id == request.Id)
 								.Include(m => m.Pet)
@@ -44,7 +53,7 @@ public class UpdateMomentHandler : IRequestHandler<UpdateMomentCommand, MomentRe
 		}
 
 		//check permission
-		if (currentAccount.PetCoffeeShopId == null || currentAccount.PetCoffeeShopId != UpdateMoment.Pet.PetCoffeeShopId)
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == UpdateMoment.Pet.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
@@ -53,8 +62,7 @@ public class UpdateMomentHandler : IRequestHandler<UpdateMomentCommand, MomentRe
 
 		if(request.NewImages != null)
 		{
-			if (!string.IsNullOrEmpty(UpdateMoment.Image)) { UpdateMoment.Image += ";"; }
-			UpdateMoment.Image += await _azureService.UpdateloadImages(request.NewImages);
+			UpdateMoment.Image = await _azureService.UpdateloadImages(request.NewImages);
 		}
 
 		await _unitOfWork.MomentRepository.UpdateAsync(UpdateMoment);

@@ -40,12 +40,13 @@ namespace PetCoffee.Application.Features.Areas.Handlers
                 throw new ApiException(ResponseCode.AccountNotActived);
             }
 
-            var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => a.Id == request.AreaId)).FirstOrDefault();
+            var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => a.Id == request.AreaId && !a.Deleted)).FirstOrDefault();
             if (area == null)
             {
                 throw new ApiException(ResponseCode.AreaNotExist);
             }
-            await _unitOfWork.AreaRepsitory.DeleteAsync(area);
+			area.DeletedAt = DateTime.UtcNow;
+			await _unitOfWork.AreaRepsitory.UpdateAsync(area);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

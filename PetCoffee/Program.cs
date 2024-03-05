@@ -1,8 +1,8 @@
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using PetCoffee.Application;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Infrastructure;
+using PetCoffee.Infrastructure.SinalR.Notifications;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text.Json.Serialization;
 
@@ -55,5 +55,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<ExceptionMidleware>();
+
+app.MapHub<NotificationHub>("/notification-hub");
 
 app.Run();

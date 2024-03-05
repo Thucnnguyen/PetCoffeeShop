@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCoffee.API", "PetCoffee\PetCoffee.API.csproj", "{8D581243-CED9-47AE-8D9B-F1A7C1BFE5B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCoffee.API", "PetCoffee\PetCoffee.API.csproj", "{8D581243-CED9-47AE-8D9B-F1A7C1BFE5B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCoffee.Application", "PetCoffee.Application\PetCoffee.Application.csproj", "{B0FB6A00-08AA-459B-B6A5-6FC590AA0B46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCoffee.Application", "PetCoffee.Application\PetCoffee.Application.csproj", "{B0FB6A00-08AA-459B-B6A5-6FC590AA0B46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCoffee.Domain", "PetCoffee.Domain\PetCoffee.Domain.csproj", "{ED7BB4C2-8A99-4F93-98FF-35BC04F2752C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCoffee.Domain", "PetCoffee.Domain\PetCoffee.Domain.csproj", "{ED7BB4C2-8A99-4F93-98FF-35BC04F2752C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCoffee.Infrastructure", "PetCoffee.Infrastructure\PetCoffee.Infrastructure.csproj", "{B85FE6DB-67AC-4115-98BF-E854B021E31E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCoffee.Infrastructure", "PetCoffee.Infrastructure\PetCoffee.Infrastructure.csproj", "{B85FE6DB-67AC-4115-98BF-E854B021E31E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetCoffee.Shared", "PetCoffee.Shared\PetCoffee.Shared.csproj", "{148B535E-C627-4023-AA94-B754BFE06F36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PetCoffee.Shared", "PetCoffee.Shared\PetCoffee.Shared.csproj", "{148B535E-C627-4023-AA94-B754BFE06F36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -27,12 +27,10 @@ namespace PetCoffee.Application.Features.Areas.Commands
     }
     public class UpdateAreaCommand : IRequest<AreaResponse>
     {
-
         public long Id { get; set; }
         public string? Description { get; set; }
         public IFormFile? Image { get; set; }
         public int TotalSeat { get; set; }
-
-        
+        public int Order { get; set; }
     }
 }

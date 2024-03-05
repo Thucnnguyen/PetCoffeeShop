@@ -21,7 +21,7 @@ public class MomentController : ApiControllerBase
 	}
 
 	[HttpPut("moments")]
-	[Authorize(Roles = "Staff,Manager")]
+	[Authorize]
 	public async Task<ActionResult<MomentResponse>> PutMoment([FromForm] UpdateMomentCommand request)
 	{
 		var response = await Mediator.Send(request);
@@ -32,6 +32,14 @@ public class MomentController : ApiControllerBase
 	[Authorize]
 
 	public async Task<ActionResult<IList<MomentResponse>>> GetMomentByPetId([FromRoute] GetMomentByPetIdQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+	[HttpGet("moments/{Id}")]
+	[Authorize]
+
+	public async Task<ActionResult<IList<MomentResponse>>> GetMomentById([FromRoute] GetMomentByIdQuery request)
 	{
 		var response = await Mediator.Send(request);
 		return Ok(response);

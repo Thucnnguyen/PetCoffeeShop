@@ -14,5 +14,6 @@ public class PetCoffeeShopForCardResponse
 	public double? TotalFollow { get; set; }
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public ShopType Type { get; set; }
+	public ShopStatus Status { get; set; }
 	public DateTime CreatedAt { get; set; }
 }

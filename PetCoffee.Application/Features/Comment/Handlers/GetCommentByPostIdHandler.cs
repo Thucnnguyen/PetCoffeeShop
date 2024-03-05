@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OpenAI_API.Images;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -37,9 +38,13 @@ public class GetCommentByPostIdHandler : IRequestHandler<GetCommentByPostIdQuery
         }
         var Comments =  _unitOfWork.CommentRepository.Get(c => c.PostId == request.PostId,disableTracking:true)
                                                     .Include(c => c.CreatedBy)        
-                                                    .ToList();
+                                                    .Include(c => c.PetCoffeeShop)
+		.ToList();
 
-        var ShowComments = Comments.Where(c => c.ParentCommentId != null);
+        var ShowComments = Comments.Where(c => c.ParentCommentId != null)
+							.Skip((request.PageNumber - 1) * request.PageSize)
+				            .Take(request.PageSize);
+
         var response = new List<CommentResponse>();
         foreach (var comment in Comments)
         {
@@ -49,7 +54,7 @@ public class GetCommentByPostIdHandler : IRequestHandler<GetCommentByPostIdQuery
         }
         return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(
         response,
-        response.Count(),
+		Comments.Count(),
         request.PageNumber,
         request.PageSize);
     }

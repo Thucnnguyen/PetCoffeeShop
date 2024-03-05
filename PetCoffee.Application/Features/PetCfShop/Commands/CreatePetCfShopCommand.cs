@@ -39,5 +39,5 @@ public class CreatePetCfShopCommand : IRequest<PetCoffeeShopResponse>
 	public string TaxCode { get; set; }
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
-	public ShopType ShopType { get; set; }
+	public ShopType Type { get; set; }
 }

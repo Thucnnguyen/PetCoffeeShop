@@ -34,6 +34,11 @@ public class DeleteEventHandler : IRequestHandler<DeleteEventCommand, bool>
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
+		if (currentAccount.IsCustomer )
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		};
+
 		var GetEvent = ( await _unitOfWork.EventRepository.GetAsync(s => s.Id == request.EventId && !s.Deleted))
 			.FirstOrDefault();
 
@@ -41,7 +46,7 @@ public class DeleteEventHandler : IRequestHandler<DeleteEventCommand, bool>
 		{
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
-		if(GetEvent.PetCoffeeShopId != currentAccount.PetCoffeeShopId)
+		if( !currentAccount.AccountShops.Any(a => a.ShopId == GetEvent.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}

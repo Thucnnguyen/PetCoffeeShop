@@ -3,6 +3,7 @@ using MediatR;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
 using PetCoffee.Application.Persistence.Repository;
+using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
@@ -23,7 +24,7 @@ public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery
 		int TotalShop = 0;
 		if(request.ShopType != null)
 		{
-			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s =>s.Type == request.ShopType);
+			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s =>s.Type == request.ShopType && s.Status == ShopStatus.Active);
 		}
 		else
 		{

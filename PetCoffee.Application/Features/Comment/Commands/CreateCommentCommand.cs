@@ -23,6 +23,7 @@ public class CreateCommentValidation : AbstractValidator<CreateCommentCommand>
 
 public class CreateCommentCommand : IRequest<CommentResponse>
 {
+	public long? ShopId { get; set; }
 	public string? Content { get; set; }
 	public IFormFile? Image { get; set; }
 	public long PostId { get; set; }

@@ -30,16 +30,13 @@ public class GetMomentsByIdHandler : IRequestHandler<GetMomentByPetIdQuery, ILis
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
-		//check pet info
-		var Pet = await _unitOfWork.PetRepository.GetByIdAsync(request.Id);
-		if (Pet == null)
+		if (currentAccount.IsVerify)
 		{
-			throw new ApiException(ResponseCode.PetNotExisted);
+			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		
 
 		// check view permission
-		if(currentAccount == null || currentAccount.PetCoffeeShopId != Pet.PetCoffeeShopId)
+		if (currentAccount.IsCustomer)
 		{
 			var MomentsPublic = await _unitOfWork.MomentRepository
 							.GetAsync(m => m.PetId == request.Id && m.IsPublic == true);

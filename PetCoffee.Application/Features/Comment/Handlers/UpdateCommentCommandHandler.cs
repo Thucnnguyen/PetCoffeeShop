@@ -63,7 +63,6 @@ public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand,
 		await _unitOfWork.CommentRepository.UpdateAsync(comment);
 		await _unitOfWork.SaveChangesAsync();
 		var response = _mapper.Map<CommentResponse>(comment);
-		response.Account = _mapper.Map<AccountForPostModel>(comment.CreatedBy);
 		return response;
 	}
 }

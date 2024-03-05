@@ -28,8 +28,5 @@ public class FirebaseService : IFirebaseService
 		{
 			throw new ApiException(ResponseCode.FirebaseTokenNotValid);
 		}
-
-
-
 	}
 }

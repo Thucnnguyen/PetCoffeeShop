@@ -45,6 +45,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
               disableTracking: true
             )
             .Include(p => p.Likes)
+            .Include(p => p.PetCoffeeShop)
             .Include(p => p.Comments)
 			.Include(p => p.PostCategories)
 			.ThenInclude(c => c.Category)

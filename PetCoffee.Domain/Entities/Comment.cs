@@ -13,6 +13,10 @@ public class Comment: BaseAuditableEntity
 	public long PostId { get; set; }
 	public Post Post { get; set; }
 
+	[ForeignKey("PetCoffeeShop")]
+	public long? ShopId { get; set; }
+	public PetCoffeeShop? PetCoffeeShop { get; set; }
+
 	[ForeignKey("ParentComment")]
 	public long? ParentCommentId { get; set; }
 	public Comment? ParentComment { get; set; }

@@ -7,6 +7,7 @@ namespace PetCoffee.Application.Features.Pet.Commands;
 
 public class CreatePetCommand : IRequest<PetResponse>
 {
+	public long PetCoffeeShopId { get; set; }
 	public string Name { get; set; }
 	public int? BirthYear { get; set; }
 	public double? Weight { get; set; }

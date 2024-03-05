@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.PetCfShop.Commands;
@@ -30,24 +31,30 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 	public async Task<PetCoffeeShopResponse> Handle(CreatePetCfShopCommand request, CancellationToken cancellationToken)
 	{
 		var CurrentUser = await _currentAccountService.GetCurrentAccount();
-		if(CurrentUser == null)
+		if (CurrentUser == null)
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
-		if(CurrentUser.IsVerify)
+		if (CurrentUser.IsVerify)
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
+		var isHasRequest = await _unitOfWork.PetCoffeeShopRepository.Get(p => p.CreatedById == CurrentUser.Id && p.Status == ShopStatus.Processing)
+								.AnyAsync();
+		if (isHasRequest)
+		{
+			throw new ApiException(ResponseCode.HasShopRequest);
+		}
 		var NewPetCoffeeShop = _mapper.Map<PetCoffeeShop>(request);
-		NewPetCoffeeShop.Type = request.ShopType;
 		//check TaxCode 
 		var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
 
-		if (TaxCodeResponse == null || TaxCodeResponse.Code == "51") 
+		if (TaxCodeResponse == null || TaxCodeResponse.Code == "51")
 		{
 			throw new ApiException(ResponseCode.TaxCodeNotExisted);
 		}
+
 		//upload avatar
 		if (request.Avatar != null)
 		{
@@ -62,10 +69,14 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 		}
 		await _unitOfWork.PetCoffeeShopRepository.AddAsync(NewPetCoffeeShop);
 		await _unitOfWork.SaveChangesAsync();
-		
-		CurrentUser.Role = Role.Manager;
-		CurrentUser.PetCoffeeShopId = NewPetCoffeeShop.Id;
-		await _unitOfWork.AccountRepository.UpdateAsync(CurrentUser);
+
+		var NewAccountShop = new AccountShop()
+		{
+			AccountId = CurrentUser.Id,
+			ShopId = NewPetCoffeeShop.Id
+		};
+
+		await _unitOfWork.AccountShopRespository.AddAsync(NewAccountShop);
 		await _unitOfWork.SaveChangesAsync();
 
 		var response = _mapper.Map<PetCoffeeShopResponse>(NewPetCoffeeShop);

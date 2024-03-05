@@ -7,7 +7,6 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Auth.Queries;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 

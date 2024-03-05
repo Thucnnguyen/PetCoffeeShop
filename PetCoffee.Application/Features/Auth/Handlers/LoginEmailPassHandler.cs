@@ -11,7 +11,7 @@ using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 
-public class LoginEmailPassHandler : IRequestHandler<LoginUsernamePassCommand, AccessTokenResponse>
+public class LoginEmailPassHandler : IRequestHandler<LoginEmailPassCommand, AccessTokenResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IJwtService _jwtService;
@@ -24,7 +24,7 @@ public class LoginEmailPassHandler : IRequestHandler<LoginUsernamePassCommand, A
 		_mapper = mapper;
 	}
 
-	public async Task<AccessTokenResponse> Handle(LoginUsernamePassCommand request, CancellationToken cancellationToken)
+	public async Task<AccessTokenResponse> Handle(LoginEmailPassCommand request, CancellationToken cancellationToken)
 	{
 		var isExisted = await _unitOfWork.AccountRepository.GetUserByUserNameAndPassword(request.Username,request.Password);
 		if (isExisted == null)

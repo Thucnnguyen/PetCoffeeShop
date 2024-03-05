@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.PetCfShop.Queries;
 
-public class GetAllPetCfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
+public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
 {
     private string? _search;
 
@@ -21,26 +21,21 @@ public class GetAllPetCfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<P
 
     public ShopType? ShopType { get; set; }
 
-    public string? Address { get; set; }
-	public double Latitude { get; set; }
-	public double Longitude { get; set; }
 
 	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
     {
         if (Search is not null)
         {
-            Expression = Expression.And(store => store.Name != null && store.Name.ToLower().Contains(Search));
+            Expression = Expression.And(shop => shop.Name != null && shop.Name.ToLower().Contains(Search));
         }
 
         if (ShopType is not null)
         {
-            Expression = Expression.And(store => Equals(ShopType, store.Type));
+            Expression = Expression.And(shop => Equals(ShopType, shop.Type));
         }
 
-        if (Address is not null)
-        {
-            Expression = Expression.And(store => store.Location != null && store.Location.ToLower().Contains(Address.ToLower().Trim()));
-        }
+        Expression = Expression.And(shop => shop.Status == ShopStatus.Processing);
+
 
         return Expression;
     }
