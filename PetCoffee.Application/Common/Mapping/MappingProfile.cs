@@ -87,6 +87,7 @@ public class MappingProfile : Profile
 
         //report
         CreateMap<CreateReportPostCommand, Report>().ReverseMap();
+        CreateMap<CreateReportCommentCommand, Report>().ReverseMap();
         CreateMap<Report, ReportResponse>().ReverseMap();
 
         //Event

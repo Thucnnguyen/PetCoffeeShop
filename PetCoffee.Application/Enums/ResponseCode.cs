@@ -8,6 +8,10 @@ public enum ResponseCode
 
     [Description("Area không tồn tại")] AreaNotExist,
 
+
+    //Comment
+
+    [Description("Comment không tồn tại")] CommentNotExist,
     //Auth
 
     [Description("Có lỗi xảy ra")] CommonError,

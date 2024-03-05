@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PetCoffee.Application.Features.Comment.Commands;
 using PetCoffee.Application.Features.PetCfShop.Commands;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Post.Commands;
@@ -36,10 +37,18 @@ namespace PetCoffee.API.Controllers
             
             var response = await Mediator.Send(request);
             return Ok(response);
+        }
 
 
 
-
+        [HttpPost("/comments/{Id}/report")]
+        [Authorize]
+        public async Task<ActionResult<bool>> CreateReportCommentByCurrentAccount(
+    [FromRoute] long Id, [FromBody] CreateReportCommentCommand request)
+        {
+            request.Id = Id;
+            var response = await Mediator.Send(request);
+            return response;
         }
 
     }
