@@ -7,6 +7,8 @@ using PetCoffee.Application.Features.Comment.Commands;
 using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Events.Commands;
 using PetCoffee.Application.Features.Events.Models;
+using PetCoffee.Application.Features.Items.Commands;
+using PetCoffee.Application.Features.Items.Models;
 using PetCoffee.Application.Features.Memory.Commands;
 using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Pet.Commands;
@@ -43,6 +45,11 @@ public class MappingProfile : Profile
         CreateMap<UpdateAreaCommand, Area>().ReverseMap();
         CreateMap<CreateAreaCommand, Area>().ReverseMap();
 
+
+
+        //Item
+        CreateMap<ItemResponse, Item>().ReverseMap();
+        CreateMap<CreateItemCommand, Item>().ReverseMap();
 
         // pet cafe shop
         CreateMap<PetCoffeeShop, PetCoffeeShopResponse>().ReverseMap();
