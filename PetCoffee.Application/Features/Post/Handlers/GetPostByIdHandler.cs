@@ -34,15 +34,17 @@ namespace PetCoffee.Application.Features.Post.Handlers
 			{
 				throw new ApiException(ResponseCode.AccountNotExist);
 			}
-
-			var post = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
+            var reportedPostIds = (await _unitOfWork.ReportRepository.GetAsync(r => r.CreatedById == currentAccount.Id && r.PostID != null)).Select(r => r.PostID).ToList();
+            var post = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
             .Include(p => p.Comments)
             .Include(p => p.Likes)
             .Include(p => p.PostCategories)
             .ThenInclude(c => c.Category)
             .Include(p => p.PostPetCoffeeShops)
             .ThenInclude(shop => shop.Shop)
-            .Include(p => p.CreatedBy).FirstOrDefaultAsync();
+           .Include(p => p.CreatedBy)
+            .Where(p => !reportedPostIds.Contains(p.Id))
+            .FirstOrDefaultAsync();
 
             if (post == null)
             {
