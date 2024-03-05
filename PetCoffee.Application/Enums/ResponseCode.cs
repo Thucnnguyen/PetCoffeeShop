@@ -11,6 +11,7 @@ public enum ResponseCode
     //Item
 
     [Description("Item name đã tồn tại")] ItemNameIsExisted,
+    [Description("Item không tồn tại")] ItemNotExist,
 
     //Auth
 
