@@ -74,6 +74,8 @@ public class UnitOfWork : IUnitOfWork
 	private IPostCoffeeShopRepository? _postCoffeeShopRepository;
 	private IFollowPetCfShopRepository? _followPetCfShopRepository;
 	private IAccountShopRespository? _accountShopRespository;
+	private IWalletItemRepository? _walletItemRepository;
+	private ITransactionItemRepository? _transactionItemRepository;
 
 
 	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
@@ -102,4 +104,6 @@ public class UnitOfWork : IUnitOfWork
 
 	public IFollowPetCfShopRepository FollowPetCfShopRepository => _followPetCfShopRepository ??= new FollowPetCfShopRepository(_dbContext);
 	public IAccountShopRespository? AccountShopRespository => _accountShopRespository ??= new AccountShopRespository(_dbContext);
+	public ITransactionItemRepository? TransactionItemRepository => _transactionItemRepository ??= new TransactionItemRepository(_dbContext);
+	public IWalletItemRepository? WalletItemRepository => _walletItemRepository ??= new WalletItemRepository(_dbContext);
 }

@@ -12,7 +12,7 @@ public class Item : BaseAuditableEntity
 	public double Price { get; set; }
 	public string Description { get; set; }
 
-	[InverseProperty(nameof(Transaction.Item))]
-	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
+	[InverseProperty(nameof(TransactionItem.Item))]
+	public IList<TransactionItem> Transactions { get; set; } = new List<TransactionItem>();
 
 }

@@ -20,8 +20,8 @@ public class Transaction : BaseAuditableEntity
 	public string? Content { get; set; }
 
 	// for donate
-	public long? ItemId { get; set; }
-	public Item? Item { get; set; }
+	[InverseProperty(nameof(TransactionItem.Transaction))]
+	public IList<TransactionItem> Items { get; set; } = new List<TransactionItem>();
 
 	public TransactionStatus TransactionStatus { get; set; }
 	public TransactionType TransactionType { get; set; }

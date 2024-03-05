@@ -118,23 +118,19 @@ public class MappingProfile : Profile
 
 		CreateMap<SubmittingEventField, EventFieldResponse>()
 			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.FieldName, opt => opt.MapFrom(src => src.FieldName))
-			.ForMember(dest => dest.FieldValue, opt => opt.MapFrom(src => src.FieldValue))
+			.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
+			.ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
 			.ForMember(dest => dest.IsOptional, opt => opt.MapFrom(src => src.IsOptional))
-			.ForMember(dest => dest.OptionValue, opt => opt.MapFrom(src => src.OptionValue))
 			.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Submitcontent))
-			.ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order))
 			.ForMember(dest => dest.SubmittinhEventId, opt => opt.MapFrom(src => src.SubmittingEventId))
 			.ForMember(dest => dest.SubmmitContent, opt => opt.MapFrom(src => src.Submitcontent));
 
 		CreateMap<SubmittingEventField, FieldEventResponseForEventResponse>()
 			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.FieldName, opt => opt.MapFrom(src => src.FieldName))
-			.ForMember(dest => dest.FieldValue, opt => opt.MapFrom(src => src.FieldValue))
+			.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
+			.ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
 			.ForMember(dest => dest.IsOptional, opt => opt.MapFrom(src => src.IsOptional))
-			.ForMember(dest => dest.OptionValue, opt => opt.MapFrom(src => src.OptionValue))
 			.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Submitcontent))
-			.ForMember(dest => dest.Order, opt => opt.MapFrom(src => src.Order))
 			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.SubmittingEventId))
 			.ForMember(dest => dest.SubmmitContent, opt => opt.MapFrom(src => src.Submitcontent));
 

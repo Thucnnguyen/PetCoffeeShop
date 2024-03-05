@@ -37,4 +37,6 @@ public interface IUnitOfWork
 	IPostCoffeeShopRepository PostCoffeeShopRepository { get; }
 	IFollowPetCfShopRepository FollowPetCfShopRepository { get; }
 	IAccountShopRespository AccountShopRespository { get; }
+	IWalletItemRepository WalletItemRepository { get; }
+	ITransactionItemRepository TransactionItemRepository { get; }
 }
