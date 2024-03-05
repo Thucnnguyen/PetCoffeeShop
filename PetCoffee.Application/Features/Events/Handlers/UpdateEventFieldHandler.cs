@@ -38,10 +38,10 @@ public class UpdateEventFieldHandler : IRequestHandler<UpdateEventFieldCommand, 
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		if (currentAccount.PetCoffeeShopId == null)
+		if (currentAccount.IsCustomer )
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+		};
 
 		var UpdateEventField = await _unitOfWork.EventFieldRepsitory.GetByIdAsync(request.Id);
 		if (UpdateEventField == null)

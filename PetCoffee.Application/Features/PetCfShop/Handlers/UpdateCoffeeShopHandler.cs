@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
@@ -29,22 +28,41 @@ public class UpdateCoffeeShopHandler : IRequestHandler<UpdateCoffeeShopCommand, 
 	public async Task<PetCoffeeShopResponse> Handle(UpdateCoffeeShopCommand request, CancellationToken cancellationToken)
 	{
 		var CurrentAccount = await _currentAccountService.GetCurrentAccount();
-		if (CurrentAccount.PetCoffeeShopId == null)
+		if (CurrentAccount == null)
 		{
-			throw new ApiException(ResponseCode.Forbidden);
+			throw new ApiException(ResponseCode.AccountNotExist);
 		}
-		if (CurrentAccount.PetCoffeeShopId == null)
+		if (CurrentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+
+		if (CurrentAccount.IsCustomer || !CurrentAccount.AccountShops.Any(a => a.ShopId == request.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
-		}
-		var updateShop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(CurrentAccount.PetCoffeeShopId);
-		if(updateShop == null)
+		};
+
+
+		var updateShop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(request.PetCoffeeShopId);
+		if (updateShop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 
 		//assign data
 		Assign.Partial(request, updateShop);
+		if(request.InstagramUrl == null)
+		{
+			updateShop.InstagramUrl = "";
+		}
+		if (request.WebsiteUrl == null)
+		{
+			updateShop.WebsiteUrl = "";
+		}
+		if (request.FbUrl == null)
+		{
+			updateShop.FbUrl = "";
+		}
 		//upload avatar
 		if (request.Avatar != null)
 		{

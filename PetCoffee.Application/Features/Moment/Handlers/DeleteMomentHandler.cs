@@ -31,6 +31,16 @@ public class DeleteMomentHandler : IRequestHandler<DeleteMomentCommand, bool>
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+
+		if (currentAccount.IsCustomer)
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		};
+
 		//check moment info
 		var DeletedMoment = await _unitOfWork.MomentRepository.Get(m => m.Id == request.Id)
 								.Include(m => m.Pet)
@@ -41,11 +51,11 @@ public class DeleteMomentHandler : IRequestHandler<DeleteMomentCommand, bool>
 		}
 
 		//check permission
-		if (currentAccount.PetCoffeeShopId == null || currentAccount.PetCoffeeShopId != DeletedMoment.Pet.PetCoffeeShopId)
+
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == DeletedMoment.Pet.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
-
 		await _unitOfWork.MomentRepository.DeleteAsync(DeletedMoment);
 		await _unitOfWork.SaveChangesAsync();
 		return true;

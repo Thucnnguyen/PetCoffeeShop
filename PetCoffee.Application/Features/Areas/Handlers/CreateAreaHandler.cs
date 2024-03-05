@@ -4,16 +4,9 @@ using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
-using PetCoffee.Application.Features.Comment.Commands;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PetCoffee.Application.Features.Areas.Handlers
 {

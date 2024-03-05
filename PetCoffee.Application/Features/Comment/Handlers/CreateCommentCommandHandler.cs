@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Comment.Commands;
@@ -9,7 +10,9 @@ using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-
+using PetCoffee.Application.Service.Notifications;
+using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Comment.Handlers;
 
@@ -19,13 +22,15 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 	private readonly IAzureService _azureService;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
+	private readonly INotifier _notifier;
 
-	public CreateCommentCommandHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
+	public CreateCommentCommandHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_azureService = azureService;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
+		_notifier = notifier;
 	}
 
 	public async Task<CommentResponse> Handle(CreateCommentCommand request, CancellationToken cancellationToken)
@@ -40,15 +45,18 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
+
 		//check post info
-		var post = await _unitOfWork.PostRepository.GetByIdAsync(request.PostId);
+		var post = await _unitOfWork.PostRepository.Get(po => po.Id == request.PostId)
+													.Include(po => po.CreatedBy)
+													.FirstOrDefaultAsync();
 		if (post == null)
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
-		
+
 		var NewComment = _mapper.Map<Domain.Entities.Comment>(request);
-		if(request.Image != null)
+		if (request.Image != null)
 		{
 			await _azureService.CreateBlob(request.Image.FileName, request.Image);
 			NewComment.Image = await _azureService.GetBlob(request.Image.FileName);
@@ -56,8 +64,37 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 		await _unitOfWork.CommentRepository.AddAsync(NewComment);
 		await _unitOfWork.SaveChangesAsync();
 
-		var response = _mapper.Map<CommentResponse>(NewComment);
-		response.Account = _mapper.Map<AccountForPostModel>(currentAccount);
+		var NewCommentData = (await _unitOfWork.CommentRepository
+								.GetAsync(
+									predicate: c => c.Id == NewComment.Id,
+									includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Comment, object>>>
+									{
+										c => c.CreatedBy,
+										c => c.PetCoffeeShop
+									})).FirstOrDefault();
+
+		var response = _mapper.Map<CommentResponse>(NewCommentData);
+		//if (NewCommentData.ParentCommentId == null)
+		//{
+		//	var notificationForComment = new Notification(
+		//			account: post.CreatedBy,
+		//			type: NotificationType.CommentPost,
+		//			entityType: EntityType.Like,
+		//			data: NewCommentData
+		//		);
+		//	await _notifier.NotifyAsync(notificationForComment, true);
+		//	return response;
+		//}
+
+		//var notificationForReply = new Notification(
+		//			account: post.CreatedBy,
+		//			type: NotificationType.ReplyComment,
+		//			entityType: EntityType.Like,
+		//			data: NewCommentData
+		//		);
+		//await _notifier.NotifyAsync(notificationForReply, true);
 		return response;
+
+
 	}
 }

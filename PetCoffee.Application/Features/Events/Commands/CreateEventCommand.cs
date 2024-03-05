@@ -10,16 +10,17 @@ public class CreateEventValidation : AbstractValidator<CreateEventCommand>
     public CreateEventValidation()
     {
         RuleFor(model => model.StartTime)
-			.Must((command, StartTime) => StartTime <= DateTime.UtcNow)
+			.Must((command, StartTime) => StartTime >= DateTime.UtcNow)
 			.WithMessage("Thời gian bắt đầu không được ở trong quá khứ");
 
 		RuleFor(model => model.StartTime)
-			.Must((command, StartTime) => StartTime > command.EndTime)
+			.Must((command, StartTime) => StartTime < command.EndTime)
 			.WithMessage("Thời gian kết thúc phải sau thời gian bắt đầu");
 	}
 }
 public class CreateEventCommand : IRequest<EventResponse>
 {
+	public long PetCoffeeShopId { get; set; }
 	public string Title { get; set; }
 	public IFormFile? ImageFile { get; set; }
 	public string? Description { get; set; }

@@ -28,10 +28,17 @@ public class CreateMomentHandlers : IRequestHandler<CreateMomentCommand, MomentR
 	{
 		//get Current account 
 		var currentAccount  = await _currentAccountService.GetRequiredCurrentAccount();
-		if(currentAccount == null)
+		if (currentAccount == null)
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+
+		
+
 		//check pet info
 		var Pet = await _unitOfWork.PetRepository.GetByIdAsync(request.PetId);
 		if(Pet == null)
@@ -39,11 +46,12 @@ public class CreateMomentHandlers : IRequestHandler<CreateMomentCommand, MomentR
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
 		//check permission
-		if(currentAccount.PetCoffeeShopId == null || currentAccount.PetCoffeeShopId != Pet.PetCoffeeShopId) 
+
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == Pet.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
-		
+
 		var NewMemory = _mapper.Map<Domain.Entities.Moment>(request);
 		//upload image
 		NewMemory.Image = await _azureService.UpdateloadImages(request.Image);

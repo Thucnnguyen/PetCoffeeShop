@@ -37,18 +37,19 @@ public class CreatePetHandler : IRequestHandler<CreatePetCommand, PetResponse>
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == currentAccount.PetCoffeeShopId && s.Status == ShopStatus.Active);
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == request.PetCoffeeShopId))
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		};
+
+		var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.PetCoffeeShopId && s.Status == ShopStatus.Active);
 		if (PetCoffeeShop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
-		if (currentAccount.PetCoffeeShopId == null)
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+
 
 		var NewPet = _mapper.Map<Domain.Entities.Pet>(request);
-		NewPet.PetCoffeeShopId = currentAccount.PetCoffeeShopId.Value;
 		//upload avatar
 		if (request.Avatar != null)
 		{
@@ -66,7 +67,6 @@ public class CreatePetHandler : IRequestHandler<CreatePetCommand, PetResponse>
 		var response = _mapper.Map<PetResponse>(NewPet);
 
 		response.CreatedById = currentAccount.Id;
-		response.PetCoffeeShopId = currentAccount.PetCoffeeShopId.Value;
 
 		return response;
 	}

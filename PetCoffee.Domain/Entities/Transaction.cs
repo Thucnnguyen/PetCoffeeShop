@@ -14,6 +14,9 @@ public class Transaction : BaseAuditableEntity
 	public double Amount { get; set; }
 	public long? RemitterId { get; set; }
 	public Wallet? Remitter {  get; set; }
+
+	public long? ReservationId { get; set; }
+	public Reservation? Reservation { get; set; }
 	public string? Content { get; set; }
 
 	// for donate

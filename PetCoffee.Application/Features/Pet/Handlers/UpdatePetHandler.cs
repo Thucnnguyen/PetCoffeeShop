@@ -37,10 +37,11 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		if (currentAccount.PetCoffeeShopId == null)
+
+		if (currentAccount.IsCustomer )
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+		};
 
 		var pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
 
@@ -48,7 +49,7 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
-		if (currentAccount.PetCoffeeShopId != pet.PetCoffeeShopId)
+		if ( !currentAccount.AccountShops.Any(a => a.ShopId == pet.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}

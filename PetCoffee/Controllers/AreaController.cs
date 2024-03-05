@@ -20,7 +20,7 @@ namespace PetCoffee.API.Controllers
     public class AreaController : ApiControllerBase
     {
 
-        [HttpGet("petcoffeeshops/{ShopId}/Areas")]
+        [HttpGet("petcoffeeshops/{ShopId}/areas")]
         [Authorize]
         public async Task<ActionResult<PaginationResponse<Area, AreaResponse>>> GetAreaById([FromRoute] GetAreaByPetCfShopIdQuery request)
         {
@@ -28,8 +28,15 @@ namespace PetCoffee.API.Controllers
             return response;
         }
 
+		[HttpGet("areas/{AreaId}")]
+		[Authorize]
+		public async Task<ActionResult< AreaResponse>> GetAreaById([FromRoute] GetAreaByIdQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 
-        [HttpPost("Areas")]
+		[HttpPost("Areas")]
         [Authorize]
 
         public async Task<ActionResult<AreaResponse>> Post([FromForm] CreateAreaCommand request)

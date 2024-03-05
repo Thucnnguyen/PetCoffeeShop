@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -40,11 +38,11 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, EventRespo
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		if (currentAccount.PetCoffeeShopId == null)
+		if (currentAccount.IsCustomer)
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
-		}
-		
+		};
+
 		var UpdateEvent =  _unitOfWork.EventRepository.Get(e => e.Id == request.Id)
 														.Include(e => e.EventFields)
 														.FirstOrDefault();
@@ -57,7 +55,7 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, EventRespo
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
 
-        if (UpdateEvent.PetCoffeeShopId != currentAccount.PetCoffeeShopId)
+        if (!currentAccount.AccountShops.Any(a => a.ShopId == UpdateEvent.PetCoffeeShopId) )
         {
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}

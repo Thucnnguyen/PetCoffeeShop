@@ -6,6 +6,8 @@ using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Auth.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 
@@ -30,7 +32,19 @@ public class GetCurrentAccountHandler : IRequestHandler<GetCurrentAccountInfomat
 			throw new ApiException(ResponseCode.Unauthorized);
 		}
 
+		var listPetCoffeeShop = await _unitOfWork.AccountShopRespository
+			.GetAsync(predicate: a => a.AccountId == currentAccount.Id && a.PetCoffeeShop.Status != ShopStatus.Cancel,
+					includes: new List<System.Linq.Expressions.Expression<Func<AccountShop, object>>>
+					{
+						a => a.PetCoffeeShop
+					});
+		
 		var response =  _mapper.Map<AccountResponse>(currentAccount);
+		if(listPetCoffeeShop != null)
+		{
+			response.ShopResponses = listPetCoffeeShop.Select(shop => _mapper.Map<ShopResponseForAccount>(shop.PetCoffeeShop)).ToList();
+		}
+
 		response.TotalIsFollowing = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.CreatedById == currentAccount.Id); ;
 		return response;
 	}

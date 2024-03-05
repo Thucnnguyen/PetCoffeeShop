@@ -12,14 +12,21 @@ using Microsoft.IdentityModel.Tokens;
 using OpenAI_API;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Application.Service.Notifications;
+using PetCoffee.Application.Service.Notifications.Models;
 using PetCoffee.Infrastructure.Persistence.Context;
 using PetCoffee.Infrastructure.Persistence.Interceptors;
 using PetCoffee.Infrastructure.Persistence.Repository;
 using PetCoffee.Infrastructure.Services;
+using PetCoffee.Infrastructure.Services.Notifications;
+using PetCoffee.Infrastructure.Services.Notifications.Website.SignalR;
 using PetCoffee.Infrastructure.Settings;
+using PetCoffee.Infrastructure.SinalR;
+using PetCoffee.Infrastructure.SinalR.Notifications;
 using Quartz;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace PetCoffee.Infrastructure;
 
@@ -55,6 +62,29 @@ public static class ConfigureService
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<IFirebaseService, FirebaseService>();
 		services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+		services.AddSingleton<INotificationProvider, NotificationProvider>();
+		services.AddSingleton<INotificationAdapter, NotificationAdapter>();
+		services.AddSingleton<INotifier, Notifier>();
+		services.AddSingleton<NotificationConnectionManager>();
+		services.AddSingleton<IWebNotificationService, WebNotificationService>();
+		services.AddSingleton<NotificationConnectionManager>();
+		services.AddSingleton<ConnectionManagerServiceResolver>(serviceProvider => type =>
+		{
+			return type switch
+			{
+				Type _ when type == typeof(NotificationConnectionManager)
+					=> serviceProvider.GetRequiredService<NotificationConnectionManager>(),
+				_ => throw new KeyNotFoundException()
+			};
+		});
+		//add signalR
+		services.AddSignalR()
+			.AddJsonProtocol(options =>
+			{
+				options.PayloadSerializerOptions.Converters
+					.Add(new JsonStringEnumConverter());
+			});
+
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 		//config VietQr

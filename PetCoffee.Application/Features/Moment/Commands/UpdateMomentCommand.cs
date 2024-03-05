@@ -10,7 +10,6 @@ public class UpdateMomentCommand : IRequest<MomentResponse>
 {
 	public long Id { get; set; }
 	public string? Content { get; set; }
-	public string? ImageUrl { get; set; }
 	public IList<IFormFile>? NewImages { get; set; }
 	public MomentType? MomentType { get; set; }
 	public bool? IsPublic { get; set; }

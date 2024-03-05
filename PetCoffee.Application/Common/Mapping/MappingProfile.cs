@@ -9,6 +9,7 @@ using PetCoffee.Application.Features.Events.Commands;
 using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Memory.Commands;
 using PetCoffee.Application.Features.Memory.Models;
+using PetCoffee.Application.Features.Notifications.Models;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.PetCfShop.Commands;
@@ -48,6 +49,7 @@ public class MappingProfile : Profile
         CreateMap<PetCoffeeShop, PetCoffeeShopResponse>().ReverseMap();
         CreateMap<PetCoffeeShop, PetCoffeeShopForCardResponse>().ReverseMap();
         CreateMap<CreatePetCfShopCommand, PetCoffeeShop>().ReverseMap();
+        CreateMap<ShopResponseForAccount, PetCoffeeShop>().ReverseMap();
 
 
 		//category
@@ -61,10 +63,15 @@ public class MappingProfile : Profile
 		CreateMap<Post, PostResponse>()
 			   .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories.Select(pc => pc.Category)))
 			   .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops.Select(ppc => ppc.Shop)))
-			   .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
+			   .ForMember(dest => dest.NamePoster, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
+			   .ForMember(dest => dest.PosterAvatar, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar))
+			   .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CreatedBy.Id));
 		//pets
-		CreateMap<PetResponse, Pet>().ReverseMap()
-			    .ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound));
+		CreateMap<Pet, PetResponse>()
+				.ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound))
+				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area));
+		CreateMap<Area, AreaResponseForPet>();
+
 		CreateMap<CreatePetCommand, Pet>().ReverseMap();
 
         //Vaccination
@@ -78,8 +85,10 @@ public class MappingProfile : Profile
 		CreateMap<Comment, CommentForPost>()
 			.ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.CreatedBy.FullName));
         CreateMap<Comment, CreateCommentCommand>().ReverseMap();
-        CreateMap<Comment, CommentResponse>()
-			.ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy)).ReverseMap();
+		CreateMap<Comment, CommentResponse>()
+			.ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
+			.ForMember(dest => dest.CommentorImage, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar));
+			
 		//like
 		CreateMap<CreateLikePostCommand, Like>().ReverseMap();
 		//Event
@@ -104,6 +113,7 @@ public class MappingProfile : Profile
 		CreateMap<CreateSubmittingEventField,SubmittingEventField>().ReverseMap();
 		CreateMap<EventField, SubmittingEventField>()
 			 .ForMember(dest => dest.Id, opt => opt.Ignore());
+
 
 
 		CreateMap<SubmittingEventField, EventFieldResponse>()
@@ -160,5 +170,10 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
 			.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
 			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+
+		// notification
+		CreateMap<Notification, NotificationResponse>().ReverseMap();
+
+
 	}
 }

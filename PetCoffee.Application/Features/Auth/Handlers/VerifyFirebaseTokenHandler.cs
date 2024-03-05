@@ -51,8 +51,9 @@ public class VerifyFirebaseTokenHandler : IRequestHandler<VerifyFirebaseTokenCom
 				PhoneNumber = string.IsNullOrEmpty(userRecord.PhoneNumber) ? "" : userRecord.PhoneNumber,
 				Avatar = userRecord.PhotoUrl,
 				Password = "",
+				Role = Role.Customer,
 				LoginMethod = LoginMethod.FirebaseEmail,
-				
+				Status = AccountStatus.Active
 			};
 
 			await _unitOfWork.AccountRepository.AddAsync(NewAccount);

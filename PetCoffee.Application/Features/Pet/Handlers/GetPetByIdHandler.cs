@@ -36,7 +36,14 @@ internal class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var Pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
+		var Pet = (await _unitOfWork.PetRepository
+				.GetAsync(
+						predicate: p => p.Id == request.Id && !p.Deleted,
+						includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Pet, object>>>
+						{
+							p => p.Area
+						})
+				).FirstOrDefault();
 		
 
 		if (Pet == null) 

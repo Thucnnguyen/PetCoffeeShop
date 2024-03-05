@@ -34,13 +34,20 @@ public class DeletePetHandler : IRequestHandler<DeletePetCommand, bool>
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
+
+		if (currentAccount.IsCustomer)
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		};
+
 		var pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
 
 		if (pet == null)
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
-		if (currentAccount.PetCoffeeShopId != pet.PetCoffeeShopId)
+
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == pet.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}

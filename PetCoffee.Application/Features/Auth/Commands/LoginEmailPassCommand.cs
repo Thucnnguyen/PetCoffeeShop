@@ -5,7 +5,7 @@ using PetCoffee.Application.Features.Auth.Models;
 
 namespace PetCoffee.Application.Features.Auth.Commands;
 
-public class LoginUserNamePassValidation : AbstractValidator<LoginUsernamePassCommand>
+public class LoginUserNamePassValidation : AbstractValidator<LoginEmailPassCommand>
 {
     public LoginUserNamePassValidation()
     {
@@ -15,7 +15,7 @@ public class LoginUserNamePassValidation : AbstractValidator<LoginUsernamePassCo
     }
 }
 
-public class LoginUsernamePassCommand : IRequest<AccessTokenResponse>
+public class LoginEmailPassCommand : IRequest<AccessTokenResponse>
 {
 	public string Username { get; set; }	
 	public string Password { get; set; }

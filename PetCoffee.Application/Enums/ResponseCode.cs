@@ -29,6 +29,7 @@ public enum ResponseCode
 
     //shop
     [Description("Cửa hàng Không tồn tại")] ShopNotExisted,
+    [Description("Bạn đang có một yêu cầu tạo của hàng rồi")] HasShopRequest,
 	//TaxCode
 	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted,
 	//pet
@@ -56,5 +57,9 @@ public enum ResponseCode
 
 	//firebaseToken
 	[Description("Token của firbase không đúng")] FirebaseTokenNotValid,
+
+	//Notification
+	[Description("Không tìm thấy thông báo")] NotificationErrorNotFound,
+	[Description("Trạng thái hiện tại của Thông báo không cho phép thực hiện thao tác này")] NotificationErrorInvalidStatus,
 
 }
