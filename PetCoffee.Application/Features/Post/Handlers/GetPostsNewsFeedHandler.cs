@@ -95,6 +95,6 @@ namespace PetCoffee.Application.Features.Post.Handlers
                 postsQuery.Count(),
                 request.PageNumber,
                 request.PageSize);
-        }
+            }
     }
 }

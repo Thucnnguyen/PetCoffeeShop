@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Comment.Commands;
 using PetCoffee.Application.Features.PetCfShop.Commands;
 using PetCoffee.Application.Features.PetCfShop.Models;
@@ -49,5 +50,13 @@ namespace PetCoffee.API.Controllers
             return response;
         }
 
+
+        [HttpGet("reports")]
+        [Authorize]  
+        public async Task<ActionResult<PaginationResponse<Report, ReportResponse>>> GetReports(
+        [FromQuery] GetAllReportRequestQuery request)
+        {
+            return await Mediator.Send(request);
+        }
     }
 }
