@@ -66,4 +66,10 @@ public enum ResponseCode
 	[Description("Không tìm thấy thông báo")] NotificationErrorNotFound,
 	[Description("Trạng thái hiện tại của Thông báo không cho phép thực hiện thao tác này")] NotificationErrorInvalidStatus,
 
+
+
+    //Report
+
+    [Description("Report không tồn tại")] ReportNotExist,
+
 }

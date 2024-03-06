@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
@@ -35,7 +37,7 @@ namespace PetCoffee.API.Controllers
         [Authorize]
         public async Task<ActionResult<IList<ReportResponse>>> Get([FromRoute] GetAllReportSpeicificPostQuery request)
         {
-            
+
             var response = await Mediator.Send(request);
             return Ok(response);
         }
@@ -52,11 +54,23 @@ namespace PetCoffee.API.Controllers
 
 
         [HttpGet("reports")]
-        [Authorize]  
+        [Authorize]
         public async Task<ActionResult<PaginationResponse<Report, ReportResponse>>> GetReports(
         [FromQuery] GetAllReportRequestQuery request)
         {
             return await Mediator.Send(request);
         }
+
+
+        [HttpPut("reports/status")]
+        //[Authorize(Roles = "Admin")]
+        [Authorize]
+        public async Task<ActionResult<bool>> UpdateReportStatus([FromForm] UpdateReportStatusCommand request)
+        {
+
+            return await Mediator.Send(request);
+
+        }
     }
 }
+
