@@ -53,6 +53,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 
             var newReportComment = _mapper.Map<Domain.Entities.Report>(request);
             newReportComment.Reason = request.ReportCategory.GetDescription();
+            newReportComment.Status = Domain.Enums.ReportStatus.Processing;
             await _unitOfWork.ReportRepository.AddAsync(newReportComment);
             await _unitOfWork.SaveChangesAsync();
             return true;

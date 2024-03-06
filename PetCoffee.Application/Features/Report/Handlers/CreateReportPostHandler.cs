@@ -7,6 +7,7 @@ using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Extensions;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 
             var newReportPost = _mapper.Map<Domain.Entities.Report>(request);
             newReportPost.Reason = request.ReportCategory.GetDescription();
+            newReportPost.Status = ReportStatus.Processing;
             await _unitOfWork.ReportRepository.AddAsync(newReportPost);
             await _unitOfWork.SaveChangesAsync();
             return true;
