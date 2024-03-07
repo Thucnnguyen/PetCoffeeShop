@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Auth.Queries;
+using PetCoffee.Domain.Entities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,12 +20,30 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
+
 		[HttpPost("login/firebase")]
 		public async Task<ActionResult<AccessTokenResponse>> Loginfirebase([FromBody] VerifyFirebaseTokenCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
+
+		[HttpPost("pet-coffee-shops/staffs")]
+		[Authorize(Roles = "Manager")]
+		public async Task<ActionResult<bool>> CreateStaffAccount([FromBody] RegisterShopStaffAccountCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
+		[HttpGet("pet-coffee-shops/staffs")]
+		[Authorize(Roles = "Manager")]
+		public async Task<ActionResult<PaginationResponse<Account, AccountResponse>>> GetListStaffs([FromQuery] GetStaffAccountByShopIdQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
 		[HttpGet("resend/OTP")]
 		[Authorize]
 		public async Task<ActionResult<bool>> Resend([FromQuery] ResendOTPQuery request)

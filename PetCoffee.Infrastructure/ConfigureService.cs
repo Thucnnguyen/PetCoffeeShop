@@ -14,12 +14,14 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Application.Service.Notifications.Models;
+using PetCoffee.Application.Service.Payment;
 using PetCoffee.Infrastructure.Persistence.Context;
 using PetCoffee.Infrastructure.Persistence.Interceptors;
 using PetCoffee.Infrastructure.Persistence.Repository;
 using PetCoffee.Infrastructure.Services;
 using PetCoffee.Infrastructure.Services.Notifications;
 using PetCoffee.Infrastructure.Services.Notifications.Website.SignalR;
+using PetCoffee.Infrastructure.Services.Payment.ZaloPay;
 using PetCoffee.Infrastructure.Settings;
 using PetCoffee.Infrastructure.SinalR;
 using PetCoffee.Infrastructure.SinalR.Notifications;
@@ -67,6 +69,7 @@ public static class ConfigureService
 		services.AddSingleton<INotifier, Notifier>();
 		services.AddSingleton<NotificationConnectionManager>();
 		services.AddSingleton<IWebNotificationService, WebNotificationService>();
+		services.AddSingleton<IZaloPayService, ZaloPayService>();
 		services.AddSingleton<NotificationConnectionManager>();
 		services.AddSingleton<ConnectionManagerServiceResolver>(serviceProvider => type =>
 		{
@@ -93,6 +96,12 @@ public static class ConfigureService
 			.ValidateDataAnnotations()
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<VietQrSettings>>().Value);
+		//config ZaloPay
+		services.AddOptions<ZaloPaySettings>()
+			.BindConfiguration(ZaloPaySettings.ConfigSection)
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+		services.AddSingleton(sp => sp.GetRequiredService<IOptions<ZaloPaySettings>>().Value);
 		//config azure settings
 		services.AddOptions<AzureSettings>()
 			.BindConfiguration(AzureSettings.ConfigSection)

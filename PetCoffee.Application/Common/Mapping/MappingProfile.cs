@@ -40,6 +40,7 @@ public class MappingProfile : Profile
         CreateMap<CustomerRegisterCommand,Account>().ReverseMap();
         CreateMap<AccountResponse,Account>().ReverseMap();
         CreateMap<AccountForPostModel,Account>().ReverseMap();
+        CreateMap<RegisterShopStaffAccountCommand, Account>().ReverseMap();
 
         //Area
         CreateMap<AreaResponse, Area>().ReverseMap();
@@ -178,6 +179,6 @@ public class MappingProfile : Profile
 		// notification
 		CreateMap<Notification, NotificationResponse>().ReverseMap();
 
-
+		
 	}
 }

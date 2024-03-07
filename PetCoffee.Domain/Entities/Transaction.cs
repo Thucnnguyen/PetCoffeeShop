@@ -16,6 +16,8 @@ public class Transaction : BaseAuditableEntity
 	public Wallet? Remitter {  get; set; }
 
 	public long? ReservationId { get; set; }
+	public string? ReferenceTransactionId { get; set; }
+	public string? Url {  get; set; }
 	public Reservation? Reservation { get; set; }
 	public string? Content { get; set; }
 
