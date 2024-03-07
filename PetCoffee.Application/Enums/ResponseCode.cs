@@ -10,8 +10,12 @@ public enum ResponseCode
 
 
     //Comment
-
     [Description("Comment không tồn tại")] CommentNotExist,
+    //Item
+
+    [Description("Item name đã tồn tại")] ItemNameIsExisted,
+    [Description("Item không tồn tại")] ItemNotExist,
+
     //Auth
 
     [Description("Có lỗi xảy ra")] CommonError,
