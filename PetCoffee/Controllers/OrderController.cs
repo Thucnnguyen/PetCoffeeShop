@@ -26,5 +26,21 @@ namespace PetCoffee.API.Controllers
             }
             return await Mediator.Send(request);
         }
+
+
+
+        [HttpGet("{id:long}")]
+        [Authorize]
+        public async Task<ActionResult<ReservationResponse>> GetOrder([FromRoute] long id)
+        {
+            var getOrderRequest = new GetReservationQuery
+            {
+                Id = id
+            };
+
+            return await Mediator.Send(getOrderRequest);
+        }
+
+
     }
 }

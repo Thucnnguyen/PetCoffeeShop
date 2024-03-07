@@ -66,4 +66,9 @@ public enum ResponseCode
 	[Description("Không tìm thấy thông báo")] NotificationErrorNotFound,
 	[Description("Trạng thái hiện tại của Thông báo không cho phép thực hiện thao tác này")] NotificationErrorInvalidStatus,
 
+
+    //Reservation
+
+    [Description("Reservation không tồn tại")] ReservationNotExist,
+
 }

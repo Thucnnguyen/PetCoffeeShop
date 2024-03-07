@@ -29,8 +29,9 @@ namespace PetCoffee.Application.Features.Reservation.Queries
 
         public DateTime? To { get; set; }
 
+        public long? CustomerId { get; set; }
 
-        
+
 
         public override Expression<Func<Domain.Entities.Reservation, bool>> GetExpressions()
         {
@@ -43,7 +44,9 @@ namespace PetCoffee.Application.Features.Reservation.Queries
             Expression = Expression.And(order => From == null || order.CreatedAt.Date >= From);
 
             Expression = Expression.And(order => To == null || order.CreatedAt.Date <= To);
-            
+            Expression = Expression.And(order => CustomerId == null
+                                         || (order.CreatedById != null && CustomerId == order.CreatedById));
+                                         
 
             return Expression;
         }

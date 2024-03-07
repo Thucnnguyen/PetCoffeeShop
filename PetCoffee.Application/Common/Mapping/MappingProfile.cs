@@ -181,7 +181,15 @@ public class MappingProfile : Profile
 
         // reservation
         CreateMap<Reservation, ReservationResponse>().ReverseMap();
+        //CreateMap<Reservation, ReservationDetailResponse>().ReverseMap();
 
+
+        CreateMap<Reservation, ReservationDetailResponse>()
+          .ForMember(dest => dest.Transactions, option
+                  => option.MapFrom(src => src.Transactions));
+
+        CreateMap<Reservation, ReservationDetailResponse>()
+    .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.Transactions));
 
     }
 }
