@@ -36,7 +36,7 @@ public class MomentController : ApiControllerBase
 		var response = await Mediator.Send(request);
 		return Ok(response);
 	}
-	[HttpGet("moments/{Id}")]
+	[HttpGet("moments/{MomentId}")]
 	[Authorize]
 
 	public async Task<ActionResult<IList<MomentResponse>>> GetMomentById([FromRoute] GetMomentByIdQuery request)
