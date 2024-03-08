@@ -21,6 +21,10 @@ public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRe
 
     public ShopType? ShopType { get; set; }
 
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
+
+
 
 	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
     {

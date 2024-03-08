@@ -12,6 +12,7 @@ using PetCoffee.Application.Features.Items.Models;
 using PetCoffee.Application.Features.Memory.Commands;
 using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Notifications.Models;
+using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.PetCfShop.Commands;
@@ -186,6 +187,15 @@ public class MappingProfile : Profile
 		// notification
 		CreateMap<Notification, NotificationResponse>().ReverseMap();
 
-		
+		//transaction
+
+		CreateMap<Transaction, PaymentResponse>().ReverseMap();
+		//wallet
+		CreateMap<WalletItem,ItemWalletResponse>()
+			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))
+			.ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
+
+
+
 	}
 }

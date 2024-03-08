@@ -21,6 +21,7 @@ using PetCoffee.Infrastructure.Persistence.Repository;
 using PetCoffee.Infrastructure.Services;
 using PetCoffee.Infrastructure.Services.Notifications;
 using PetCoffee.Infrastructure.Services.Notifications.Website.SignalR;
+using PetCoffee.Infrastructure.Services.Payment.VnPay;
 using PetCoffee.Infrastructure.Services.Payment.ZaloPay;
 using PetCoffee.Infrastructure.Settings;
 using PetCoffee.Infrastructure.SinalR;
@@ -70,6 +71,7 @@ public static class ConfigureService
 		services.AddSingleton<NotificationConnectionManager>();
 		services.AddSingleton<IWebNotificationService, WebNotificationService>();
 		services.AddSingleton<IZaloPayService, ZaloPayService>();
+		services.AddSingleton<IVnPayService, VnPayService>();
 		services.AddSingleton<NotificationConnectionManager>();
 		services.AddSingleton<ConnectionManagerServiceResolver>(serviceProvider => type =>
 		{
@@ -102,6 +104,12 @@ public static class ConfigureService
 			.ValidateDataAnnotations()
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<ZaloPaySettings>>().Value);
+		//config vnpay
+		services.AddOptions<VnPaySettings>()
+			.BindConfiguration(VnPaySettings.ConfigSection)
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+		services.AddSingleton(sp => sp.GetRequiredService<IOptions<VnPaySettings>>().Value);
 		//config azure settings
 		services.AddOptions<AzureSettings>()
 			.BindConfiguration(AzureSettings.ConfigSection)

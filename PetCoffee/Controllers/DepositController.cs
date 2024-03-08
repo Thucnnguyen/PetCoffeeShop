@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.Payments.Commands;
 using PetCoffee.Application.Features.Payments.Models;
+using PetCoffee.Application.Features.Payments.Queries;
 
 namespace PetCoffee.API.Controllers
 {
@@ -8,15 +10,24 @@ namespace PetCoffee.API.Controllers
 	[ApiController]
 	public class DepositController : ApiControllerBase
 	{
-		[HttpPost("deposits")]
+		[HttpPost("recharges")]
+		[Authorize]
 		public async Task<ActionResult<PaymentResponse>> CreateDepositTransaction ([FromBody] CreatePaymentCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
-		[HttpPost("deposits/callback")]
-		public async Task<ActionResult<PaymentResponse>> CallbackZaloPay([FromBody] CallbackZaloPayCommand request)
+
+		[HttpGet("recharges/{TransactionId}")]
+		public async Task<ActionResult<PaymentResponse>> GetDepositTransaction([FromRoute] GetTransactionByIdQuery request)
 		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+		[HttpGet("payments/callback/vnpay/{referenceId}")]
+		public async Task<ActionResult<PaymentResponse>> CallbackVNPay([FromRoute] string referenceId, [FromQuery] ProcessVnpayPaymentIpnCommand request)
+		{
+			request.ReferenceId = referenceId;
 			await Mediator.Send(request);
 			return Ok();
 		}

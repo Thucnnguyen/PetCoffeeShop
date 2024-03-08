@@ -49,7 +49,7 @@ public class CreateEventFiledHandler : IRequestHandler<CreateEventFieldCommand, 
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
 
-		if (!currentAccount.AccountShops.Any(a => a.ShopId != updateEvent.PetCoffeeShopId))
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == updateEvent.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
@@ -60,7 +60,7 @@ public class CreateEventFiledHandler : IRequestHandler<CreateEventFieldCommand, 
 			newField.EventId = updateEvent.Id;
 			return newField;
 		});
-
+		await _unitOfWork.EventFieldRepsitory.AddRange(NewFieldEvents);
 		await _unitOfWork.SaveChangesAsync();
 
 		var response = NewFieldEvents.Select(f => _mapper.Map<FieldEventResponseForEventResponse>(f)).ToList();

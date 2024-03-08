@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCoffee.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307160316_updateWalletTable")]
+    partial class updateWalletTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -344,9 +347,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Icon")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -955,8 +956,8 @@ namespace PetCoffee.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(65,30)");
+                    b.Property<double>("Amount")
+                        .HasColumnType("double");
 
                     b.Property<string>("Content")
                         .HasColumnType("longtext");
@@ -969,9 +970,6 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("PetId")
-                        .HasColumnType("bigint");
 
                     b.Property<string>("ReferenceTransactionId")
                         .HasColumnType("longtext");
@@ -1000,8 +998,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("PetId");
 
                     b.HasIndex("RemitterId");
 
@@ -1479,10 +1475,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("PetCoffee.Domain.Entities.Pet", "Pet")
-                        .WithMany("Transactions")
-                        .HasForeignKey("PetId");
-
                     b.HasOne("PetCoffee.Domain.Entities.Wallet", "Remitter")
                         .WithMany()
                         .HasForeignKey("RemitterId");
@@ -1498,8 +1490,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("Pet");
 
                     b.Navigation("Remitter");
 
@@ -1616,8 +1606,6 @@ namespace PetCoffee.Infrastructure.Migrations
             modelBuilder.Entity("PetCoffee.Domain.Entities.Pet", b =>
                 {
                     b.Navigation("Moments");
-
-                    b.Navigation("Transactions");
 
                     b.Navigation("Vaccinations");
                 });

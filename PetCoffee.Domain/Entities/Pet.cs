@@ -26,4 +26,6 @@ public class Pet : BaseAuditableEntity
 	public IList<Vaccination> Vaccinations { get; set; } = new List<Vaccination>();
 	[InverseProperty(nameof(Moment.Pet))]
 	public IList<Moment> Moments { get; set; } = new List<Moment>();
+	[InverseProperty(nameof(Transaction.Pet))]
+	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 }
