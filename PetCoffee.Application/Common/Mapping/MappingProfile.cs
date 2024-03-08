@@ -182,7 +182,7 @@ public class MappingProfile : Profile
 
         // reservation
         CreateMap<Reservation, ReservationResponse>().ReverseMap();
-        //CreateMap<Reservation, ReservationDetailResponse>().ReverseMap();
+        CreateMap<UpdateAreaCommand, Area>().ReverseMap();
 
 
         CreateMap<Reservation, ReservationDetailResponse>()

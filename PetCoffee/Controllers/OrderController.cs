@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;
 using PetCoffee.Domain.Entities;
@@ -42,9 +43,15 @@ namespace PetCoffee.API.Controllers
         }
 
 
-      
 
+        [HttpPut("{id:long}")]
+        [Authorize]
+        public async Task<ActionResult<ReservationResponse>> UpdateOrder([FromRoute] long id, [FromBody] UpdateReservationCommand request)
+        {
+            request.Id = id;
+            return await Mediator.Send(request);
+        }
 
-
+        
     }
 }
