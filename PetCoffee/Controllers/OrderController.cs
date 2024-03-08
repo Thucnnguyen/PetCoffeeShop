@@ -1,12 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.PostCategory.Models;
+using PetCoffee.Application.Features.PostCategory.Queries;
 using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;
 using PetCoffee.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.API.Controllers
 {
@@ -52,6 +56,14 @@ namespace PetCoffee.API.Controllers
             return await Mediator.Send(request);
         }
 
-        
+        // view order by speicific arear 
+        [HttpGet("areas/{AreaId}/orders")]
+        [Authorize]
+        public async Task<ActionResult<IList<ReservationResponse>>> GetOrderByAreaId([FromQuery] GetReservationByAreaIdQuery request)
+        {
+    
+            return Ok(await Mediator.Send(request));
+        }
+
     }
 }
