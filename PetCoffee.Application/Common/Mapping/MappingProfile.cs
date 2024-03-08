@@ -25,6 +25,7 @@ using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
+using PetCoffee.Application.Features.Transaction.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Domain.Entities;
@@ -191,5 +192,8 @@ public class MappingProfile : Profile
         CreateMap<Reservation, ReservationDetailResponse>()
     .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.Transactions));
 
+
+        // transaction
+        CreateMap<Transaction, TransactionResponse>().ReverseMap();
     }
 }

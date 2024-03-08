@@ -31,7 +31,7 @@ namespace PetCoffee.API.Controllers
 
         [HttpGet("{id:long}")]
         [Authorize]
-        public async Task<ActionResult<ReservationResponse>> GetOrder([FromRoute] long id)
+        public async Task<ActionResult<ReservationDetailResponse>> GetOrder([FromRoute] long id)
         {
             var getOrderRequest = new GetReservationQuery
             {
@@ -40,6 +40,10 @@ namespace PetCoffee.API.Controllers
 
             return await Mediator.Send(getOrderRequest);
         }
+
+
+      
+
 
 
     }
