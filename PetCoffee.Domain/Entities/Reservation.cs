@@ -1,6 +1,7 @@
 ﻿using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 
 
 namespace PetCoffee.Domain.Entities;
@@ -24,5 +25,8 @@ public class Reservation : BaseAuditableEntity
 	public Area? Area { get; set; }
 
     public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
+
+
+   
 
 }

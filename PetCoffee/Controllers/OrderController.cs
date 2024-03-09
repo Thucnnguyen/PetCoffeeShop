@@ -65,5 +65,14 @@ namespace PetCoffee.API.Controllers
             return Ok(await Mediator.Send(request));
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<ReservationResponse>> CreateOrder([FromBody] InitializeOrderCommand command)
+        {
+            return await Mediator.Send(command);
+        }
+
+
+
     }
 }
