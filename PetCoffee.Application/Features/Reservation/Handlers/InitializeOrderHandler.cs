@@ -9,6 +9,7 @@ using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,13 +53,20 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 throw new ApiException(ResponseCode.AreaNotExist);
             }
 
+            // check seat is ok ?
+            var isSeat =  IsAreaAvailable(request.AreaId, request.StartTime, request.EndTime, request.TotalSeatBook);
+
+            if (!isSeat)
+            {
+                throw new ApiException(ResponseCode.AreaInsufficientSeating);
+            }
 
             var order = new Domain.Entities.Reservation
             {
 
                 Status = OrderStatus.Processing,
                 StartTime = request.StartTime,
-                EndTime = request.EndTime ??= request.StartTime.AddHours(2),
+                EndTime = request.EndTime,
                 Note = request.Note,
                 AreaId = request.AreaId,
                 TotalPrice = 0, //
@@ -66,12 +74,15 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 Deposit = 0, //
                 Code = "test", //
                 CreatedById = currentAccount.Id,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                TotalSeatBook = request.TotalSeatBook
 
             };
 
             await _unitOfWork.ReservationRepository.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();
+
+
 
             // minus money in wallet for booking
 
@@ -81,5 +92,40 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
         }
+
+
+
+        public  bool IsAreaAvailable(long areaId, DateTime startTime, DateTime endTime, int requestedSeats)
+        {
+           
+          
+            var existingReservations =  _unitOfWork.ReservationRepository
+                .Get(r => r.AreaId == areaId && (r.Status != OrderStatus.Deleted || r.Status != OrderStatus.Overtime)  &&
+                            ((startTime >= r.StartTime && startTime < r.EndTime) ||
+                             (endTime > r.StartTime && endTime <= r.EndTime) ||
+                             (startTime <= r.StartTime && endTime >= r.EndTime)))
+                .ToList();
+
+          
+            existingReservations = existingReservations
+                .Where(r => r.Status == OrderStatus.Success)
+                .ToList();
+
+          
+            var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
+
+         
+            var area =  _unitOfWork.AreaRepsitory.Get(a => a.Id == areaId).FirstOrDefault();
+
+            var totalSeatsAvailable = area.TotalSeat;
+         
+            
+
+        
+            return totalSeatsAvailable - totalSeatsBooked >= requestedSeats;
+        }
+
+
+
     }
 }

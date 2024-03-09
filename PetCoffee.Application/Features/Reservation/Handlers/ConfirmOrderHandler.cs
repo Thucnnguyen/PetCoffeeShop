@@ -59,12 +59,19 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             order.UpdatedAt = DateTime.Now;
 
             await _unitOfWork.ReservationRepository.UpdateAsync(order);
-            await _unitOfWork.SaveChangesAsync();
+            //await _unitOfWork.SaveChangesAsync();
 
             // update area information
 
+            var area = await _unitOfWork.AreaRepsitory.GetByIdAsync(order.AreaId);
+            if (area == null) 
+            {
+                throw new ApiException(ResponseCode.AreaNotExist);
+            }
+            area.TotalSeatAvailable = area.TotalSeat - order.TotalSeatBook;
+            await _unitOfWork.AreaRepsitory.UpdateAsync(area);
 
-
+            await _unitOfWork.SaveChangesAsync();
 
 
             return _mapper.Map<ReservationResponse>(order);

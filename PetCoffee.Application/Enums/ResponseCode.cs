@@ -7,6 +7,7 @@ public enum ResponseCode
     //Area
 
     [Description("Area không tồn tại")] AreaNotExist,
+    [Description("Area không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
 
 
     //Comment
