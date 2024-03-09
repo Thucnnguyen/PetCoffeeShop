@@ -73,6 +73,20 @@ namespace PetCoffee.API.Controllers
         }
 
 
+        [HttpPut("{id:long}/confirm")]
+        [Authorize]
+        public async Task<ActionResult<ReservationResponse>> ConfirmOrder([FromRoute] long id)
+        {
+            var command = new ConfirmOrderCommand()
+            {
+                OrderId = id,
+            };
+
+            return await Mediator.Send(command);
+        }
+
+
+
 
     }
 }
