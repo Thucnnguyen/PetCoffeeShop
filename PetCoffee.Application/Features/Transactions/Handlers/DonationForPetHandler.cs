@@ -90,7 +90,7 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
 		}
 		await _unitOfWork.SaveChangesAsync();
 
-		var newTransaction = new Transaction()
+		var newTransaction = new Domain.Entities.Transaction()
 		{
 			WalletId = currentAccount.Id,
 			Amount = (decimal)totalMoney,

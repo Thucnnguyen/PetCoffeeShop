@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -43,9 +44,40 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 throw new ApiException(ResponseCode.PermissionDenied);
             }
 
+            // check exist area
+            var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
+
+            if (area == null)
+            {
+                throw new ApiException(ResponseCode.AreaNotExist);
+            }
 
 
-            return null;
+            var order = new Domain.Entities.Reservation
+            {
+
+                Status = OrderStatus.Processing,
+                StartTime = request.StartTime,
+                EndTime = request.EndTime ??= request.StartTime.AddHours(2),
+                Note = request.Note,
+                AreaId = request.AreaId,
+                TotalPrice = 0, //
+                Discount = 0, //
+                Deposit = 0, //
+                Code = "test", //
+                CreatedById = currentAccount.Id,
+                CreatedAt = DateTime.Now
+
+            };
+
+            await _unitOfWork.ReservationRepository.AddAsync(order);
+            await _unitOfWork.SaveChangesAsync();
+
+            // minus money in wallet for booking
+
+
+
+            return _mapper.Map<ReservationResponse>(order);
 
 
         }

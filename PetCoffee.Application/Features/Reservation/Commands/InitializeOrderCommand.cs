@@ -13,7 +13,7 @@ namespace PetCoffee.Application.Features.Reservation.Commands
     {
         public long AreaId { get; set; }
         public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
         public string? Note { get; set; }
     }
 }
