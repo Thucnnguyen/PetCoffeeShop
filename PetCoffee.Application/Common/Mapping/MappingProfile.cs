@@ -196,6 +196,7 @@ public class MappingProfile : Profile
         CreateMap<InitializeOrderCommand, Reservation>().ReverseMap();
 
         CreateMap<UpdateAreaCommand, Area>().ReverseMap();
+
 		//transaction
 
 		CreateMap<Transaction, PaymentResponse>().ReverseMap();

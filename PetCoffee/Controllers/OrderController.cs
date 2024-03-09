@@ -86,7 +86,16 @@ namespace PetCoffee.API.Controllers
         }
 
 
-
+        [HttpPut("{id:long}/return")]
+        [Authorize]
+        public async Task<ActionResult<ReservationResponse>> ReturnOrder([FromRoute] long id)
+        {
+            var command = new ReturnOrderCommand()
+            {
+                OrderId = id,
+            };
+            return await Mediator.Send(command);
+        }
 
     }
 }
