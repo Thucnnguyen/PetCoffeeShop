@@ -21,6 +21,10 @@ public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRe
 
     public ShopType? ShopType { get; set; }
 
+    public double Longitude { get; set; }
+    public double Latitude { get; set; }
+
+
 
 	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
     {
@@ -34,7 +38,7 @@ public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRe
             Expression = Expression.And(shop => Equals(ShopType, shop.Type));
         }
 
-        Expression = Expression.And(shop => shop.Status == ShopStatus.Processing);
+        Expression = Expression.And(shop => shop.Status != ShopStatus.Processing);
 
 
         return Expression;

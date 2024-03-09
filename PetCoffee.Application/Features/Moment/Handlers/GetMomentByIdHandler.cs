@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Memory.Models;
@@ -39,7 +40,8 @@ public class GetMomentByIdHandler : IRequestHandler<GetMomentByIdQuery, MomentRe
 		if (currentAccount.IsCustomer)
 		{
 			var MomentsPublic = await _unitOfWork.MomentRepository
-							.GetAsync(m => m.Id == request.MomentId && m.IsPublic == true);
+							.Get(m => m.Id == request.MomentId && m.IsPublic == true)
+							.FirstOrDefaultAsync();
 			if (MomentsPublic == null)
 			{
 				throw new ApiException(ResponseCode.MomentNotExisted);
@@ -48,7 +50,8 @@ public class GetMomentByIdHandler : IRequestHandler<GetMomentByIdQuery, MomentRe
 		}
 
 		var Moments = await _unitOfWork.MomentRepository
-							.GetAsync(m => m.Id == request.MomentId);
+							.Get(m => m.Id == request.MomentId)
+							.FirstOrDefaultAsync();
 		if (Moments == null)
 		{
 			throw new ApiException(ResponseCode.MomentNotExisted);

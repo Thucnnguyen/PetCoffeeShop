@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Service;
 using PetCoffee.Infrastructure.Settings;
-using System.Net.Http;
 
 namespace PetCoffee.Infrastructure.Services;
 

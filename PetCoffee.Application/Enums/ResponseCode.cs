@@ -10,8 +10,12 @@ public enum ResponseCode
 
 
     //Comment
-
     [Description("Comment không tồn tại")] CommentNotExist,
+    //Item
+
+    [Description("Quà tặng đã tồn tại")] ItemNameIsExisted,
+    [Description("Quà tặng không tồn tại")] ItemNotExist,
+
     //Auth
 
     [Description("Có lỗi xảy ra")] CommonError,
@@ -65,6 +69,13 @@ public enum ResponseCode
 	//Notification
 	[Description("Không tìm thấy thông báo")] NotificationErrorNotFound,
 	[Description("Trạng thái hiện tại của Thông báo không cho phép thực hiện thao tác này")] NotificationErrorInvalidStatus,
+	//Transaction
+	[Description("Không tìm thấy giao dịch")] TransactionNotFound,
+
+	//wallet
+	[Description("Trong ví không đủ tiền để thực hiện, vui lòng nạp thêm")] NotEnoughBalance,
+	[Description("Quà tặng trong ví của bạn không đủ vui lòng kiểm trả lại")] ItemInWalletNotEnough,
+
 
 
     //Reservation

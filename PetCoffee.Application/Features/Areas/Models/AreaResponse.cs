@@ -13,7 +13,8 @@ namespace PetCoffee.Application.Features.Areas.Models
         public string? Description { get; set; }
         public string? Image { get; set; }
         public int TotalSeat { get; set; }
+		public int Order { get; set; }
 
-        public long PetcoffeeShopId { get; set; }
+		public long PetcoffeeShopId { get; set; }
     }
 }

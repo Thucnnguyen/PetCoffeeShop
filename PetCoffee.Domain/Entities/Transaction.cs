@@ -11,11 +11,18 @@ public class Transaction : BaseAuditableEntity
 	[ForeignKey("Wallet")]
 	public long WalletId { get; set; }
 	public Wallet Wallet { get; set; }
-	public double Amount { get; set; }
+	public decimal Amount { get; set; }
+
 	public long? RemitterId { get; set; }
 	public Wallet? Remitter {  get; set; }
 
+	public long? PetId { get; set; }
+	public Pet? Pet { get; set; }
+
+	public string? ReferenceTransactionId { get; set; }
+	public string? Url {  get; set; }
 	public long? ReservationId { get; set; }
+
 	public Reservation? Reservation { get; set; }
 	public string? Content { get; set; }
 
@@ -23,6 +30,6 @@ public class Transaction : BaseAuditableEntity
 	[InverseProperty(nameof(TransactionItem.Transaction))]
 	public IList<TransactionItem> Items { get; set; } = new List<TransactionItem>();
 
-	public TransactionStatus TransactionStatus { get; set; }
+	public TransactionStatus TransactionStatus { get; set; } = TransactionStatus.Processing;
 	public TransactionType TransactionType { get; set; }
 }

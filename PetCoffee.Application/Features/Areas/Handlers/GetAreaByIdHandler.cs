@@ -16,6 +16,14 @@ public class GetAreaByIdHandler : IRequestHandler<GetAreaByIdQuery, AreaResponse
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
+
+	public GetAreaByIdHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+	{
+		_unitOfWork = unitOfWork;
+		_currentAccountService = currentAccountService;
+		_mapper = mapper;
+	}
+
 	public async Task<AreaResponse> Handle(GetAreaByIdQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
@@ -28,7 +36,7 @@ public class GetAreaByIdHandler : IRequestHandler<GetAreaByIdQuery, AreaResponse
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var area = await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId);
+		var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
 
 		if(area == null)
 		{

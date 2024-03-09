@@ -7,9 +7,12 @@ using PetCoffee.Application.Features.Comment.Commands;
 using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Events.Commands;
 using PetCoffee.Application.Features.Events.Models;
+using PetCoffee.Application.Features.Items.Commands;
+using PetCoffee.Application.Features.Items.Models;
 using PetCoffee.Application.Features.Memory.Commands;
 using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Notifications.Models;
+using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.PetCfShop.Commands;
@@ -42,12 +45,18 @@ public class MappingProfile : Profile
         CreateMap<CustomerRegisterCommand,Account>().ReverseMap();
         CreateMap<AccountResponse,Account>().ReverseMap();
         CreateMap<AccountForPostModel,Account>().ReverseMap();
+        CreateMap<RegisterShopStaffAccountCommand, Account>().ReverseMap();
 
         //Area
         CreateMap<AreaResponse, Area>().ReverseMap();
         CreateMap<UpdateAreaCommand, Area>().ReverseMap();
         CreateMap<CreateAreaCommand, Area>().ReverseMap();
 
+
+
+        //Item
+        CreateMap<ItemResponse, Item>().ReverseMap();
+        CreateMap<CreateItemCommand, Item>().ReverseMap();
 
         // pet cafe shop
         CreateMap<PetCoffeeShop, PetCoffeeShopResponse>().ReverseMap();
@@ -183,6 +192,15 @@ public class MappingProfile : Profile
         // reservation
         CreateMap<Reservation, ReservationResponse>().ReverseMap();
         CreateMap<UpdateAreaCommand, Area>().ReverseMap();
+		//transaction
+
+		CreateMap<Transaction, PaymentResponse>().ReverseMap();
+		//wallet
+		CreateMap<WalletItem,ItemWalletResponse>()
+			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))
+			.ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
+
+
 
 
         CreateMap<Reservation, ReservationDetailResponse>()
