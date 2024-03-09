@@ -29,7 +29,7 @@ public class ProcessVnpayPaymentIpnHandler : IRequestHandler<ProcessVnpayPayment
 		var resultData = new Transaction();
 
 		var transaction = await _unitOfWork.TransactionRepository
-								.Get(t => t.ReferenceTransactionId == request.ReferenceId && t.TransactionStatus == TransactionStatus.Processing && t.TransactionType == TransactionType.Recharge)
+								.Get(t => t.ReferenceTransactionId == request.ReferenceId && t.TransactionStatus == TransactionStatus.Processing && t.TransactionType == TransactionType.TopUp)
 								.FirstOrDefaultAsync();
 
 		if (transaction == null)

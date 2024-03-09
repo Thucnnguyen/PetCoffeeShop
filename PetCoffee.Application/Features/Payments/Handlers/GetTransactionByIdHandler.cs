@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Payments.Models;
@@ -24,18 +25,26 @@ public class GetTransactionByIdHandler : IRequestHandler<GetTransactionByIdQuery
 
 	public async Task<PaymentResponse> Handle(GetTransactionByIdQuery request, CancellationToken cancellationToken)
 	{
-		var currentAccount = await _currentAccountService.GetCurrentAccount();
-		if (currentAccount == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (currentAccount.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
+		//var currentAccount = await _currentAccountService.GetCurrentAccount();
+		//if (currentAccount == null)
+		//{
+		//	throw new ApiException(ResponseCode.AccountNotExist);
+		//}
+		//if (currentAccount.IsVerify)
+		//{
+		//	throw new ApiException(ResponseCode.AccountNotActived);
+		//}
 
 		var transaction = await _unitOfWork.TransactionRepository
-							.GetByIdAsync(request.TransactionId);
+							.Get(t => t.Id == request.TransactionId)
+							.Include(t => t.Items)
+							 .ThenInclude(ti => ti.Item)
+							.Include(t => t.Pet)
+							.Include(t => t.Reservation)
+							.ThenInclude(r => r.Area)
+							.ThenInclude(a => a.PetCoffeeShop)
+							.FirstOrDefaultAsync();
+
 		if (transaction == null)
 		{
 			throw new ApiException(ResponseCode.TransactionNotFound);

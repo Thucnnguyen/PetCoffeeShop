@@ -188,8 +188,14 @@ public class MappingProfile : Profile
 		CreateMap<Notification, NotificationResponse>().ReverseMap();
 
 		//transaction
+		CreateMap<Transaction, PaymentResponse>()
+			.ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet != null ? src.Pet.Name : null))
+			.ForMember(dest => dest.TransactionItems, opt => opt.MapFrom(src => src.Items))
+			.ForMember(dest => dest.ShopName, opt => opt.MapFrom(src => src.Reservation != null ? src.Reservation.Area.PetCoffeeShop.Name : null));
 
-		CreateMap<Transaction, PaymentResponse>().ReverseMap();
+		CreateMap<TransactionItem, TransactionItemResponse>()
+			.ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name));
+		CreateMap<PaymentResponse, Transaction>();
 		//wallet
 		CreateMap<WalletItem,ItemWalletResponse>()
 			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))

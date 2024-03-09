@@ -26,7 +26,6 @@ public class CreateMomentCommand : IRequest<MomentResponse>
 	public string? Content { get; set; }
 	public IList<IFormFile>? Image { get; set; }
 	public MomentType MomentType { get; set; }
-	public bool IsPublic { get; set; } = true;
 
 	public long PetId { get; set; }
 }

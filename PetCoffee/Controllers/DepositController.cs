@@ -18,12 +18,7 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
-		[HttpGet("recharges/{TransactionId}")]
-		public async Task<ActionResult<PaymentResponse>> GetDepositTransaction([FromRoute] GetTransactionByIdQuery request)
-		{
-			var response = await Mediator.Send(request);
-			return response;
-		}
+		
 		[HttpGet("payments/callback/vnpay/{referenceId}")]
 		public async Task<ActionResult<PaymentResponse>> CallbackVNPay([FromRoute] string referenceId, [FromQuery] ProcessVnpayPaymentIpnCommand request)
 		{

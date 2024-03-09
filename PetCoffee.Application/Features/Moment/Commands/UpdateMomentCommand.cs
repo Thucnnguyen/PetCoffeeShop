@@ -12,5 +12,4 @@ public class UpdateMomentCommand : IRequest<MomentResponse>
 	public string? Content { get; set; }
 	public IList<IFormFile>? NewImages { get; set; }
 	public MomentType? MomentType { get; set; }
-	public bool? IsPublic { get; set; }
 }
