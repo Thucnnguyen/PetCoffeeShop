@@ -9,13 +9,17 @@ public class CreateEventValidation : AbstractValidator<CreateEventCommand>
 {
     public CreateEventValidation()
     {
-        RuleFor(model => model.StartTime)
-			.Must((command, StartTime) => StartTime >= DateTime.UtcNow)
+        RuleFor(model => model.StartDate)
+			.Must((command, StartDate) => StartDate >= DateTime.UtcNow)
 			.WithMessage("Thời gian bắt đầu không được ở trong quá khứ");
+
+		RuleFor(model => model.StartDate)
+			.Must((command, StartDate) => StartDate < command.EndDate)
+			.WithMessage("Thời gian kết thúc phải sau thời gian bắt đầu");
 
 		RuleFor(model => model.StartTime)
 			.Must((command, StartTime) => StartTime < command.EndTime)
-			.WithMessage("Thời gian kết thúc phải sau thời gian bắt đầu");
+			.WithMessage("Giờ kết thúc phải sau giờ bắt đầu");
 	}
 }
 public class CreateEventCommand : IRequest<EventResponse>
@@ -24,8 +28,10 @@ public class CreateEventCommand : IRequest<EventResponse>
 	public string Title { get; set; }
 	public IFormFile? ImageFile { get; set; }
 	public string? Description { get; set; }
-	public DateTime StartTime { get; set; }
-	public DateTime EndTime { get; set; }
+	public DateTime StartDate { get; set; }
+	public DateTime EndDate { get; set; }
+	public TimeSpan StartTime { get; set; }
+	public TimeSpan EndTime { get; set; }
 	public string? Location { get; set; }
 	
 	

@@ -39,7 +39,7 @@ public class GetMomentsByIdHandler : IRequestHandler<GetMomentByPetIdQuery, ILis
 		if (currentAccount.IsCustomer)
 		{
 			var MomentsPublic = await _unitOfWork.MomentRepository
-							.GetAsync(m => m.PetId == request.Id && m.IsPublic == true);
+							.GetAsync(m => m.PetId == request.Id);
 			if (MomentsPublic == null)
 			{
 				return new List<MomentResponse>();

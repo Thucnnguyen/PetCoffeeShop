@@ -8,8 +8,10 @@ public class EventForCardResponse
 	public string? Title { get; set; }
 	public string? Image { get; set; }
 	public string? Description { get; set; }
-	public DateTime StartTime { get; set; }
-	public DateTime EndTime { get; set; }
+	public DateTime StartDate { get; set; }
+	public DateTime EndDate { get; set; }
+	public TimeSpan StartTime { get; set; }
+	public TimeSpan EndTime { get; set; }
 	public string? Location { get; set; }
 	public long TotalJoinEvent { get; set; } = 0;
 }

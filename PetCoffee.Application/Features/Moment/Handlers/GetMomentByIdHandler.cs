@@ -40,7 +40,7 @@ public class GetMomentByIdHandler : IRequestHandler<GetMomentByIdQuery, MomentRe
 		if (currentAccount.IsCustomer)
 		{
 			var MomentsPublic = await _unitOfWork.MomentRepository
-							.Get(m => m.Id == request.MomentId && m.IsPublic == true)
+							.Get(m => m.Id == request.MomentId)
 							.FirstOrDefaultAsync();
 			if (MomentsPublic == null)
 			{

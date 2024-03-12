@@ -4,7 +4,7 @@ namespace PetCoffee.Domain.Enums;
 
 public enum ReportStatus 
 {
-	Success,
+	Accept,
 	Processing,
 	Reject
 }

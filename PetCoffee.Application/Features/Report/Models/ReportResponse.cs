@@ -1,9 +1,5 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Report.Models
 {
@@ -13,5 +9,6 @@ namespace PetCoffee.Application.Features.Report.Models
         public long? CommentId { get; set; }
         public long? PostID { get; set; }
         public string? Reason { get; set; }
-    }
+		public ReportStatus Status { get; set; }
+	}
 }
