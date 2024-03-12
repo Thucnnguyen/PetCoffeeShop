@@ -26,7 +26,7 @@ public class ProcessVnpayPaymentIpnHandler : IRequestHandler<ProcessVnpayPayment
 
 	public async Task Handle(ProcessVnpayPaymentIpnCommand request, CancellationToken cancellationToken)
 	{
-		var resultData = new Transaction();
+		var resultData = new Domain.Entities.Transaction();
 
 		var transaction = await _unitOfWork.TransactionRepository
 								.Get(t => t.ReferenceTransactionId == request.ReferenceId && t.TransactionStatus == TransactionStatus.Processing && t.TransactionType == TransactionType.TopUp)

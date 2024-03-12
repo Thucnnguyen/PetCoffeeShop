@@ -7,6 +7,7 @@ public enum ResponseCode
     //Area
 
     [Description("Area không tồn tại")] AreaNotExist,
+    [Description("Area không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
 
 
     //Comment
@@ -80,5 +81,10 @@ public enum ResponseCode
 	[Description("Báo cáo không tồn tại")] ReportNotExisted,
 
 
+
+
+    //Reservation
+
+    [Description("Reservation không tồn tại")] ReservationNotExist,
 
 }

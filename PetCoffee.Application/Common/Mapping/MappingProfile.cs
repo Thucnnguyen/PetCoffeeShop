@@ -25,8 +25,12 @@ using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Models;
+using PetCoffee.Application.Features.Reservation.Commands;
+using PetCoffee.Application.Features.Reservation.Handlers;
+using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
+using PetCoffee.Application.Features.Transaction.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Domain.Entities;
@@ -187,6 +191,12 @@ public class MappingProfile : Profile
 		// notification
 		CreateMap<Notification, NotificationResponse>().ReverseMap();
 
+        // reservation
+        CreateMap<Reservation, ReservationResponse>().ReverseMap();
+        CreateMap<InitializeOrderCommand, Reservation>().ReverseMap();
+
+        CreateMap<UpdateAreaCommand, Area>().ReverseMap();
+
 		//transaction
 		CreateMap<Transaction, PaymentResponse>()
 			.ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet != null ? src.Pet.Name : null))
@@ -203,5 +213,16 @@ public class MappingProfile : Profile
 
 
 
-	}
+
+        CreateMap<Reservation, ReservationDetailResponse>()
+          .ForMember(dest => dest.Transactions, option
+                  => option.MapFrom(src => src.Transactions));
+
+        CreateMap<Reservation, ReservationDetailResponse>()
+    .ForMember(dest => dest.Transactions, opt => opt.MapFrom(src => src.Transactions));
+
+
+        // transaction
+        CreateMap<Transaction, TransactionResponse>().ReverseMap();
+    }
 }
