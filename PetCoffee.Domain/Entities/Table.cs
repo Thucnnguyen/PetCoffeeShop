@@ -11,4 +11,6 @@ public class Table : BaseAuditableEntity
 
 	public long AreaId { get; set; }
 	public Area Area { get; set; }
+
+	public double PricePerHour { get; set; }
 }

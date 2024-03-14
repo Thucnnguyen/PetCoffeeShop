@@ -49,7 +49,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 			}
 
 			var areas = _unitOfWork.AreaRepsitory.Get(c => c.PetcoffeeShopId == request.ShopId && !c.Deleted, disableTracking: true)
-												//.Include(c => c.creaet)
+												//.Include(c => c.table)
 												.ToList();
 
 			var response = new List<AreaResponse>();
