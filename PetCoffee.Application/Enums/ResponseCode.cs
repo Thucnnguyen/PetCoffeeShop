@@ -87,4 +87,9 @@ public enum ResponseCode
 
     [Description("Reservation không tồn tại")] ReservationNotExist,
 
+
+    //Table
+
+    [Description("Table không tồn tại")] TableNotExist,
+
 }

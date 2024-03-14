@@ -1,5 +1,6 @@
 ﻿
 using PetCoffee.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
@@ -13,4 +14,8 @@ public class Table : BaseAuditableEntity
 	public Area Area { get; set; }
 
 	public double PricePerHour { get; set; }
+
+
+    [InverseProperty(nameof(ReservationTable.Reservation))]
+    public IList<ReservationTable> ReservationTables { get; set; } = new List<ReservationTable>();
 }

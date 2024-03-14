@@ -1017,6 +1017,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("longtext");
 
+                    b.Property<double>("PricePerHour")
+                        .HasColumnType("double");
+
                     b.Property<int>("Type")
                         .HasColumnType("int");
 

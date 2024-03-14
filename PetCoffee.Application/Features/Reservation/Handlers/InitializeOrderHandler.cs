@@ -39,20 +39,20 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             }
 
             // check exist area
-            var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
+            //var table = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.TableId)).FirstOrDefault();
 
-            if (area == null)
-            {
-                throw new ApiException(ResponseCode.AreaNotExist);
-            }
+            //if (table == null)
+            //{
+            //    throw new ApiException(ResponseCode.TableNotExist);
+            //}
 
             // check seat is ok ?
-            var isSeat =  IsAreaAvailable(request.AreaId, request.StartTime, request.EndTime, request.TotalSeatBook);
+            //var isSeat =  IsAreaAvailable(request.TableId, request.StartTime, request.EndTime, request.TotalSeat);
 
-            if (!isSeat)
-            {
-                throw new ApiException(ResponseCode.AreaInsufficientSeating);
-            }
+            //if (!isSeat)
+            //{
+            //    throw new ApiException(ResponseCode.AreaInsufficientSeating);
+            //}
 
             var order = new Domain.Entities.Reservation
             {
@@ -61,7 +61,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
                 Note = request.Note,
-                AreaId = request.AreaId,
+                //AreaId = request.AreaId,
                 TotalPrice = 0, //
                 Discount = 0, //
                 Deposit = 0, //
@@ -92,10 +92,11 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
            
           
             var existingReservations =  _unitOfWork.ReservationRepository
-                .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing)  &&
-                            ((startTime >= r.StartTime && startTime < r.EndTime) ||
-                             (endTime > r.StartTime && endTime <= r.EndTime) ||
-                             (startTime <= r.StartTime && endTime >= r.EndTime)))
+                //.Get(r => r.ReservationTables.Tab == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing)  &&
+                //            ((startTime >= r.StartTime && startTime < r.EndTime) ||
+                //             (endTime > r.StartTime && endTime <= r.EndTime) ||
+                //             (startTime <= r.StartTime && endTime >= r.EndTime)))
+                .Get()
                 .ToList();
 
           
