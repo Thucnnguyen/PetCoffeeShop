@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetCoffee.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initDb : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,8 +49,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     EndTimeBlockComment = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: true)
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,7 +90,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Price = table.Column<double>(type: "double", nullable: false),
-                    Description = table.Column<string>(type: "longtext", nullable: false)
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Icon = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedById = table.Column<long>(type: "bigint", nullable: true),
@@ -122,6 +123,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Data = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     EntityType = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     ReferenceId = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ReadAt = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
@@ -184,6 +186,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Type = table.Column<int>(type: "int", nullable: false),
                     OpeningTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     ClosedTime = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    EndTimePackage = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -201,40 +204,12 @@ namespace PetCoffee.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Post",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Content = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Image = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Post", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Post_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Wallet",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Balance = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    AccountId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -244,16 +219,35 @@ namespace PetCoffee.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Wallet", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Wallet_Account_AccountId",
+                        name: "FK_Wallet_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "AccountShop",
+                columns: table => new
+                {
+                    AccountId = table.Column<long>(type: "bigint", nullable: false),
+                    ShopId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccountShop", x => new { x.AccountId, x.ShopId });
+                    table.ForeignKey(
+                        name: "FK_AccountShop_Account_AccountId",
                         column: x => x.AccountId,
                         principalTable: "Account",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Wallet_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
+                        name: "FK_AccountShop_PetCoffeeShop_ShopId",
+                        column: x => x.ShopId,
+                        principalTable: "PetCoffeeShop",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -268,11 +262,22 @@ namespace PetCoffee.Infrastructure.Migrations
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     TotalSeat = table.Column<int>(type: "int", nullable: false),
-                    PetcoffeeShopId = table.Column<long>(type: "bigint", nullable: false)
+                    TotalSeatAvailable = table.Column<int>(type: "int", nullable: true),
+                    Order = table.Column<int>(type: "int", nullable: false),
+                    PetcoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Area", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Area_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Area_PetCoffeeShop_PetcoffeeShopId",
                         column: x => x.PetcoffeeShopId,
@@ -294,8 +299,10 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    StartTime = table.Column<TimeSpan>(type: "time(6)", nullable: false),
+                    EndTime = table.Column<TimeSpan>(type: "time(6)", nullable: false),
                     Location = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
@@ -350,6 +357,241 @@ namespace PetCoffee.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Post",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Content = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ShopId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Post", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Post_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Post_PetCoffeeShop_ShopId",
+                        column: x => x.ShopId,
+                        principalTable: "PetCoffeeShop",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "WalletItem",
+                columns: table => new
+                {
+                    ItemId = table.Column<long>(type: "bigint", nullable: false),
+                    WalletId = table.Column<long>(type: "bigint", nullable: false),
+                    TotalItem = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WalletItem", x => new { x.WalletId, x.ItemId });
+                    table.ForeignKey(
+                        name: "FK_WalletItem_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "ItemId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WalletItem_Wallet_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Order",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    TotalPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Note = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Deposit = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Code = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Rate = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Comment = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    AreaId = table.Column<long>(type: "bigint", nullable: true),
+                    TotalSeatBook = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Order", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Order_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Order_Area_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "Area",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Pet",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    BirthYear = table.Column<int>(type: "int", nullable: true),
+                    Weight = table.Column<double>(type: "double", nullable: true),
+                    Gender = table.Column<int>(type: "int", nullable: true),
+                    Avatar = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Backgound = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Description = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    PetType = table.Column<int>(type: "int", nullable: false),
+                    PetStatus = table.Column<int>(type: "int", nullable: false),
+                    Spayed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
+                    AreaId = table.Column<long>(type: "bigint", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Pet", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Pet_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Pet_Area_AreaId",
+                        column: x => x.AreaId,
+                        principalTable: "Area",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Pet_PetCoffeeShop_PetCoffeeShopId",
+                        column: x => x.PetCoffeeShopId,
+                        principalTable: "PetCoffeeShop",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "EventFields",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Question = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Type = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    IsOptional = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Answer = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EventId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventFields", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventFields_Event_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "FollowEvents",
+                columns: table => new
+                {
+                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    EventId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FollowEvents", x => new { x.EventId, x.CreatedById });
+                    table.ForeignKey(
+                        name: "FK_FollowEvents_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FollowEvents_Event_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "SubmittingEvent",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    EventId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubmittingEvent", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SubmittingEvent_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_SubmittingEvent_Event_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Comment",
                 columns: table => new
                 {
@@ -360,6 +602,7 @@ namespace PetCoffee.Infrastructure.Migrations
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PostId = table.Column<long>(type: "bigint", nullable: false),
+                    ShopId = table.Column<long>(type: "bigint", nullable: true),
                     ParentCommentId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedById = table.Column<long>(type: "bigint", nullable: true),
@@ -378,6 +621,11 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Comment_Comment_ParentCommentId",
                         column: x => x.ParentCommentId,
                         principalTable: "Comment",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Comment_PetCoffeeShop_ShopId",
+                        column: x => x.ShopId,
+                        principalTable: "PetCoffeeShop",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Comment_Post_PostId",
@@ -485,268 +733,6 @@ namespace PetCoffee.Infrastructure.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Transaction",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    WalletId = table.Column<long>(type: "bigint", nullable: false),
-                    Amount = table.Column<double>(type: "double", nullable: false),
-                    RemitterId = table.Column<long>(type: "bigint", nullable: true),
-                    Content = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ItemId = table.Column<long>(type: "bigint", nullable: true),
-                    TransactionStatus = table.Column<int>(type: "int", nullable: false),
-                    TransactionType = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Transaction", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Transaction_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Transaction_Items_ItemId",
-                        column: x => x.ItemId,
-                        principalTable: "Items",
-                        principalColumn: "ItemId");
-                    table.ForeignKey(
-                        name: "FK_Transaction_Wallet_RemitterId",
-                        column: x => x.RemitterId,
-                        principalTable: "Wallet",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Transaction_Wallet_WalletId",
-                        column: x => x.WalletId,
-                        principalTable: "Wallet",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Order",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    TotalPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Discount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Note = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Deposit = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    Code = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Rate = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Comment = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FloorId = table.Column<long>(type: "bigint", nullable: true),
-                    AreaId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Order", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Order_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Order_Area_AreaId",
-                        column: x => x.AreaId,
-                        principalTable: "Area",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Pet",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    BirthYear = table.Column<int>(type: "int", nullable: true),
-                    Weight = table.Column<double>(type: "double", nullable: true),
-                    Gender = table.Column<int>(type: "int", nullable: true),
-                    Avatar = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Backgound = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    PetType = table.Column<int>(type: "int", nullable: false),
-                    PetStatus = table.Column<int>(type: "int", nullable: false),
-                    Spayed = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
-                    AreaId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Pet", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Pet_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Pet_Area_AreaId",
-                        column: x => x.AreaId,
-                        principalTable: "Area",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Pet_PetCoffeeShop_PetCoffeeShopId",
-                        column: x => x.PetCoffeeShopId,
-                        principalTable: "PetCoffeeShop",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "EventFields",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FieldName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FieldValue = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsOptional = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    OptionValue = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Answer = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Order = table.Column<int>(type: "int", nullable: false),
-                    EventId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EventFields", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EventFields_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "FollowEvents",
-                columns: table => new
-                {
-                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
-                    EventId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FollowEvents", x => new { x.EventId, x.CreatedById });
-                    table.ForeignKey(
-                        name: "FK_FollowEvents_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_FollowEvents_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "SubmittingEvent",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    EventId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubmittingEvent", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_SubmittingEvent_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_SubmittingEvent_Event_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Event",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Report",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CommentId = table.Column<long>(type: "bigint", nullable: true),
-                    PostID = table.Column<long>(type: "bigint", nullable: true),
-                    Reason = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    ReportCategory = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Report", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Report_Account_CreatedById",
-                        column: x => x.CreatedById,
-                        principalTable: "Account",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Report_Comment_CommentId",
-                        column: x => x.CommentId,
-                        principalTable: "Comment",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Report_Post_PostID",
-                        column: x => x.PostID,
-                        principalTable: "Post",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Diaries",
                 columns: table => new
                 {
@@ -756,7 +742,6 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IsPublic = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     MomentType = table.Column<int>(type: "int", nullable: false),
                     PetId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -776,6 +761,62 @@ namespace PetCoffee.Infrastructure.Migrations
                         name: "FK_Diaries_Pet_PetId",
                         column: x => x.PetId,
                         principalTable: "Pet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Transaction",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    WalletId = table.Column<long>(type: "bigint", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    RemitterId = table.Column<long>(type: "bigint", nullable: true),
+                    PetId = table.Column<long>(type: "bigint", nullable: true),
+                    ReferenceTransactionId = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Url = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    ReservationId = table.Column<long>(type: "bigint", nullable: true),
+                    Content = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TransactionStatus = table.Column<int>(type: "int", nullable: false),
+                    TransactionType = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transaction_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transaction_Order_ReservationId",
+                        column: x => x.ReservationId,
+                        principalTable: "Order",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transaction_Pet_PetId",
+                        column: x => x.PetId,
+                        principalTable: "Pet",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transaction_Wallet_RemitterId",
+                        column: x => x.RemitterId,
+                        principalTable: "Wallet",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Transaction_Wallet_WalletId",
+                        column: x => x.WalletId,
+                        principalTable: "Wallet",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -812,16 +853,13 @@ namespace PetCoffee.Infrastructure.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FieldName = table.Column<string>(type: "longtext", nullable: false)
+                    Question = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FieldValue = table.Column<string>(type: "longtext", nullable: false)
+                    Type = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsOptional = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    OptionValue = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Answer = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Order = table.Column<int>(type: "int", nullable: false),
                     Submitcontent = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     SubmittingEventId = table.Column<long>(type: "bigint", nullable: false),
@@ -847,10 +885,79 @@ namespace PetCoffee.Infrastructure.Migrations
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "Report",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    CommentId = table.Column<long>(type: "bigint", nullable: true),
+                    PostID = table.Column<long>(type: "bigint", nullable: true),
+                    Reason = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    ReportCategory = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CreatedById = table.Column<long>(type: "bigint", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Report", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Report_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Report_Comment_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comment",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Report_Post_PostID",
+                        column: x => x.PostID,
+                        principalTable: "Post",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "TransactionItem",
+                columns: table => new
+                {
+                    ItemId = table.Column<long>(type: "bigint", nullable: false),
+                    TransactionId = table.Column<long>(type: "bigint", nullable: false),
+                    TotalItem = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransactionItem", x => new { x.TransactionId, x.ItemId });
+                    table.ForeignKey(
+                        name: "FK_TransactionItem_Items_ItemId",
+                        column: x => x.ItemId,
+                        principalTable: "Items",
+                        principalColumn: "ItemId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TransactionItem_Transaction_TransactionId",
+                        column: x => x.TransactionId,
+                        principalTable: "Transaction",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
             migrationBuilder.CreateIndex(
-                name: "IX_Account_PetCoffeeShopId",
-                table: "Account",
-                column: "PetCoffeeShopId");
+                name: "IX_AccountShop_ShopId",
+                table: "AccountShop",
+                column: "ShopId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Area_CreatedById",
+                table: "Area",
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Area_PetcoffeeShopId",
@@ -876,6 +983,11 @@ namespace PetCoffee.Infrastructure.Migrations
                 name: "IX_Comment_PostId",
                 table: "Comment",
                 column: "PostId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_ShopId",
+                table: "Comment",
+                column: "ShopId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Diaries_CreatedById",
@@ -968,6 +1080,11 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Post_ShopId",
+                table: "Post",
+                column: "ShopId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostCategories_CategoryId",
                 table: "PostCategories",
                 column: "CategoryId");
@@ -1028,9 +1145,9 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Transaction_ItemId",
+                name: "IX_Transaction_PetId",
                 table: "Transaction",
-                column: "ItemId");
+                column: "PetId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Transaction_RemitterId",
@@ -1038,9 +1155,19 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "RemitterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Transaction_ReservationId",
+                table: "Transaction",
+                column: "ReservationId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Transaction_WalletId",
                 table: "Transaction",
                 column: "WalletId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransactionItem_ItemId",
+                table: "TransactionItem",
+                column: "ItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Vaccination_PetId",
@@ -1048,29 +1175,21 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "PetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Wallet_AccountId",
-                table: "Wallet",
-                column: "AccountId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Wallet_CreatedById",
                 table: "Wallet",
                 column: "CreatedById");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Account_PetCoffeeShop_PetCoffeeShopId",
-                table: "Account",
-                column: "PetCoffeeShopId",
-                principalTable: "PetCoffeeShop",
-                principalColumn: "Id");
+            migrationBuilder.CreateIndex(
+                name: "IX_WalletItem_ItemId",
+                table: "WalletItem",
+                column: "ItemId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Account_PetCoffeeShop_PetCoffeeShopId",
-                table: "Account");
+            migrationBuilder.DropTable(
+                name: "AccountShop");
 
             migrationBuilder.DropTable(
                 name: "Diaries");
@@ -1091,9 +1210,6 @@ namespace PetCoffee.Infrastructure.Migrations
                 name: "Notification");
 
             migrationBuilder.DropTable(
-                name: "Order");
-
-            migrationBuilder.DropTable(
                 name: "PostCategories");
 
             migrationBuilder.DropTable(
@@ -1106,10 +1222,13 @@ namespace PetCoffee.Infrastructure.Migrations
                 name: "SubmittingEventField");
 
             migrationBuilder.DropTable(
-                name: "Transaction");
+                name: "TransactionItem");
 
             migrationBuilder.DropTable(
                 name: "Vaccination");
+
+            migrationBuilder.DropTable(
+                name: "WalletItem");
 
             migrationBuilder.DropTable(
                 name: "Categories");
@@ -1121,19 +1240,25 @@ namespace PetCoffee.Infrastructure.Migrations
                 name: "SubmittingEvent");
 
             migrationBuilder.DropTable(
+                name: "Transaction");
+
+            migrationBuilder.DropTable(
                 name: "Items");
-
-            migrationBuilder.DropTable(
-                name: "Wallet");
-
-            migrationBuilder.DropTable(
-                name: "Pet");
 
             migrationBuilder.DropTable(
                 name: "Post");
 
             migrationBuilder.DropTable(
                 name: "Event");
+
+            migrationBuilder.DropTable(
+                name: "Order");
+
+            migrationBuilder.DropTable(
+                name: "Pet");
+
+            migrationBuilder.DropTable(
+                name: "Wallet");
 
             migrationBuilder.DropTable(
                 name: "Area");

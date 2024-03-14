@@ -138,6 +138,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<int>("TotalSeat")
                         .HasColumnType("int");
 
+                    b.Property<int?>("TotalSeatAvailable")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -860,6 +863,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<int>("TotalSeatBook")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -1488,7 +1494,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .HasForeignKey("RemitterId");
 
                     b.HasOne("PetCoffee.Domain.Entities.Reservation", "Reservation")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("ReservationId");
 
                     b.HasOne("PetCoffee.Domain.Entities.Wallet", "Wallet")
@@ -1652,6 +1658,11 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("PostPetCoffeeShops");
 
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("PetCoffee.Domain.Entities.Reservation", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.SubmittingEvent", b =>
