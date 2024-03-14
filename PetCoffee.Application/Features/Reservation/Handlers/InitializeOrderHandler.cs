@@ -46,6 +46,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             //    throw new ApiException(ResponseCode.TableNotExist);
             //}
 
+
             // check seat is ok ?
             //var isSeat =  IsAreaAvailable(request.TableId, request.StartTime, request.EndTime, request.TotalSeat);
 
@@ -54,12 +55,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             //    throw new ApiException(ResponseCode.AreaInsufficientSeating);
             //}
 
+
+
             var order = new Domain.Entities.Reservation
             {
 
                 Status = OrderStatus.Processing,
                 StartTime = request.StartTime,
-                EndTime = request.EndTime,
+                EndTime = request.EndTime ??= request.StartTime.AddHours(2),
                 Note = request.Note,
                 //AreaId = request.AreaId,
                 TotalPrice = 0, //
@@ -67,14 +70,16 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 Deposit = 0, //
                 Code = "test", //
                 CreatedById = currentAccount.Id,
-                CreatedAt = DateTime.Now,
+
+                
+
+                CreatedAt = DateTime.Now
+
 
             };
 
             await _unitOfWork.ReservationRepository.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();
-
-
 
             // minus money in wallet for booking
 
@@ -92,11 +97,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
            
           
             var existingReservations =  _unitOfWork.ReservationRepository
-                //.Get(r => r.ReservationTables.Tab == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing)  &&
-                //            ((startTime >= r.StartTime && startTime < r.EndTime) ||
-                //             (endTime > r.StartTime && endTime <= r.EndTime) ||
-                //             (startTime <= r.StartTime && endTime >= r.EndTime)))
-                .Get()
+                .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing) &&
+                            ((startTime >= r.StartTime && startTime < r.EndTime) ||
+                             (endTime > r.StartTime && endTime <= r.EndTime) ||
+                             (startTime <= r.StartTime && endTime >= r.EndTime)))
                 .ToList();
 
           
@@ -104,10 +108,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 .Where(r => r.Status == OrderStatus.Success)
                 .ToList();
 
-          
-            var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
 
-         
+            //var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
+
+
             var area =  _unitOfWork.AreaRepsitory.Get(a => a.Id == areaId).FirstOrDefault();
 
          
@@ -116,6 +120,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
         
             return true;
         }
+
 
 
 

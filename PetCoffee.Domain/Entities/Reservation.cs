@@ -24,12 +24,6 @@ public class Reservation : BaseAuditableEntity
 	public long? AreaId { get; set; }
 	public Area? Area { get; set; }
 
-
-	[InverseProperty(nameof(ReservationTable.Reservation))]
-    public IList<ReservationTable> ReservationTables { get; set; } = new List<ReservationTable>();
-
-    public int TotalSeatBook { get; set; }  
-
     public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 
 
