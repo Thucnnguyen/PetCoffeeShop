@@ -39,6 +39,11 @@ public class ApplicationDbContext : DbContext
 			.HasKey(e => new { e.TransactionId, e.ItemId });
 		modelBuilder.Entity<WalletItem>()
 			.HasKey(e => new { e.WalletId, e.ItemId });
+		modelBuilder.Entity<RatePet>()
+			.HasKey(e => new { e.PetId, e.CreatedById });
+		modelBuilder.Entity<ReservationTable>()
+			.HasKey(e => new { e.TableId, e.ReservationId });
+
 	}
 
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -66,6 +71,4 @@ public class ApplicationDbContext : DbContext
     public DbSet<Wallet> Wallets => Set<Wallet>();
 	public DbSet<PostPetCoffeeShop> PostPetCoffeeShops => Set<PostPetCoffeeShop>();
 	public DbSet<FollowPetCfShop> FollowPetCfShops => Set<FollowPetCfShop>();
-
-
 }

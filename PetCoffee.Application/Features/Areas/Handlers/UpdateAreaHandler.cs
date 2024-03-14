@@ -58,7 +58,6 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             }
 
             area.Description = request.Description;
-            area.TotalSeat = request.TotalSeat;
             area.Order = request.Order;
             
 

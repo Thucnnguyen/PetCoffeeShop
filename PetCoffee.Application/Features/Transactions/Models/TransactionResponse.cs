@@ -9,13 +9,13 @@ using System.Text;
 using System.Threading.Tasks;
 using PetCoffee.Application.Common.Models.Response;
 
-namespace PetCoffee.Application.Features.Transaction.Models
+namespace PetCoffee.Application.Features.Transactions.Models
 {
-    public class TransactionResponse: BaseAuditableEntityResponse
+    public class TransactionResponse : BaseAuditableEntityResponse
     {
-  
+
         public long Id { get; set; }
-      
+
         public long WalletId { get; set; }
         public Wallet Wallet { get; set; }
         public double Amount { get; set; }

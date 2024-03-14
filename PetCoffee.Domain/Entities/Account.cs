@@ -58,7 +58,8 @@ public class Account
 	public IList<Report> Reports { get; set; } = new List<Report>();
 	[InverseProperty(nameof(AccountShop.Account))]
 	public IList<AccountShop> AccountShops { get; set; } = new List<AccountShop>();
-
+	[InverseProperty(nameof(RatePet.CreatedBy))]
+	public IList<RatePet> PetRattings { get; set; } = new List<RatePet>();
 	/*
 	 * for staff, manager
 	 */

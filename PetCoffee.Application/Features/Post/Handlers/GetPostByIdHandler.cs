@@ -4,11 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Post.Model;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 
 

@@ -30,7 +30,7 @@ using PetCoffee.Application.Features.Reservation.Handlers;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
-using PetCoffee.Application.Features.Transaction.Models;
+using PetCoffee.Application.Features.Transactions.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Domain.Entities;
@@ -168,7 +168,8 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.PetCoffeeShopId, opt => opt.MapFrom(src => src.Event.PetCoffeeShopId));
 
 		CreateMap<SubmittingEvent, EventForCardResponse>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
+			.ForMember(dest => dest.SubmitEventId, opt => opt.MapFrom(src => src.Id))
 			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
 			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
 			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
@@ -209,6 +210,7 @@ public class MappingProfile : Profile
 		//wallet
 		CreateMap<WalletItem,ItemWalletResponse>()
 			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))
+			.ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Item.Price))
 			.ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
 
 

@@ -53,8 +53,8 @@ public class GetEventsForCustomerHandler : IRequestHandler<GetEventsForCustomerQ
 		if (followedShopIds.Any())
 		{
 			eventQuery = eventQuery
-			 .OrderByDescending(e => followedShopIds.Select(f => f.ShopId).Contains(e.PetCoffeeShopId))
-			 .ThenByDescending(e => e.CreatedAt)
+			 .OrderByDescending(e => e.CreatedAt)
+			 .ThenByDescending(e => followedShopIds.Select(f => f.ShopId).Contains(e.PetCoffeeShopId))
 			 .ThenByDescending(e => e.SubmittingEvents.Count());
 		}
 		else

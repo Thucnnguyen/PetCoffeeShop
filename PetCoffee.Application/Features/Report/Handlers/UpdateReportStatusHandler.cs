@@ -33,26 +33,39 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 			report.Status = ReportStatus.Accept;
 			if (report.PostID != null)
 			{
-				var post = await _unitOfWork.PostRepository.Get(p => p.Id == report.PostID && !p.Deleted)
-							.FirstOrDefaultAsync();
-				if (post != null)
+				var AnyAcceptedReport = await _unitOfWork.ReportRepository
+					.Get(r => r.PostID == report.PostID && r.Status == ReportStatus.Accept)
+					.AnyAsync();
+
+				if (AnyAcceptedReport)
 				{
-					post.DeletedAt = DateTime.UtcNow;
-					await _unitOfWork.PostRepository.UpdateAsync(post);
+					var post = await _unitOfWork.PostRepository.Get(p => p.Id == report.PostID && !p.Deleted)
+							.FirstOrDefaultAsync();
+					if (post != null)
+					{
+						post.DeletedAt = DateTime.UtcNow;
+						await _unitOfWork.PostRepository.UpdateAsync(post);
+					}
 				}
+				report.Status = ReportStatus.Accept;
 			}
 
 			if (report.CommentId != null)
 			{
-				var comments = await _unitOfWork.CommentRepository
-							.GetAsync(c => c.Id == report.CommentId  && c.ParentCommentId == report.CommentId);
-				if (comments != null)
+				var AnyAcceptedReport = await _unitOfWork.ReportRepository
+					.Get(r => r.CommentId == report.CommentId && r.Status == ReportStatus.Accept)
+					.AnyAsync();
+				if (AnyAcceptedReport)
 				{
-					await _unitOfWork.CommentRepository.DeleteRange(comments);
+					var comments = await _unitOfWork.CommentRepository
+												.GetAsync(c => c.Id == report.CommentId && c.ParentCommentId == report.CommentId);
+					if (comments != null)
+					{
+						await _unitOfWork.CommentRepository.DeleteRange(comments);
+					}
 				}
+				report.Status = ReportStatus.Accept;
 			}
-
-
 		}
 		else
 		{

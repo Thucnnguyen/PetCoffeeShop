@@ -9,5 +9,4 @@ public enum OrderStatus
     Reject,
     Returned,
     Overtime,
-    Deleted
 }
