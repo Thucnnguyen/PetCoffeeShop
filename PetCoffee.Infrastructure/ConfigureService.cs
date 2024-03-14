@@ -98,6 +98,21 @@ public static class ConfigureService
 			.ValidateDataAnnotations()
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<VietQrSettings>>().Value);
+		//redis 
+		services.AddOptions<RedisSettings>()
+			.BindConfiguration(RedisSettings.ConfigSection)
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+		services.AddSingleton(sp => sp.GetRequiredService<IOptions<RedisSettings>>().Value);
+
+		services.AddSingleton<ICacheService, CacheService>();
+        services.AddStackExchangeRedisCache(redisOptions =>
+        {
+            using var sc = services.BuildServiceProvider().CreateScope();
+            var settings = sc.ServiceProvider.GetRequiredService<RedisSettings>();
+            var connection = $"{settings.Host}:{settings.Port},password={settings.Password}";
+            redisOptions.Configuration = connection;
+        });
 		//config ZaloPay
 		services.AddOptions<ZaloPaySettings>()
 			.BindConfiguration(ZaloPaySettings.ConfigSection)

@@ -1,11 +1,7 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.PostCategory.Models;
-using PetCoffee.Application.Features.PostCategory.Queries;
 using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;

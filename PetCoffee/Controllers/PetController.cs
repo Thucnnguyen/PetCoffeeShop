@@ -47,6 +47,14 @@ public class PetController : ApiControllerBase
 		return Ok(response);
 	}
 
+	[HttpPut("shops/pets")]
+	[Authorize]
+	public async Task<ActionResult<bool>> UpdateShopIdForPet([FromBody] UpdateShopIdOfPetCommand request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+
 	[HttpPut("areas/pets")]
 	[Authorize]
 	public async Task<ActionResult<bool>> UpdatePetArea([FromBody] UpdatePetAreaCommand request)

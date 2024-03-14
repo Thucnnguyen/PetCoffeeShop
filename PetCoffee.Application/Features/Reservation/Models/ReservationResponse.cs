@@ -1,11 +1,6 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Reservation.Models
 {
@@ -23,7 +18,7 @@ namespace PetCoffee.Application.Features.Reservation.Models
         public string? Rate { get; set; }
         public string? Comment { get; set; }
 
-        public long? FloorId { get; set; }
+        public long? AreaId { get; set; }
         //public Area? Area { get; set; }
     }
 }

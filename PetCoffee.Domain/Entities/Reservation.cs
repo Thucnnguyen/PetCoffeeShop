@@ -12,11 +12,11 @@ public class Reservation : BaseAuditableEntity
 	public long Id { get; set; }
 	public decimal TotalPrice { get; set; }
 	public OrderStatus Status { get; set; }	
-	public decimal Discount { get; set; }
+	public decimal? Discount { get; set; }
 	public DateTime StartTime { get; set; }
 	public DateTime EndTime { get; set; }
 	public string? Note { get; set; }
-	public decimal Deposit { get; set; }
+	public decimal? Deposit { get; set; }
 	public string Code { get; set; }
 	public string? Rate { get; set; }
 	public string? Comment { get; set; }

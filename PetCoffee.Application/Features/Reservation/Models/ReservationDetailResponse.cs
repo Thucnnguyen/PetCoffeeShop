@@ -1,4 +1,4 @@
-﻿using PetCoffee.Application.Features.Transaction.Models;
+﻿using PetCoffee.Application.Features.Transactions.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

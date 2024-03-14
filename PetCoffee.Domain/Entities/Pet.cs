@@ -28,4 +28,6 @@ public class Pet : BaseAuditableEntity
 	public IList<Moment> Moments { get; set; } = new List<Moment>();
 	[InverseProperty(nameof(Transaction.Pet))]
 	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
+	[InverseProperty(nameof(RatePet.Pet))]
+	public IList<RatePet> PetRattings { get; set; } = new List<RatePet>();
 }

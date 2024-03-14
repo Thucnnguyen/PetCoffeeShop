@@ -68,7 +68,6 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             {
                 throw new ApiException(ResponseCode.AreaNotExist);
             }
-            area.TotalSeatAvailable = area.TotalSeat - order.TotalSeatBook;
             await _unitOfWork.AreaRepsitory.UpdateAsync(area);
 
             await _unitOfWork.SaveChangesAsync();

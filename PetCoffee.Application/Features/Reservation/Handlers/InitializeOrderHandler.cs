@@ -7,13 +7,6 @@ using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -75,7 +68,6 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 Code = "test", //
                 CreatedById = currentAccount.Id,
                 CreatedAt = DateTime.Now,
-                TotalSeatBook = request.TotalSeatBook
 
             };
 
@@ -100,7 +92,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
            
           
             var existingReservations =  _unitOfWork.ReservationRepository
-                .Get(r => r.AreaId == areaId && (r.Status != OrderStatus.Deleted || r.Status != OrderStatus.Overtime)  &&
+                .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing)  &&
                             ((startTime >= r.StartTime && startTime < r.EndTime) ||
                              (endTime > r.StartTime && endTime <= r.EndTime) ||
                              (startTime <= r.StartTime && endTime >= r.EndTime)))
@@ -117,12 +109,11 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
          
             var area =  _unitOfWork.AreaRepsitory.Get(a => a.Id == areaId).FirstOrDefault();
 
-            var totalSeatsAvailable = area.TotalSeat;
          
             
 
         
-            return totalSeatsAvailable - totalSeatsBooked >= requestedSeats;
+            return true;
         }
 
 
