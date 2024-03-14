@@ -11,7 +11,7 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Payments.Queries;
 
-public class GetAllTransactionQuery : PaginationRequest<Transaction>, IRequest<PaginationResponse<Transaction, PaymentResponse>>
+public class GetAllTransactionQuery : PaginationRequest<Domain.Entities.Transaction>, IRequest<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
 	public DateTime? From { get; set; }
 
@@ -23,7 +23,7 @@ public class GetAllTransactionQuery : PaginationRequest<Transaction>, IRequest<P
 	public long? CustomerId { get; set; }
 	public long? ShopId { get; set; }
 
-	public override Expression<Func<Transaction, bool>> GetExpressions()
+	public override Expression<Func<Domain.Entities.Transaction, bool>> GetExpressions()
 	{
 
 		if (From != null)

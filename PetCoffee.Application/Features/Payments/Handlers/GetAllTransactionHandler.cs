@@ -12,7 +12,7 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 
-public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, PaginationResponse<Transaction, PaymentResponse>>
+public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IUnitOfWork _unitOfWork;
@@ -25,7 +25,7 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, 
 		_mapper = mapper;
 	}
 
-	public async Task<PaginationResponse<Transaction, PaymentResponse>> Handle(GetAllTransactionQuery request, CancellationToken cancellationToken)
+	public async Task<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>> Handle(GetAllTransactionQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -55,7 +55,7 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, 
 							.ThenInclude(a => a.PetCoffeeShop)
 							.AsQueryable();
 
-		return new PaginationResponse<Transaction, PaymentResponse>(
+		return new PaginationResponse<Domain.Entities.Transaction, PaymentResponse>(
 			payments,
 			request.PageNumber,
 			request.PageSize,
