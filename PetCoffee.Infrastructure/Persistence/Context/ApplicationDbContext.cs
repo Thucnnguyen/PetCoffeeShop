@@ -41,8 +41,6 @@ public class ApplicationDbContext : DbContext
 			.HasKey(e => new { e.WalletId, e.ItemId });
 		modelBuilder.Entity<RatePet>()
 			.HasKey(e => new { e.PetId, e.CreatedById });
-		modelBuilder.Entity<ReservationTable>()
-			.HasKey(e => new { e.TableId, e.ReservationId });
 
 	}
 

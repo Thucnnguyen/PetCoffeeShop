@@ -63,6 +63,7 @@ public class VnPayService : IVnPayService
 			Content = payment.Info,
 			ReferenceTransactionId = payment.PaymentReferenceId,
 			Url = paymentUrl,
+			TransactionStatus = TransactionStatus.Processing,
 			TransactionType = TransactionType.TopUp,
 		};
 

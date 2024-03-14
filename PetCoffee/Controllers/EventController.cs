@@ -4,7 +4,6 @@ using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Events.Commands;
 using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Events.Queries;
-using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
 using PetCoffee.Domain.Entities;
@@ -54,16 +53,33 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
-		[HttpGet("events/{EventId}/submitting-event-for-customer")]
+		[HttpGet("events/submitting-events/{SubmittingEventId}")]
 		[Authorize]
-		public async Task<ActionResult<EventResponse>> GetsubmitingEventForCustomer([FromRoute] GetSubmitEventByEvenIdFormForCustomerQuery request)
+		public async Task<ActionResult<EventResponse>> GetsubmitingEventById([FromRoute] GetSubmitEventByIdQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
+
+		[HttpGet("events/{EventId}/submitting-events-for-customer")]
+		[Authorize]
+		public async Task<ActionResult<EventResponse>> GetsubmitingEventByEventIdForCustomer([FromRoute] GetSubmittingEventByIdForCustomerQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
+		[HttpGet("events/submitting-events")]
+		[Authorize(Roles = "Staff,Manager")]
+		public async Task<ActionResult<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>> GetSubmittingEventByEventId([FromQuery] GetSubmittingEventByEventIdForShopQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+
 		[HttpGet("events/joinevents")]
 		[Authorize]
-		public async Task<ActionResult<PaginationResponse<SubmittingEvent, EventForCardResponse>>> GetJoinEvent([FromQuery] GetJoinEventForCustomerQuery request)
+		public async Task<ActionResult<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>> GetJoinEvent([FromQuery] GetJoinEventForCustomerQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
@@ -94,7 +110,7 @@ namespace PetCoffee.API.Controllers
 
 		[HttpGet("petcoffeeshops/{ShopId}/events")]
 		[Authorize]
-		public async Task<ActionResult<List<EventForCardResponse>>> GetEventByShopId([FromRoute] GetEventsByShopIdQuery request)
+		public async Task<ActionResult<PaginationResponse<Event, EventForCardResponse>>> GetEventByShopId([FromRoute] GetEventsByShopIdQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
