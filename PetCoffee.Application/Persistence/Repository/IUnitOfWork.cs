@@ -19,7 +19,6 @@ public interface IUnitOfWork
 	IEventFieldRepsitory EventFieldRepsitory { get; }
 	IEventRepository EventRepository { get; }
 	IAreaRepsitory AreaRepsitory { get; }
-    ITableRepository TableRepository { get; }
     IJoinEventRepository JoinEventRepository { get; }
 	IItemRepository ItemRepository { get; }
 	ILikeRepository LikeRepository { get; }
