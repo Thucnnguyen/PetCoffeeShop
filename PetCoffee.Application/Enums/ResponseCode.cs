@@ -4,28 +4,28 @@ namespace PetCoffee.Application.Common.Enums;
 
 public enum ResponseCode
 {
-    //Area
+	//Area
 
-    [Description("Area không tồn tại")] AreaNotExist,
-    [Description("Area không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
+	[Description("Area không tồn tại")] AreaNotExist,
+	[Description("Area không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
 
 
-    //Comment
-    [Description("Comment không tồn tại")] CommentNotExist,
-    //Item
+	//Comment
+	[Description("Comment không tồn tại")] CommentNotExist,
+	//Item
 
-    [Description("Quà tặng đã tồn tại")] ItemNameIsExisted,
-    [Description("Quà tặng không tồn tại")] ItemNotExist,
+	[Description("Quà tặng đã tồn tại")] ItemNameIsExisted,
+	[Description("Quà tặng không tồn tại")] ItemNotExist,
 
-    //Auth
+	//Auth
 
-    [Description("Có lỗi xảy ra")] CommonError,
+	[Description("Có lỗi xảy ra")] CommonError,
 	[Description("Lỗi định dạng dữ liệu")] ValidationError,
 	[Description("Tài khoản không được xác thực")] Unauthorized,
 	[Description("Tài khoản không được phép truy cập tài nguyên này")] Forbidden,
 	[Description("Mã đã hết hạn")] OptExpired,
 	[Description("Tài khoản Chưa kích hoạt")] AccountNotActived,
-	[Description("Tài khoản đã kích hoạt")] AccountIsActived ,
+	[Description("Tài khoản đã kích hoạt")] AccountIsActived,
 	[Description("Tài khoản không tồn tại")] AccountNotExist,
 	[Description("Tài khoản không có quyền")] PermissionDenied,
 
@@ -36,19 +36,19 @@ public enum ResponseCode
 	[Description("Tên đã tồn tại")] PostCategoryIsExisted,
 	[Description("Category Không tồn tại")] PostCategoryNotExisted,
 
-    //shop
-    [Description("Cửa hàng Không tồn tại")] ShopNotExisted,
-    [Description("Bạn đang có một yêu cầu tạo của hàng rồi")] HasShopRequest,
+	//shop
+	[Description("Cửa hàng Không tồn tại")] ShopNotExisted,
+	[Description("Bạn đang có một yêu cầu tạo của hàng rồi")] HasShopRequest,
 	//TaxCode
 	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted,
 	//pet
 	[Description("Pet Không tồn tại")] PetNotExisted,
 
-    //Vaccination
-    [Description("Vaccination Không tồn tại")] VaccinationNotExisted,
+	//Vaccination
+	[Description("Vaccination Không tồn tại")] VaccinationNotExisted,
 
-    //Post
-    [Description("Bài đăng Không tồn tại")] PostNotExisted,
+	//Post
+	[Description("Bài đăng Không tồn tại")] PostNotExisted,
 	//Comment
 	[Description("Bình luận Không tồn tại")] CommentNotExisted,
 	//follow
@@ -60,6 +60,7 @@ public enum ResponseCode
 	[Description("Sự kiện Không thể thay đổi vì đã quá thời gian bắt đầu")] EventCannotChanged,
 	//submitEvent
 	[Description("Gửi form tham gia event không hợp lệ vui lòng xem lại")] SubmittingEventNotCorrectForm,
+	[Description("Form tham gia của bạn không tồn tại")] SubmittingEventNotExist,
 	[Description("Bạn đã tham gia event rồi")] SubmittingEventIsExist,
 	//EventField
 	[Description("Trường này không tồn tại")] EventFieldIsNotExist,
@@ -83,8 +84,8 @@ public enum ResponseCode
 
 
 
-    //Reservation
+	//Reservation
 
-    [Description("Reservation không tồn tại")] ReservationNotExist,
+	[Description("Reservation không tồn tại")] ReservationNotExist,
 
 }

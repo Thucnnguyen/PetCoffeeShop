@@ -114,7 +114,8 @@ public class MappingProfile : Profile
 
         //Event
         CreateMap<CreateEventCommand, Event>().ReverseMap();
-		CreateMap<EventForCardResponse, Event>().ReverseMap();
+		CreateMap<Event, EventForCardResponse>()
+				.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
 		CreateMap<EventResponse, Event>();
 		CreateMap<Event, EventResponse>()
 				.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()))
@@ -169,6 +170,17 @@ public class MappingProfile : Profile
 
 		CreateMap<SubmittingEvent, EventForCardResponse>()
 			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
+			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
+			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
+			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
+			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
+			.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
+			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+			.ForMember(dest => dest.IsJoin, opt => opt.MapFrom(src => src.Event.SubmittingEvents.Any()))
+			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+
+		CreateMap<SubmittingEvent, EventSubmittingForCardResponse>()
+			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
 			.ForMember(dest => dest.SubmitEventId, opt => opt.MapFrom(src => src.Id))
 			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
 			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
@@ -176,6 +188,7 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
 			.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
 			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+			.ForMember(dest => dest.AccountForPostModel, opt => opt.MapFrom(src => src.CreatedBy))
 			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
 
 		CreateMap<SubmittingEvent, EventResponse>()

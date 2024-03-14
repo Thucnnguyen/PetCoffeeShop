@@ -8,8 +8,9 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Events.Queries;
 
-public class GetJoinEventForCustomerQuery : PaginationRequest<SubmittingEvent>, IRequest<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>
+public class GetSubmittingEventByEventIdForShopQuery : PaginationRequest<SubmittingEvent>, IRequest<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>
 {
+	public long EventId { get; set; }
 	private string? _search;
 
 	public string? Search
@@ -22,8 +23,10 @@ public class GetJoinEventForCustomerQuery : PaginationRequest<SubmittingEvent>, 
 	{
 		if (Search is not null)
 		{
-			Expression = Expression.And(e => e.Event.Title.ToLower().Contains(Search) || e.Event.Description.ToLower().Contains(Search));
+			Expression = Expression.And(e => e.CreatedBy.FullName.ToLower().Contains(Search));
 		}
+
+		Expression = Expression.And(e => e.EventId == EventId);
 		return Expression;
 	}
 }

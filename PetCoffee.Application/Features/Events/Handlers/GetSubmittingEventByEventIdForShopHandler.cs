@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -13,20 +12,20 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Events.Handlers;
 
-public class GetJoinEventForCustomerHandler : IRequestHandler<GetJoinEventForCustomerQuery, PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>
+public class GetSubmittingEventByEventIdForShopHandler : IRequestHandler<GetSubmittingEventByEventIdForShopQuery, PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>
 {
-	private readonly IMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
+	private readonly IMapper _mapper;
 
-	public GetJoinEventForCustomerHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
+	public GetSubmittingEventByEventIdForShopHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
 	{
-		_mapper = mapper;
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
+		_mapper = mapper;
 	}
 
-	public async Task<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>> Handle(GetJoinEventForCustomerQuery request, CancellationToken cancellationToken)
+	async Task<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>> IRequestHandler<GetSubmittingEventByEventIdForShopQuery, PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>.Handle(GetSubmittingEventByEventIdForShopQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
 		if (currentAccount == null)
@@ -37,13 +36,15 @@ public class GetJoinEventForCustomerHandler : IRequestHandler<GetJoinEventForCus
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		var Expression = request.GetExpressions().And(se => se.CreatedById == currentAccount.Id);
+
 		var SubmitingEvents = _unitOfWork.SubmittingEventRepsitory
-							.Get(predicate: Expression)
+							.Get(predicate: request.GetExpressions())
 							.Include(se => se.Event)
 							.ThenInclude(e => e.FollowEvents)
+							.Include(se => se.CreatedBy)
 							.OrderByDescending(se => se.CreatedAt)
 							.AsQueryable();
+
 
 		return new PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>(
 				SubmitingEvents,

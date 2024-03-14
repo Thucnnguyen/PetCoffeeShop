@@ -13,20 +13,20 @@ namespace PetCoffee.Application.Features.Events.Handlers;
 
 
 
-public class GetSubmitEventByEvenIdFormForCustomerHandler : IRequestHandler<GetSubmitEventByEvenIdFormForCustomerQuery, EventResponse>
+public class GetSubmitEventByIdHandler : IRequestHandler<GetSubmitEventByIdQuery, EventResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
 
-	public GetSubmitEventByEvenIdFormForCustomerHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+	public GetSubmitEventByIdHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
 	{
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
 	}
 
-	public async Task<EventResponse> Handle(GetSubmitEventByEvenIdFormForCustomerQuery request, CancellationToken cancellationToken)
+	public async Task<EventResponse> Handle(GetSubmitEventByIdQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -38,7 +38,7 @@ public class GetSubmitEventByEvenIdFormForCustomerHandler : IRequestHandler<GetS
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var GetSubmittingEvent = await _unitOfWork.SubmittingEventRepsitory.Get(e => e.EventId == request.EventId && e.CreatedById == currentAccount.Id)
+		var GetSubmittingEvent = await _unitOfWork.SubmittingEventRepsitory.Get(e => e.Id == request.SubmittingEventId)
 																.Include(s => s.SubmittingEventFields)
 																.Include(s => s.Event)
 																.FirstOrDefaultAsync();
@@ -51,7 +51,7 @@ public class GetSubmitEventByEvenIdFormForCustomerHandler : IRequestHandler<GetS
 		response.IsJoin = GetSubmittingEvent != null;
 		if (response.IsJoin)
 		{
-			if ( GetSubmittingEvent.SubmittingEventFields.Any())
+			if (GetSubmittingEvent.SubmittingEventFields.Any())
 				response.Fields = GetSubmittingEvent.SubmittingEventFields.Select(a => _mapper.Map<FieldEventResponseForEventResponse>(a)).ToList();
 		}
 		return response;

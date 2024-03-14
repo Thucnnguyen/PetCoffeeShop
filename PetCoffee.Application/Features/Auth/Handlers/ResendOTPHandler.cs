@@ -6,7 +6,6 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
 

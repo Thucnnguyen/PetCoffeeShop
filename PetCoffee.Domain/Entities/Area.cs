@@ -24,6 +24,5 @@ public class Area : BaseAuditableEntity
 	[InverseProperty(nameof(Pet.Area))]
 	public IList<Pet> Pets { get; set; } = new List<Pet>();
 
-	[InverseProperty(nameof(Table.Area))]
-	public IList<Table> Tables { get; set; } = new List<Table>();
+
 }
