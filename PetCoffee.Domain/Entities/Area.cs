@@ -24,5 +24,11 @@ public class Area : BaseAuditableEntity
 	[InverseProperty(nameof(Pet.Area))]
 	public IList<Pet> Pets { get; set; } = new List<Pet>();
 
+	public long PricePerHour { get; set; }
+	public int TotalSeat { get; set; }
+
+
+    [InverseProperty(nameof(Reservation.Area))]
+    public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
 
 }

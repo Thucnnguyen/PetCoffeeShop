@@ -16,5 +16,9 @@ namespace PetCoffee.Application.Features.Areas.Models
 		public int Order { get; set; }
 
 		public long PetcoffeeShopId { get; set; }
+
+        public long PricePerHour { get; set; }
+
+        public long AvailableSeat { get; set; }
     }
 }

@@ -77,7 +77,7 @@ public class UnitOfWork : IUnitOfWork
 	private IWalletItemRepository? _walletItemRepository;
 	private ITransactionItemRepository? _transactionItemRepository;
     private IRatePetRepository? _ratePetRepository;
-    private ITableRepository? _tableRepository;
+
 
 
     public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
@@ -110,5 +110,5 @@ public class UnitOfWork : IUnitOfWork
 	public IWalletItemRepository? WalletItemRepository => _walletItemRepository ??= new WalletItemRepository(_dbContext);
 	public IRatePetRepository? RatePetRespository  => _ratePetRepository ??= new RatePetRespository(_dbContext);
 
-    public ITableRepository TableRepository => _tableRepository ??= new TableRepository(_dbContext);	
+    
 }

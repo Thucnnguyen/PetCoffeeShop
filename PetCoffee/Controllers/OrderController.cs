@@ -63,23 +63,23 @@ namespace PetCoffee.API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<ReservationResponse>> CreateOrder([FromBody] InitializeOrderCommand command)
+        public async Task<ActionResult<ReservationResponse>> CreateOrder([FromForm] InitializeOrderCommand command)
         {
             return await Mediator.Send(command);
         }
 
 
-        [HttpPut("{id:long}/confirm")]
-        [Authorize]
-        public async Task<ActionResult<ReservationResponse>> ConfirmOrder([FromRoute] long id)
-        {
-            var command = new ConfirmOrderCommand()
-            {
-                OrderId = id,
-            };
+        //[HttpPut("{id:long}/confirm")]
+        //[Authorize]
+        //public async Task<ActionResult<ReservationResponse>> ConfirmOrder([FromRoute] long id)
+        //{
+        //    var command = new ConfirmOrderCommand()
+        //    {
+        //        OrderId = id,
+        //    };
 
-            return await Mediator.Send(command);
-        }
+        //    return await Mediator.Send(command);
+        //}
 
 
         [HttpPut("{id:long}/return")]

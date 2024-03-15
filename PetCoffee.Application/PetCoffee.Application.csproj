@@ -15,7 +15,6 @@
     <Folder Include="Common\Models\Request\" />
     <Folder Include="Features\FollowShop\Models\" />
     <Folder Include="Features\SubmitttingEvents\Queries\" />
-    <Folder Include="Features\Tables\Commands\" />
     <Folder Include="Features\Transactions\Queries\" />
   </ItemGroup>
 

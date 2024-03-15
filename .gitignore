@@ -399,3 +399,7 @@ FodyWeavers.xsd
 tatus post
 et --hard HEAD~1
 
+PetCoffee.Infrastructure/Migrations/20240314120617_init.cs
+PetCoffee.Infrastructure/Migrations/20240314120617_init.Designer.cs
+PetCoffee.Infrastructure/Migrations/20240315042930_init.Designer.cs
+PetCoffee.Infrastructure/Migrations/20240315042930_init.cs

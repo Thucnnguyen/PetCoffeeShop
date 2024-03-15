@@ -30,7 +30,7 @@ using PetCoffee.Application.Features.Reservation.Handlers;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
-using PetCoffee.Application.Features.Tables.Models;
+
 using PetCoffee.Application.Features.Transactions.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
@@ -242,7 +242,6 @@ public class MappingProfile : Profile
         CreateMap<Transaction, TransactionResponse>().ReverseMap();
 
 
-        //table
-        CreateMap<Table, TableResponse>().ReverseMap();
+       
     }
 }

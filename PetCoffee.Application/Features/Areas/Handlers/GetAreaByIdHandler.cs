@@ -42,7 +42,8 @@ public class GetAreaByIdHandler : IRequestHandler<GetAreaByIdQuery, AreaResponse
 		{
 			throw new ApiException(ResponseCode.AreaNotExist);
 		}
+	
 
-		return _mapper.Map<AreaResponse>(area);
+        return _mapper.Map<AreaResponse>(area);
 	}
 }

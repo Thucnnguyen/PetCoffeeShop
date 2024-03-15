@@ -135,6 +135,12 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<long>("PetcoffeeShopId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("PricePerHour")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TotalSeat")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -889,9 +895,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int>("TotalSeatBook")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -1478,7 +1481,7 @@ namespace PetCoffee.Infrastructure.Migrations
             modelBuilder.Entity("PetCoffee.Domain.Entities.Reservation", b =>
                 {
                     b.HasOne("PetCoffee.Domain.Entities.Area", "Area")
-                        .WithMany("Reservations")
+                        .WithMany()
                         .HasForeignKey("AreaId");
 
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
@@ -1643,8 +1646,6 @@ namespace PetCoffee.Infrastructure.Migrations
             modelBuilder.Entity("PetCoffee.Domain.Entities.Area", b =>
                 {
                     b.Navigation("Pets");
-
-                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Category", b =>

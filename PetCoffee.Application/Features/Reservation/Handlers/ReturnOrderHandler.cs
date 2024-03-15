@@ -47,13 +47,21 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 throw new ApiException(ResponseCode.ReservationNotExist);
             }
 
+
+            // condition de duoc return ???
+
+            // condition de duoc return ???
+
             reservation.Status = OrderStatus.Returned;
+
 
 
             await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
             await _unitOfWork.SaveChangesAsync();
 
-            // refund money 
+            // refund money -> hoan tien 100 % ??
+
+
 
 
             return _mapper.Map<ReservationResponse>(reservation);

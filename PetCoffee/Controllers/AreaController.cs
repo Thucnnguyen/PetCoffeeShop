@@ -62,6 +62,16 @@ namespace PetCoffee.API.Controllers
         }
 
 
+        // view property area spcificshop at timerange and people go
+        [HttpGet("petcoffeeshops/booking/areas")]
+        [Authorize]
+        public async Task<ActionResult<PaginationResponse<Area, AreaResponse>>> GetAreaForBooking([FromQuery] GetAreaForBookingQuery request)
+        {
+            
+            var response = await Mediator.Send(request);
+            return response;
+        }
+
 
     }
 }
