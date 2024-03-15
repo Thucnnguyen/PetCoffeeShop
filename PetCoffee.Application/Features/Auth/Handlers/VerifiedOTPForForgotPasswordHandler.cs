@@ -44,7 +44,7 @@ public class VerifiedOTPForForgotPasswordHandler : IRequestHandler<VerifiedOTPFo
 
 		//remove otp 
 		currentAccount.OTP = "";
-		currentAccount.OTPExpired = DateTime.Now.AddDays(-1);
+		currentAccount.OTPExpired = DateTime.UtcNow.AddDays(-1);
 		await _unitOfWork.AccountRepository.UpdateAsync(currentAccount);
 		await _unitOfWork.SaveChangesAsync();
 		return true;

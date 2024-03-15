@@ -41,7 +41,7 @@ public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, Pagi
 		}
 		var Pets = await _unitOfWork.PetRepository
 					.GetAsync(
-							predicate: p => p.PetCoffeeShopId == request.ShopId && !p.Deleted,
+							predicate: request.GetExpressions(),
 							includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Pet, object>>>
 							{
 								p => p.Area

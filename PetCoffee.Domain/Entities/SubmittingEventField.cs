@@ -12,7 +12,7 @@ public class SubmittingEventField : BaseAuditableEntity
 	public string Type { get; set; }
 	public bool IsOptional { get; set; }
 	public string? Answer { get; set; }
-	public string? Submitcontent { get; set; }
+	public string? SubmittingContent { get; set; }
 
 	public long SubmittingEventId { get; set; }
 	public SubmittingEvent SubmittingEvent { get; set; }

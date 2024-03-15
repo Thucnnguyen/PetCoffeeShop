@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Pet.Commands;
+using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 
@@ -14,12 +15,14 @@ public class UpdateShopIdOfPetHandler : IRequestHandler<UpdateShopIdOfPetCommand
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly ICurrentAccountService _currentAccountService;
+	private readonly ICacheService _cacheService;
 
-	public UpdateShopIdOfPetHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+	public UpdateShopIdOfPetHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService, ICacheService cacheService)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_currentAccountService = currentAccountService;
+		_cacheService = cacheService;
 	}
 
 	public async Task<bool> Handle(UpdateShopIdOfPetCommand request, CancellationToken cancellationToken)
@@ -55,6 +58,7 @@ public class UpdateShopIdOfPetHandler : IRequestHandler<UpdateShopIdOfPetCommand
 		await _unitOfWork.PetRepository.UpdateAsync(pet);
 		await _unitOfWork.SaveChangesAsync();
 
+		await _cacheService.SetAsync(pet.Id.ToString(), _mapper.Map<PetResponse>(pet),cancellationToken);
 		return true;
 	}
 }

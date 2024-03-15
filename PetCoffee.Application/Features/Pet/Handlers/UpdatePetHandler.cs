@@ -17,13 +17,15 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 	private readonly IAzureService _azureService;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
+	private readonly ICacheService _cacheService;
 
-	public UpdatePetHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
+	public UpdatePetHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper, ICacheService cacheService)
 	{
 		_unitOfWork = unitOfWork;
 		_azureService = azureService;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
+		_cacheService = cacheService;
 	}
 
 	public async Task<PetResponse> Handle(UpdatePetCommand request, CancellationToken cancellationToken)
@@ -71,6 +73,7 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 		await _unitOfWork.SaveChangesAsync();
 
 		var response = _mapper.Map<PetResponse>(pet);
+		await _cacheService.SetAsync(response.Id.ToString(), response,cancellationToken);
 
 		return response;
 	}

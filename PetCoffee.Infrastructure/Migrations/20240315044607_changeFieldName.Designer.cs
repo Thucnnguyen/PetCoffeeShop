@@ -11,8 +11,8 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240313040413_updateTypeForEvent")]
-    partial class updateTypeForEvent
+    [Migration("20240315044607_changeFieldName")]
+    partial class changeFieldName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,9 +137,6 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.Property<long>("PetcoffeeShopId")
                         .HasColumnType("bigint");
-
-                    b.Property<int>("TotalSeat")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -965,7 +962,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Submitcontent")
+                    b.Property<string>("SubmittingContent")
                         .HasColumnType("longtext");
 
                     b.Property<long>("SubmittingEventId")

@@ -18,9 +18,9 @@ public class ZaloPayService : IZaloPayService
 	{
 		var zalopayPayRequest = new ZaloPaymentRequest(_settings.AppId, 
 								_settings.AppUser,
-							   DateTime.Now.GetTimeStamp(),
+							   DateTime.UtcNow.GetTimeStamp(),
 							   (long)payment.Amount!, 
-							   DateTime.Now.ToString("yymmdd") + "_" + payment.PaymentReferenceId ?? string.Empty,
+							   DateTime.UtcNow.ToString("yymmdd") + "_" + payment.PaymentReferenceId ?? string.Empty,
 							   "zalopayapp", 
 							   payment.Info ?? string.Empty,
 							   _settings.RedirectUrl

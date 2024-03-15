@@ -55,7 +55,7 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		account.Role = Role.Customer;
 		account.LoginMethod = LoginMethod.UserNamePass;
 		account.OTP = TokenUltils.GenerateOTPCode(6);
-		account.OTPExpired = DateTime.Now.AddDays(1);
+		account.OTPExpired = DateTime.UtcNow.AddDays(1);
 
 		var newAccount = await _unitOfWork.AccountRepository.AddAsync(account);
 		await _unitOfWork.SaveChangesAsync();

@@ -46,7 +46,7 @@ namespace PetCoffee.Application.Features.Items.Handlers
 
             var newItem = _mapper.Map<Domain.Entities.Item>(request);
             newItem.CreatedById = currentAccount.Id;
-            newItem.CreatedAt = DateTime.Now;
+            newItem.CreatedAt = DateTime.UtcNow;
 			if (request.IconImg != null)
 			{
 				await _azureService.CreateBlob(request.IconImg.FileName, request.IconImg);

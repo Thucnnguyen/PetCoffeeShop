@@ -31,9 +31,9 @@ public class Account
 	public DateTime? EndTimeBlockPost { get; set; }
 	public DateTime? EndTimeBlockComment { get; set; }
 
-	public DateTime CreatedAt { get; set; } = DateTime.Now;
+	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-	public DateTime UpdatedAt { get; set; } = DateTime.Now;
+	public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 	public DateTime? DeletedAt { get; set; }
 
@@ -82,9 +82,9 @@ public class Account
 	public bool IsCustomer => Equals(Role, Role.Customer);
 
 	[Projectable]
-	public bool IsBlockPost => EndTimeBlockPost != null && DateTime.Now <= EndTimeBlockPost;
+	public bool IsBlockPost => EndTimeBlockPost != null && DateTime.UtcNow <= EndTimeBlockPost;
 	[Projectable]
-	public bool IsBlockComment => EndTimeBlockComment != null && DateTime.Now <= EndTimeBlockComment;
+	public bool IsBlockComment => EndTimeBlockComment != null && DateTime.UtcNow <= EndTimeBlockComment;
 	[Projectable]
-	public bool IsOTPExpired => OTPExpired != null && DateTime.Now >= OTPExpired;
+	public bool IsOTPExpired => OTPExpired != null && DateTime.UtcNow >= OTPExpired;
 }

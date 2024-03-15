@@ -16,7 +16,9 @@ public class PetResponse : BaseAuditableEntityResponse
 	public PetStatus PetStatus { get; set; }
 	public PetType PetType { get; set; }
 	public PetGender Gender { get; set; }
+	public TypeSpecies TypeSpecies { get; set; }
 	public bool Spayed { get; set; } = false;
 	public AreaResponseForPet Area { get; set; }
 	public long PetCoffeeShopId { get; set; }
+	public List<DonationAccount> Accounts { get; set; }
 }

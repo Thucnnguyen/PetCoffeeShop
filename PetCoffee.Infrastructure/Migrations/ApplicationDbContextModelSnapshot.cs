@@ -564,6 +564,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<bool>("Spayed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("TypeSpecies")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -959,7 +962,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Submitcontent")
+                    b.Property<string>("SubmittingContent")
                         .HasColumnType("longtext");
 
                     b.Property<long>("SubmittingEventId")

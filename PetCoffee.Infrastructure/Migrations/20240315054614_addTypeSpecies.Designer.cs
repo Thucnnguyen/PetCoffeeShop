@@ -11,8 +11,8 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240312031009_init")]
-    partial class init
+    [Migration("20240315054614_addTypeSpecies")]
+    partial class addTypeSpecies
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,12 +138,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<long>("PetcoffeeShopId")
                         .HasColumnType("bigint");
 
-                    b.Property<int>("TotalSeat")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TotalSeatAvailable")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -253,8 +247,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time(6)");
+                    b.Property<string>("EndTime")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Image")
                         .HasColumnType("longtext");
@@ -268,8 +263,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time(6)");
+                    b.Property<string>("StartTime")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
@@ -571,6 +567,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<bool>("Spayed")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<int>("TypeSpecies")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -773,6 +772,36 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.ToTable("PostPetCoffeeShops");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.RatePet", b =>
+                {
+                    b.Property<long>("PetId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("CreatedById")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Comment")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("Rate")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("PetId", "CreatedById");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("RatePet");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.Report", b =>
                 {
                     b.Property<long>("Id")
@@ -842,10 +871,10 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<decimal>("Deposit")
+                    b.Property<decimal?>("Deposit")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<decimal>("Discount")
+                    b.Property<decimal?>("Discount")
                         .HasColumnType("decimal(65,30)");
 
                     b.Property<DateTime>("EndTime")
@@ -936,7 +965,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Submitcontent")
+                    b.Property<string>("SubmittingContent")
                         .HasColumnType("longtext");
 
                     b.Property<long>("SubmittingEventId")
@@ -1412,6 +1441,25 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("Shop");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.RatePet", b =>
+                {
+                    b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
+                        .WithMany("PetRattings")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetCoffee.Domain.Entities.Pet", "Pet")
+                        .WithMany("PetRattings")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Pet");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.Report", b =>
                 {
                     b.HasOne("PetCoffee.Domain.Entities.Comment", "Comment")
@@ -1587,6 +1635,8 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.Navigation("Notifications");
 
+                    b.Navigation("PetRattings");
+
                     b.Navigation("Posts");
 
                     b.Navigation("Reports");
@@ -1625,6 +1675,8 @@ namespace PetCoffee.Infrastructure.Migrations
             modelBuilder.Entity("PetCoffee.Domain.Entities.Pet", b =>
                 {
                     b.Navigation("Moments");
+
+                    b.Navigation("PetRattings");
 
                     b.Navigation("Transactions");
 

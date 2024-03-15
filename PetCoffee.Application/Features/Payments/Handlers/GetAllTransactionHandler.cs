@@ -8,7 +8,6 @@ using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Payments.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 

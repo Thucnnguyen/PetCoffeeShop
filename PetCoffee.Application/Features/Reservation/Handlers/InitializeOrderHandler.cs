@@ -67,7 +67,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 Deposit = 0, //
                 Code = "test", //
                 CreatedById = currentAccount.Id,
-                CreatedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
 
             };
 

@@ -10,5 +10,5 @@ public class EventFieldResponse
 	public bool IsOptional { get; set; }
 	public string? Answer { get; set; }
 	public long SubmittinhEventId { get; set; }
-	public string SubmmitContent { get; set; }
+	public string SubmittingContent { get; set; }
 }

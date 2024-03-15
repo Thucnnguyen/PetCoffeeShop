@@ -38,7 +38,7 @@ public class DeleteAccountNotVerifyJob : IJob
 		await _unitOfWork.AccountRepository.DeleteAsync(Account);
 		await _unitOfWork.SaveChangesAsync();
 
-		_logger.LogInformation("Invalidate expired Account {AccountName} not verify at {time}", Account.FullName, DateTime.Now);
+		_logger.LogInformation("Invalidate expired Account {AccountName} not verify at {time}", Account.FullName, DateTime.UtcNow);
 
 	}
 }

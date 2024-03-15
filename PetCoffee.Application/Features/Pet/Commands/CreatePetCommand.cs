@@ -13,6 +13,7 @@ public class CreatePetCommand : IRequest<PetResponse>
 	public double? Weight { get; set; }
 	public string? Description { get; set; }
 	public PetType PetType { get; set; }
+	public TypeSpecies TypeSpecies { get; set; }
 	public PetGender Gender { get; set; }
 	public IFormFile? Avatar { get; set; }
 	public bool Spayed { get; set; }= false;

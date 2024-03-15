@@ -46,7 +46,7 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, EventRespo
 		var UpdateEvent =  _unitOfWork.EventRepository.Get(e => e.Id == request.Id)
 														.Include(e => e.EventFields)
 														.FirstOrDefault();
-		if(UpdateEvent.StartDate <= DateTime.Now)
+		if(UpdateEvent.StartDate <= DateTime.UtcNow)
 		{
 			throw new ApiException(ResponseCode.EventCannotChanged);
 		}

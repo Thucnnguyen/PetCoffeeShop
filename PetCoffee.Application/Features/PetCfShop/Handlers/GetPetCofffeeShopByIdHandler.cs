@@ -39,7 +39,7 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 		var CurrentShop = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-			predicate: p => p.Id == request.Id,
+			predicate: p => p.Id == request.Id && !p.Deleted,
 			includes:  new List<Expression<Func<PetCoffeeShop, object>>>()
 				{
 					shop => shop.CreatedBy

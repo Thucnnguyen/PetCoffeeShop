@@ -70,7 +70,7 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 			{
 				var field =  _unitOfWork.EventFieldRepsitory.Get(f => f.Id == a.EventFieldId).FirstOrDefault();
 				var fieldSubmit = _mapper.Map<SubmittingEventField>(field);
-				fieldSubmit.Submitcontent = a.Submitcontent;
+				fieldSubmit.SubmittingContent = a.SubmittingContent;
 				fieldSubmit.SubmittingEventId = NewSubmittingEvent.Id;
 				return fieldSubmit;
 			});

@@ -14,8 +14,11 @@ namespace PetCoffee.Application.Features.Report.Handlers;
 public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscommand, bool>
 {
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly IMapper _mapper;
-	private readonly ICurrentAccountService _currentAccountService;
+
+	public UpdateReportStatusHandler(IUnitOfWork unitOfWork)
+	{
+		_unitOfWork = unitOfWork;
+	}
 
 	public async Task<bool> Handle(UpdateReportStatuscommand request, CancellationToken cancellationToken)
 	{
@@ -33,21 +36,27 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 			report.Status = ReportStatus.Accept;
 			if (report.PostID != null)
 			{
-				var AnyAcceptedReport = await _unitOfWork.ReportRepository
-					.Get(r => r.PostID == report.PostID && r.Status == ReportStatus.Accept)
-					.AnyAsync();
-
-				if (AnyAcceptedReport)
+				var post = await _unitOfWork.PostRepository.Get(p => p.Id == report.PostID && !p.Deleted)
+						.FirstOrDefaultAsync();
+				if (post != null)
 				{
-					var post = await _unitOfWork.PostRepository.Get(p => p.Id == report.PostID && !p.Deleted)
-							.FirstOrDefaultAsync();
-					if (post != null)
-					{
-						post.DeletedAt = DateTime.UtcNow;
-						await _unitOfWork.PostRepository.UpdateAsync(post);
-					}
+					post.DeletedAt = DateTime.UtcNow;
+					await _unitOfWork.PostRepository.UpdateAsync(post);
 				}
 				report.Status = ReportStatus.Accept;
+				await _unitOfWork.ReportRepository.UpdateAsync(report);
+
+
+				// change status for post has same postId
+				var ReportByPostId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.PostID == report.PostID && !rp.Deleted);
+				if(ReportByPostId.Any())
+				{
+					foreach(var r in ReportByPostId)
+					{
+						r.Status = ReportStatus.Accept;
+						await _unitOfWork.ReportRepository.UpdateAsync(r);
+					}
+				}
 			}
 
 			if (report.CommentId != null)
@@ -65,6 +74,17 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 					}
 				}
 				report.Status = ReportStatus.Accept;
+				await _unitOfWork.ReportRepository.UpdateAsync(report);
+				// change status for post has same comment
+				var ReportByPostId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.CommentId == report.CommentId && !rp.Deleted);
+				if (ReportByPostId.Any())
+				{
+					foreach (var r in ReportByPostId)
+					{
+						r.Status = ReportStatus.Accept;
+						await _unitOfWork.ReportRepository.UpdateAsync(r);
+					}
+				}
 			}
 		}
 		else

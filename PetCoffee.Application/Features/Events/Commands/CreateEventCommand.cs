@@ -34,7 +34,6 @@ public class CreateEventCommand : IRequest<EventResponse>
 	public string EndTime { get; set; }
 	public string? Location { get; set; }
 	
-	
 }
 
 

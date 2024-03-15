@@ -15,12 +15,14 @@ public class DeletePetHandler : IRequestHandler<DeletePetCommand, bool>
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly ICurrentAccountService _currentAccountService;
+	private readonly ICacheService _cacheService;
 
-	public DeletePetHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+	public DeletePetHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService, ICacheService cacheService)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_currentAccountService = currentAccountService;
+		_cacheService = cacheService;
 	}
 
 	public async Task<bool> Handle(DeletePetCommand request, CancellationToken cancellationToken)
@@ -57,6 +59,7 @@ public class DeletePetHandler : IRequestHandler<DeletePetCommand, bool>
 		await _unitOfWork.PetRepository.UpdateAsync(pet);
 		await _unitOfWork.SaveChangesAsync();
 
+		await _cacheService.RemoveAsync(pet.Id.ToString(), cancellationToken);
 		return true;
 
 	}

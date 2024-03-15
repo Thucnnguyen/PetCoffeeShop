@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetCoffee.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class InitDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -261,10 +261,9 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Image = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    TotalSeat = table.Column<int>(type: "int", nullable: false),
-                    TotalSeatAvailable = table.Column<int>(type: "int", nullable: true),
                     Order = table.Column<int>(type: "int", nullable: false),
                     PetcoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
+                    TotalSeat = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     CreatedById = table.Column<long>(type: "bigint", nullable: true),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -301,8 +300,10 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    StartTime = table.Column<TimeSpan>(type: "time(6)", nullable: false),
-                    EndTime = table.Column<TimeSpan>(type: "time(6)", nullable: false),
+                    StartTime = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    EndTime = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Location = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     PetCoffeeShopId = table.Column<long>(type: "bigint", nullable: false),
@@ -423,12 +424,12 @@ namespace PetCoffee.Infrastructure.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     TotalPrice = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    Discount = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
                     StartTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Note = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Deposit = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    Deposit = table.Column<decimal>(type: "decimal(65,30)", nullable: true),
                     Code = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Rate = table.Column<string>(type: "longtext", nullable: true)
@@ -759,6 +760,36 @@ namespace PetCoffee.Infrastructure.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Diaries_Pet_PetId",
+                        column: x => x.PetId,
+                        principalTable: "Pet",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "RatePet",
+                columns: table => new
+                {
+                    CreatedById = table.Column<long>(type: "bigint", nullable: false),
+                    PetId = table.Column<long>(type: "bigint", nullable: false),
+                    Rate = table.Column<long>(type: "bigint", nullable: false),
+                    Comment = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RatePet", x => new { x.PetId, x.CreatedById });
+                    table.ForeignKey(
+                        name: "FK_RatePet_Account_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RatePet_Pet_PetId",
                         column: x => x.PetId,
                         principalTable: "Pet",
                         principalColumn: "Id",
@@ -1105,6 +1136,11 @@ namespace PetCoffee.Infrastructure.Migrations
                 column: "ShopId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RatePet_CreatedById",
+                table: "RatePet",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Report_CommentId",
                 table: "Report",
                 column: "CommentId");
@@ -1214,6 +1250,9 @@ namespace PetCoffee.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "PostPetCoffeeShops");
+
+            migrationBuilder.DropTable(
+                name: "RatePet");
 
             migrationBuilder.DropTable(
                 name: "Report");

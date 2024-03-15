@@ -41,7 +41,7 @@ public class ResendOTPHandler : IRequestHandler<ResendOTPQuery, bool>
 
 		// generate otp again
 		currentAccount.OTP = TokenUltils.GenerateOTPCode(6);
-		currentAccount.OTPExpired = DateTime.Now.AddDays(1);
+		currentAccount.OTPExpired = DateTime.UtcNow.AddDays(1);
 		await _unitOfWork.AccountRepository.UpdateAsync(currentAccount);
 		await _unitOfWork.SaveChangesAsync();
 		//send email

@@ -47,5 +47,5 @@ public class PetCoffeeShop : BaseAuditableEntity
 	[InverseProperty(nameof(Comment.PetCoffeeShop))]
 	public IList<Comment> Comments { get; set; } = new List<Comment>();
 	[Projectable]
-	public bool IsBuyPackage =>  DateTime.Now <= ClosedTime;
+	public bool IsBuyPackage =>  DateTime.UtcNow <= ClosedTime;
 }

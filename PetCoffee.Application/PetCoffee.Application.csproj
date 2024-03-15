@@ -16,6 +16,7 @@
     <Folder Include="Features\FollowShop\Models\" />
     <Folder Include="Features\SubmitttingEvents\Queries\" />
     <Folder Include="Features\Transactions\Queries\" />
+    <Folder Include="Features\Wallets\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,5 +13,5 @@ public class CreateSubmittingEventCommand : IRequest<SubmittingEventResponse>
 public class CreateSubmittingEventField
 {
 	public long EventFieldId { get; set; }
-	public string? Submitcontent { get; set; }
+	public string? SubmittingContent { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Areas.Commands;
@@ -39,7 +40,10 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             }
 
             //check cf shop info
-            var shop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(request.PetcoffeeShopId);
+            var shop = await _unitOfWork.PetCoffeeShopRepository
+                .Get(s => s.Id == request.PetcoffeeShopId && !s.Deleted)
+                .FirstOrDefaultAsync();
+
             if (shop == null)
             {
                 throw new ApiException(ResponseCode.ShopNotExisted);

@@ -13,6 +13,7 @@ using PetCoffee.Application.Service.Payment;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Extensions;
+using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 
@@ -59,7 +60,7 @@ public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Paymen
 
 		var vnPayPayment = new VnPayPayment()
 		{
-			PaymentReferenceId = Guid.NewGuid().ToString(),
+			PaymentReferenceId = TokenUltils.GenerateOTPCode(8),
 			Amount = (long)request.RequiredAmount,
 			Info = TransactionType.TopUp.GetDescription(),
 			OrderType = TransactionType.TopUp.GetDescription(),

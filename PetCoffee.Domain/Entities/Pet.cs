@@ -16,6 +16,7 @@ public class Pet : BaseAuditableEntity
 	public string? Backgound { get; set; }
 	public string? Description { get; set; }
 	public PetType PetType { get; set; }
+	public TypeSpecies TypeSpecies { get; set; }
 	public PetStatus PetStatus { get; set; } = PetStatus.Active;
 	public bool Spayed { get; set; } = false;
 	public long PetCoffeeShopId { get; set; }

@@ -41,13 +41,15 @@ public class GetPetsByAreaIdHandler : IRequestHandler<GetPetsByAreaIdQuery, Pagi
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
+
 		var Pets = await _unitOfWork.PetRepository
 					.GetAsync(
-							predicate: p => p.AreaId == request.AreaId && !p.Deleted,
+							predicate: request.GetExpressions() ,
 							includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Pet, object>>>
 							{
 								p => p.Area
 							});
+
 		return new PaginationResponse<Domain.Entities.Pet, PetResponse>(
 				Pets,
 				request.PageNumber,

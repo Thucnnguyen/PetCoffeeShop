@@ -17,12 +17,14 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
+	private readonly ICacheService _cacheService;
 
-	public DonationForPetHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+	public DonationForPetHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper, ICacheService cacheService)
 	{
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
+		_cacheService = cacheService;
 	}
 
 	public async Task<PaymentResponse> Handle(DonationForPetCommand request, CancellationToken cancellationToken)
@@ -45,13 +47,22 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
 
+		var wallet = await _unitOfWork.WalletRepsitory
+				.Get(w => w.CreatedById == currentAccount.Id)
+				.FirstOrDefaultAsync();
+
+		if(wallet == null)
+		{
+			throw new ApiException(ResponseCode.ItemInWalletNotEnough);
+		}
+
 		var donationItemIds = request.DonateItems.Select(di => di.ItemId);
 		double totalMoney = 0;
 		var newTransactionItem = new List<TransactionItem>();
 		foreach (var i in request.DonateItems)
 		{
 			var item = await _unitOfWork.WalletItemRepository
-				.Get(it => donationItemIds.Any(di => di == i.ItemId))
+				.Get(it => donationItemIds.Any(di => di == it.ItemId) && it.WalletId == wallet.Id)
 				.Include(it => it.Item)
 				.FirstOrDefaultAsync();
 			if (item == null || item.TotalItem < i.Quantity)
@@ -92,7 +103,7 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
 
 		var newTransaction = new Domain.Entities.Transaction()
 		{
-			WalletId = currentAccount.Id,
+			WalletId = wallet.Id,
 			Amount = (decimal)totalMoney,
 			Content = "Tặng quà cho thú cưng",
 			PetId = pet.Id,
@@ -101,10 +112,12 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
 			ReferenceTransactionId = Guid.NewGuid().ToString(),
 			Items = newTransactionItem,
 			TransactionType = TransactionType.Donate,
+			
 		};
 
 		await _unitOfWork.TransactionRepository.AddAsync(newTransaction);
 		await _unitOfWork.SaveChangesAsync();
+		await _cacheService.RemoveAsync(pet.Id.ToString(),cancellationToken);
 		return _mapper.Map<PaymentResponse>(newTransaction);
 	}
 }

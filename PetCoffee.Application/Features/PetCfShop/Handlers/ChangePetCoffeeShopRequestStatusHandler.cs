@@ -35,7 +35,7 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 		if(request.Status == ShopStatus.Active)
 		{
 			PetCoffShopChangeStatus.Status = ShopStatus.Active;
-			PetCoffShopChangeStatus.EndTimePackage = DateTime.Now.AddMonths(3);
+			PetCoffShopChangeStatus.EndTimePackage = DateTime.UtcNow.AddMonths(3);
 			await _unitOfWork.PetCoffeeShopRepository.UpdateAsync(PetCoffShopChangeStatus);
 			var createdBy = await _unitOfWork.AccountRepository.GetByIdAsync(PetCoffShopChangeStatus.CreatedById);
 			if (createdBy.IsCustomer)

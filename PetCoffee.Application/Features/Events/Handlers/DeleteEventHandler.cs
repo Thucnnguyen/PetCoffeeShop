@@ -51,7 +51,7 @@ public class DeleteEventHandler : IRequestHandler<DeleteEventCommand, bool>
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
 
-		GetEvent.DeletedAt = DateTime.Now;
+		GetEvent.DeletedAt = DateTime.UtcNow;
 		await _unitOfWork.EventRepository.UpdateAsync(GetEvent);
 		await _unitOfWork.SaveChangesAsync();
 		return true;

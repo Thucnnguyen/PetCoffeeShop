@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.FollowShop.Commands;
@@ -36,10 +37,13 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var post = await _unitOfWork.PostRepository.GetByIdAsync(request.PetCoffeeShopId);
-		if (post == null)
+		var shop = await _unitOfWork.PetCoffeeShopRepository
+			.Get(s => s.Id == request.PetCoffeeShopId && !s.Deleted)
+			.FirstOrDefaultAsync();
+
+		if (shop == null)
 		{
-			throw new ApiException(ResponseCode.PostNotExisted);
+			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 
 		var NewFollowShop = new FollowPetCfShop() { ShopId = request.PetCoffeeShopId };

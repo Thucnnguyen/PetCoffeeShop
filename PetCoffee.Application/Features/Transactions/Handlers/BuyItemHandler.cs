@@ -1,6 +1,5 @@
 ﻿
 using AutoMapper;
-using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -9,7 +8,8 @@ using PetCoffee.Application.Features.Transactions.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
-using System.Security.Cryptography.X509Certificates;
+using PetCoffee.Domain.Enums;
+using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.Transactions.Handlers;
 
@@ -90,7 +90,33 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 			itemWallet.TotalItem += itemDic[item.ItemId];
 			await _unitOfWork.WalletItemRepository.UpdateAsync(itemWallet);
 			await _unitOfWork.SaveChangesAsync();
+			
 		}
+		
+		var donateTransaction = new Transaction()
+		{
+			Amount = (decimal)totalMoney,
+			Content = "Mua quà Tặng",
+			TransactionType = TransactionType.BuyItem,
+			TransactionStatus = TransactionStatus.Done,
+			ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
+			WalletId = wallet.Id,
+		};
+		await _unitOfWork.TransactionRepository.AddAsync(donateTransaction);
+		await _unitOfWork.SaveChangesAsync();
+		var Itemtransactions = new List<TransactionItem>();
+		foreach (var item in items)
+		{
+			Itemtransactions.Add(new TransactionItem
+			{
+				ItemId = item.ItemId,
+				TotalItem = itemDic[item.ItemId],
+				TransactionId = donateTransaction.Id,
+			});
+
+		}
+		await _unitOfWork.TransactionItemRepository.AddRange(Itemtransactions);
+		await _unitOfWork.SaveChangesAsync();
 
 		return true;
 	}
