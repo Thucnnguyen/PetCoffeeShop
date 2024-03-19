@@ -24,7 +24,8 @@ public class FirebaseService : IFirebaseService
 			var user = await FirebaseAuth.DefaultInstance.GetUserAsync(uid);
 			return user;
 
-		}catch (Exception ex)
+		}
+		catch (Exception ex)
 		{
 			throw new ApiException(ResponseCode.FirebaseTokenNotValid);
 		}

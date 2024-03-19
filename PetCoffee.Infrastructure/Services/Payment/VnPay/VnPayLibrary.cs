@@ -2,10 +2,10 @@
 
 using Microsoft.AspNetCore.Http;
 using System.Globalization;
-using System.Net.Sockets;
 using System.Net;
-using System.Text;
+using System.Net.Sockets;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace PetCoffee.Infrastructure.Services.Payment.VnPay;
 

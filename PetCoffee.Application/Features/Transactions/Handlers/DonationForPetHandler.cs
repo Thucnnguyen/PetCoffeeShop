@@ -9,6 +9,7 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PetCoffee.Application.Features.Transactions.Handlers;
 
@@ -117,6 +118,8 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
 
 		await _unitOfWork.TransactionRepository.AddAsync(newTransaction);
 		await _unitOfWork.SaveChangesAsync();
+
+		
 		await _cacheService.RemoveAsync(pet.Id.ToString(),cancellationToken);
 		return _mapper.Map<PaymentResponse>(newTransaction);
 	}

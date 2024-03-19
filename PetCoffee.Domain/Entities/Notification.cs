@@ -12,7 +12,7 @@ public class Notification : BaseAuditableEntity
 
 	public string Title { get; set; }
 	public string Content { get; set; }
-	public string Data { get; set; }
+	public string? Data { get; set; }
 	public EntityType EntityType { get; set; }
 	public NotificationType Type { get; set; }
 	public string? ReferenceId { get; set; }
@@ -46,7 +46,6 @@ public class Notification : BaseAuditableEntity
 					Title = $"Bạn có một lượt thích bải viết mới";
 					Content = $"{like.CreatedBy.FullName} đã thích bài viết của bạn";
 					Level = NotificationLevel.Information;
-
 					EntityType = EntityType.Post;
 					ReferenceId = like.PostId.ToString();
 					break;

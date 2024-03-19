@@ -16,27 +16,27 @@ namespace PetCoffee.API.Controllers
 	public class PostController : ApiControllerBase
 	{
 		// GET: api/<PostController>
-		[HttpGet("posts")]
-		[Authorize]
+		//[HttpGet("posts")]
 		//[Authorize]
-        public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPost(
-            [FromQuery] GetAllPostQuery request)
-        {
-            return await Mediator.Send(request);
-        }
+		////[Authorize]
+		//public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPost(
+		//	[FromQuery] GetAllPostQuery request)
+		//{
+		//	return await Mediator.Send(request);
+		//}
 
-        [HttpGet("posts/news-feed")]
-        [Authorize]
-        public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPostNewsFeed(
-        [FromQuery] GetPostsNewsFeedQuery request)
-        {
-            return await Mediator.Send(request);
-        }
-
-        // GET api/<PostController>/5
-        [HttpGet("currentAccounts/posts")]
+		[HttpGet("posts/news-feed")]
 		[Authorize]
-		public async Task<ActionResult<IList<PostResponse>>> GetPostCreateByCurrentAccount([FromQuery]GetPostCreatedByCurrentAccountIdQuery request)
+		public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPostNewsFeed(
+		[FromQuery] GetPostsNewsFeedQuery request)
+		{
+			return await Mediator.Send(request);
+		}
+
+		// GET api/<PostController>/5
+		[HttpGet("currentAccounts/posts")]
+		[Authorize]
+		public async Task<ActionResult<IList<PostResponse>>> GetPostCreateByCurrentAccount([FromQuery] GetPostCreatedByCurrentAccountIdQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return Ok(response);
@@ -45,7 +45,7 @@ namespace PetCoffee.API.Controllers
 		// POST api/<PostController>
 		[HttpPost("posts")]
 		[Authorize]
-		public async Task<ActionResult<PostResponse>> Post([FromForm] CreatePostCommand request )
+		public async Task<ActionResult<PostResponse>> Post([FromForm] CreatePostCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
@@ -67,20 +67,20 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 		[HttpPut("{id:long}/posts/status")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<bool>> UpdatePostStatus([FromRoute] long id, [FromBody] UpdatePostStatusCommand request)
-        {
-            request.Id = id;
-            var response = await Mediator.Send(request);
-            return response;
-        }
+		[Authorize(Roles = "Admin")]
+		public async Task<ActionResult<bool>> UpdatePostStatus([FromRoute] long id, [FromBody] UpdatePostStatusCommand request)
+		{
+			request.Id = id;
+			var response = await Mediator.Send(request);
+			return response;
+		}
 
-        [HttpGet("posts/{Id:long}")]
-        [Authorize]
-        public async Task<ActionResult<PostResponse>> GetPost([FromRoute] GetPostByIdQuery request)
-        {
+		[HttpGet("posts/{Id:long}")]
+		[Authorize]
+		public async Task<ActionResult<PostResponse>> GetPost([FromRoute] GetPostByIdQuery request)
+		{
 
-            return await Mediator.Send(request);
-        }
-    }
+			return await Mediator.Send(request);
+		}
+	}
 }

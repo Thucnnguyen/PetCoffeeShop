@@ -31,7 +31,7 @@ public class CurrentAccountService : ICurrentAccountService
 		{
 			return null;
 		}
-		return await unitOfWork.AccountRepository.Get(acc => acc.Id ==  currentAccountId)
+		return await unitOfWork.AccountRepository.Get(acc => acc.Id == currentAccountId)
 												.Include(acc => acc.AccountShops)
 												.FirstOrDefaultAsync();
 	}

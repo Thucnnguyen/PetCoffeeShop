@@ -2,12 +2,14 @@
 
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Areas.Models;
 using PetCoffee.Application.Features.Areas.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+
 
 namespace PetCoffee.Application.Features.Areas.Handlers;
 
@@ -43,6 +45,16 @@ public class GetAreaByIdHandler : IRequestHandler<GetAreaByIdQuery, AreaResponse
 			throw new ApiException(ResponseCode.AreaNotExist);
 		}
 
-		return _mapper.Map<AreaResponse>(area);
+		var pets = await _unitOfWork.PetRepository
+					.Get(p => p.PetAreas.Any(pa => pa.AreaId == request.AreaId && pa.EndTime == null) && !p.Deleted
+							&& p.Name != null && p.Name.ToLower().Contains(request.Search!= null ? request.Search : ""))
+					.Include(p => p.PetAreas)
+					.ThenInclude(pa => pa.Area)
+					.Select(p => _mapper.Map<PetResponseForArea>(p))
+					.ToListAsync();
+
+		var response = _mapper.Map<AreaResponse>(area);
+		response.Pets = pets;
+		return response;
 	}
 }

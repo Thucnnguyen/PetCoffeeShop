@@ -8,13 +8,13 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
 {
-    [Route("api/v1")]
+	[Route("api/v1")]
 	[ApiController]
 	public class CommentController : ApiControllerBase
 	{
 		[HttpGet("comments/{PostId}")]
 		[Authorize]
-		public async Task<ActionResult<PaginationResponse<Comment,CommentResponse>>> GetCommentById([FromRoute] GetCommentByPostIdQuery request)
+		public async Task<ActionResult<PaginationResponse<Comment, CommentResponse>>> GetCommentById([FromRoute] GetCommentByPostIdQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;

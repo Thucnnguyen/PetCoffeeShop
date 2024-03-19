@@ -51,7 +51,7 @@ public class Notifier : INotifier
 		});
 	}
 
-	public async Task NotifyAsync(Notification notification,bool IsSaved)
+	public async Task NotifyAsync(Notification notification, bool IsSaved)
 	{
 		if (IsSaved)
 		{

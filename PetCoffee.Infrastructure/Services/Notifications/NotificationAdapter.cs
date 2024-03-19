@@ -1,6 +1,4 @@
-﻿
-
-using PetCoffee.Application.Service.Notifications;
+﻿using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Application.Service.Notifications.Models;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;

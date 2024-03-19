@@ -24,13 +24,13 @@ public class DeleteAccountNotVerifyJob : IJob
 		var dataMap = context.JobDetail.JobDataMap;
 
 		var AccountId = dataMap.GetLongValue(AccountIdKey);
-		if(AccountId == 0)
+		if (AccountId == 0)
 		{
 			return;
 		}
 
 		var Account = await _unitOfWork.AccountRepository.Get(s => s.Id == AccountId && s.IsVerify).FirstOrDefaultAsync();
-		if(Account == null)
+		if (Account == null)
 		{
 			return;
 		}

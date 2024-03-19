@@ -16,12 +16,12 @@ public class ZaloPayService : IZaloPayService
 
 	public async Task<Transaction> CreatePayment(ZaloPayment payment)
 	{
-		var zalopayPayRequest = new ZaloPaymentRequest(_settings.AppId, 
+		var zalopayPayRequest = new ZaloPaymentRequest(_settings.AppId,
 								_settings.AppUser,
 							   DateTime.UtcNow.GetTimeStamp(),
-							   (long)payment.Amount!, 
+							   (long)payment.Amount!,
 							   DateTime.UtcNow.ToString("yymmdd") + "_" + payment.PaymentReferenceId ?? string.Empty,
-							   "zalopayapp", 
+							   "zalopayapp",
 							   payment.Info ?? string.Empty,
 							   _settings.RedirectUrl
 							   );

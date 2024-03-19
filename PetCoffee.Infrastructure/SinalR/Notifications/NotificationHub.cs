@@ -1,7 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using PetCoffee.Application.Persistence.Repository;
 
 namespace PetCoffee.Infrastructure.SinalR.Notifications;

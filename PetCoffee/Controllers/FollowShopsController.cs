@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.FollowShop.Commands;
 using PetCoffee.Application.Features.FollowShop.Queries;

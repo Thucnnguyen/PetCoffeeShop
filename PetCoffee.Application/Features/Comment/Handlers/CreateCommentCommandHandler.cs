@@ -1,13 +1,10 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Comment.Commands;
 using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Application.Service.Notifications;
@@ -74,27 +71,33 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 									})).FirstOrDefault();
 
 		var response = _mapper.Map<CommentResponse>(NewCommentData);
-		//if (NewCommentData.ParentCommentId == null)
-		//{
-		//	var notificationForComment = new Notification(
-		//			account: post.CreatedBy,
-		//			type: NotificationType.CommentPost,
-		//			entityType: EntityType.Like,
-		//			data: NewCommentData
-		//		);
-		//	await _notifier.NotifyAsync(notificationForComment, true);
-		//	return response;
-		//}
+		//for reply
+		if (NewCommentData.ParentCommentId != null)
+		{
 
-		//var notificationForReply = new Notification(
-		//			account: post.CreatedBy,
-		//			type: NotificationType.ReplyComment,
-		//			entityType: EntityType.Like,
-		//			data: NewCommentData
-		//		);
-		//await _notifier.NotifyAsync(notificationForReply, true);
+			var parrentComment = await _unitOfWork.CommentRepository.Get(pa => pa.Id == NewCommentData.ParentCommentId)
+												.Include(pa => pa.CreatedBy)
+												.FirstOrDefaultAsync();
+			if (parrentComment != null && parrentComment.CreatedById != currentAccount.Id)
+			{
+				var notificationForComment = new Notification(
+					account: post.CreatedBy,
+					type: NotificationType.CommentPost,
+					entityType: EntityType.Like,
+					data: NewCommentData
+				);
+				await _notifier.NotifyAsync(notificationForComment, true);
+			}
+		}
+
+		var notificationForReply = new Notification(
+					account: post.CreatedBy,
+					type: NotificationType.ReplyComment,
+					entityType: EntityType.Like,
+					data: NewCommentData
+				);
+		await _notifier.NotifyAsync(notificationForReply, true);
 		return response;
-
 
 	}
 }

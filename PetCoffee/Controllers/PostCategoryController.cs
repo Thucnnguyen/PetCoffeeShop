@@ -14,7 +14,7 @@ namespace PetCoffee.API.Controllers
 
 		// GET api/<PostCategoryController>/5
 		[HttpGet]
-		public async Task<ActionResult<IList<PostCategoryResponse>>> Get([FromQuery]GetAllCategoriesQuery request)
+		public async Task<ActionResult<IList<PostCategoryResponse>>> Get([FromQuery] GetAllCategoriesQuery request)
 		{
 			return Ok(await Mediator.Send(request));
 		}

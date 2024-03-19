@@ -53,7 +53,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             order.UpdatedAt = DateTime.UtcNow;
 
             await _unitOfWork.ReservationRepository.UpdateAsync(order);
-            //await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
 
             // update area information
 
@@ -64,7 +64,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             }
             await _unitOfWork.AreaRepsitory.UpdateAsync(area);
 
-            await _unitOfWork.SaveChangesAsync();
+
 
 
             return _mapper.Map<ReservationResponse>(order);

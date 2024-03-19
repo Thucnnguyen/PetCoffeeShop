@@ -1,9 +1,5 @@
-﻿
-using Microsoft.AspNetCore.SignalR.Protocol;
-using Newtonsoft.Json;
-using OpenAI_API;
+﻿using OpenAI_API;
 using OpenAI_API.Completions;
-using OpenAI_API.Models;
 using PetCoffee.Application.Service;
 using PetCoffee.Infrastructure.Common.Constant;
 
@@ -12,12 +8,12 @@ namespace PetCoffee.Infrastructure.Services;
 public class ChatgptService : IChatgptService
 {
 	private readonly IOpenAIAPI _openAIAPI;
-    public ChatgptService( IOpenAIAPI openAIAPI)
-    {
+	public ChatgptService(IOpenAIAPI openAIAPI)
+	{
 
 		_openAIAPI = openAIAPI;
-    }
-    public async Task<CompletionResult> SendRequest(string request)
+	}
+	public async Task<CompletionResult> SendRequest(string request)
 	{
 		request += PromptConstants.Prompt;
 

@@ -1,11 +1,8 @@
 ﻿
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using PetCoffee.Application.Service;
 using System.Security.Claims;
-using System.Text;
 
 namespace PetCoffee.Infrastructure.Services;
 

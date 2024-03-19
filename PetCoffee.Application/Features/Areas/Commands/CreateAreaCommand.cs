@@ -26,7 +26,8 @@ namespace PetCoffee.Application.Features.Areas.Commands
         public string? Description { get; set; }
         public IFormFile? Image { get; set; }
         public int TotalSeat { get; set; }
-        public int Order { get; set; }
+		public long PricePerHour { get; set; }
+		public int Order { get; set; }
         public long PetcoffeeShopId { get; set; }
     }
 }

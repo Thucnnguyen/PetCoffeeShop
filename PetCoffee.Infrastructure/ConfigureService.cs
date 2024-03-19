@@ -46,13 +46,13 @@ public static class ConfigureService
 			var con = _configuration.GetConnectionString("MyDb");
 			options.UseMySql(con,
 						new MySqlServerVersion(new Version(8, 0, 30)),
-						 builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)); 
+						 builder => builder.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
 			options.UseProjectables();
 		});
 		// config Quartz
 		services.AddQuartz(q =>
 		{
-            q.UseMicrosoftDependencyInjectionJobFactory();
+			q.UseMicrosoftDependencyInjectionJobFactory();
 		});
 		//add scoped
 		services.AddScoped<ICurrentPrincipalService, CurrentPrincipleService>();
@@ -106,13 +106,13 @@ public static class ConfigureService
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<RedisSettings>>().Value);
 
 		services.AddSingleton<ICacheService, CacheService>();
-        services.AddStackExchangeRedisCache(redisOptions =>
-        {
-            using var sc = services.BuildServiceProvider().CreateScope();
-            var settings = sc.ServiceProvider.GetRequiredService<RedisSettings>();
-            var connection = $"{settings.Host}:{settings.Port},password={settings.Password}";
-            redisOptions.Configuration = connection;
-        });
+		services.AddStackExchangeRedisCache(redisOptions =>
+		{
+			using var sc = services.BuildServiceProvider().CreateScope();
+			var settings = sc.ServiceProvider.GetRequiredService<RedisSettings>();
+			var connection = $"{settings.Host}:{settings.Port},password={settings.Password}";
+			redisOptions.Configuration = connection;
+		});
 		//config ZaloPay
 		services.AddOptions<ZaloPaySettings>()
 			.BindConfiguration(ZaloPaySettings.ConfigSection)
@@ -137,11 +137,12 @@ public static class ConfigureService
 		// config azure blob
 		services.AddSingleton(u => new BlobServiceClient(_azureSettings.BlobConnectionString));
 		// config azure contentmoderator
-		services.AddSingleton<IContentModeratorClient>(u => {
-				var client = new ContentModeratorClient(new ApiKeyServiceClientCredentials(_azureSettings.KeyContentModerator));
-				client.Endpoint = _azureSettings.UrlConetentModerator;
-				return client;
-			});
+		services.AddSingleton<IContentModeratorClient>(u =>
+		{
+			var client = new ContentModeratorClient(new ApiKeyServiceClientCredentials(_azureSettings.KeyContentModerator));
+			client.Endpoint = _azureSettings.UrlConetentModerator;
+			return client;
+		});
 
 
 		//config chatgpt
@@ -161,11 +162,11 @@ public static class ConfigureService
 			.ValidateDataAnnotations()
 			.ValidateOnStart();
 		services.AddSingleton(sp => sp.GetRequiredService<IOptions<FirebaseSettings>>().Value);
-		
+
 		FirebaseApp.Create(new AppOptions
-			{
-				Credential = GoogleCredential.FromFile("petcoffeeshop.json"),
-			});
+		{
+			Credential = GoogleCredential.FromFile("petcoffeeshop.json"),
+		});
 		//config jwt
 		services.AddOptions<JwtSettings>()
 			.BindConfiguration(JwtSettings.ConfigSection)

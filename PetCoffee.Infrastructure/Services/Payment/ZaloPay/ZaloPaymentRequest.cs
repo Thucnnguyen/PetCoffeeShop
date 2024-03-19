@@ -58,7 +58,7 @@ public class ZaloPaymentRequest
 	{
 		using var client = new HttpClient();
 		var content = new FormUrlEncodedContent(GetContent());
-		var response = client. PostAsync(paymentUrl, content).Result;
+		var response = client.PostAsync(paymentUrl, content).Result;
 
 		if (response.IsSuccessStatusCode)
 		{

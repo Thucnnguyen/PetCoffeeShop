@@ -1,13 +1,13 @@
-﻿using Microsoft.Azure.CognitiveServices.ContentModerator;
-using PetCoffee.Application.Service;
-using PetCoffee.Infrastructure.Settings;
-using System.Text;
-using Newtonsoft.Json;
-using PetCoffee.Infrastructure.Common.Constant;
-using Microsoft.AspNetCore.Http;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.CognitiveServices.ContentModerator;
+using Newtonsoft.Json;
+using PetCoffee.Application.Service;
+using PetCoffee.Infrastructure.Common.Constant;
+using PetCoffee.Infrastructure.Settings;
 using System.Net;
+using System.Text;
 
 namespace PetCoffee.Infrastructure.Services;
 
@@ -46,14 +46,14 @@ public class AzureService : IAzureService
 
 	public async Task<bool> HasBadWords(string content)
 	{
-		
+
 		//convert text to byte
 		byte[] textBytes = Encoding.UTF8.GetBytes(content);
 		MemoryStream stream = new MemoryStream(textBytes);
 
 		//send request
 		var result = _clientModerator.TextModeration.ScreenText("text/plain", stream, "eng", true, true, null, true);
-		if(result.Terms == null || result.Terms.Count() == 0)
+		if (result.Terms == null || result.Terms.Count() == 0)
 		{
 			return false;
 		}
@@ -62,7 +62,7 @@ public class AzureService : IAzureService
 
 	public async Task<bool> SendEmail(string to, string content, string subject)
 	{
-		
+
 		var JsonData = JsonConvert.SerializeObject(new
 		{
 			to = to,
@@ -101,7 +101,7 @@ public class AzureService : IAzureService
 		{
 			// Build the request.
 			request.Method = HttpMethod.Post;
-			request.RequestUri = new Uri(_settings.UrlTranslator + UrlConstant.Url+to);
+			request.RequestUri = new Uri(_settings.UrlTranslator + UrlConstant.Url + to);
 			request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
 			request.Headers.Add("Ocp-Apim-Subscription-Key", _settings.KeyTranslator);
 			request.Headers.Add("Ocp-Apim-Subscription-Region", _settings.LocationTranslator);

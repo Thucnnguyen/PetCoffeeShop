@@ -59,7 +59,7 @@ public class UnitOfWork : IUnitOfWork
 	private IJoinEventRepository _JoinEventRepository;
 	private IItemRepository? _itemRepository;
 	private ILikeRepository? _likeRepository;
-	private INotificationRepository? _notificationRepository;	
+	private INotificationRepository? _notificationRepository;
 	private IPetCoffeeShopRepository? _petCoffeeShopRepository;
 	private IPetRepository? _petRepository;
 	private IPostCategoryRepository? _postCategoryRepository;
@@ -77,6 +77,8 @@ public class UnitOfWork : IUnitOfWork
 	private IWalletItemRepository? _walletItemRepository;
 	private ITransactionItemRepository? _transactionItemRepository;
 	private IRatePetRepository? _ratePetRepository;
+	private IPetAreaRespository? _petAreaRespository;
+
 
 
 	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
@@ -104,8 +106,11 @@ public class UnitOfWork : IUnitOfWork
 	public IPostCoffeeShopRepository PostCoffeeShopRepository => _postCoffeeShopRepository ??= new PostPetCoffeeShopRepository(_dbContext);
 
 	public IFollowPetCfShopRepository FollowPetCfShopRepository => _followPetCfShopRepository ??= new FollowPetCfShopRepository(_dbContext);
-	public IAccountShopRespository? AccountShopRespository => _accountShopRespository ??= new AccountShopRespository(_dbContext);
-	public ITransactionItemRepository? TransactionItemRepository => _transactionItemRepository ??= new TransactionItemRepository(_dbContext);
-	public IWalletItemRepository? WalletItemRepository => _walletItemRepository ??= new WalletItemRepository(_dbContext);
-	public IRatePetRepository? RatePetRespository  => _ratePetRepository ??= new RatePetRespository(_dbContext);
+	public IAccountShopRespository AccountShopRespository => _accountShopRespository ??= new AccountShopRespository(_dbContext);
+	public ITransactionItemRepository TransactionItemRepository => _transactionItemRepository ??= new TransactionItemRepository(_dbContext);
+	public IWalletItemRepository WalletItemRepository => _walletItemRepository ??= new WalletItemRepository(_dbContext);
+	public IRatePetRepository RatePetRespository => _ratePetRepository ??= new RatePetRespository(_dbContext);
+	public IPetAreaRespository PetAreaRespository => _petAreaRespository ??= new PetAreaRespository(_dbContext);
+
+
 }

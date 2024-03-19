@@ -6,8 +6,12 @@ public enum ResponseCode
 {
 	//Area
 
-	[Description("Area không tồn tại")] AreaNotExist,
-	[Description("Area không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
+
+	[Description("Tầng không tồn tại")] AreaNotExist,
+	[Description("Tầng không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
+	[Description("Tầng đã tồn tại trong quán")] AreaIsExist,
+	[Description("Phải có tầng trước")] NotHasPreviousArea,
+
 
 
 	//Comment
@@ -77,9 +81,10 @@ public enum ResponseCode
 	//wallet
 	[Description("Trong ví không đủ tiền để thực hiện, vui lòng nạp thêm")] NotEnoughBalance,
 	[Description("Quà tặng trong ví của bạn không đủ vui lòng kiểm trả lại")] ItemInWalletNotEnough,
+    [Description("Ví Không tồn tại")] WalletNotAvailable,
 
-	//Report
-	[Description("Báo cáo không tồn tại")] ReportNotExisted,
+    //Report
+    [Description("Báo cáo không tồn tại")] ReportNotExisted,
 
 
 
@@ -87,5 +92,10 @@ public enum ResponseCode
 	//Reservation
 
 	[Description("Reservation không tồn tại")] ReservationNotExist,
+
+
+    //Table
+
+    [Description("Table không tồn tại")] TableNotExist,
 
 }

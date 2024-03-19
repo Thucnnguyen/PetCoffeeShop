@@ -9,11 +9,11 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
 {
-    //[Route("api/[controller]")]
-    [Route("/api/v1")]
-    [ApiController]
-    public class PetCoffeeShopController : ApiControllerBase
-    {
+	//[Route("api/[controller]")]
+	[Route("/api/v1")]
+	[ApiController]
+	public class PetCoffeeShopController : ApiControllerBase
+	{
 		// get all paging
 		[HttpGet("petcoffeeshops")]
 		[Authorize]
@@ -40,16 +40,16 @@ namespace PetCoffee.API.Controllers
 
 		[HttpGet("petcoffeeshops/{Id}/{Latitude}/{Longitude}")]
 		[Authorize]
-		public async Task<ActionResult< PetCoffeeShopResponse>> GetPetCfShopById(
+		public async Task<ActionResult<PetCoffeeShopResponse>> GetPetCfShopById(
 			[FromRoute] GetPetCoffeeShopByIdQuery request)
 		{
 			return await Mediator.Send(request);
 		}
 
 		[HttpPost("petcoffeeshops")]
-        [Authorize(Roles = "Customer,Manager")]
-		public async Task<ActionResult< PetCoffeeShopResponse>> AddPetCfShop(
-        [FromForm] CreatePetCfShopCommand request)
+		[Authorize(Roles = "Customer,Manager")]
+		public async Task<ActionResult<PetCoffeeShopResponse>> AddPetCfShop(
+		[FromForm] CreatePetCfShopCommand request)
 		{
 			return await Mediator.Send(request);
 		}

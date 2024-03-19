@@ -46,14 +46,12 @@ internal class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
 			return cachePet;
 		}
 
-		var Pet = (await _unitOfWork.PetRepository
-				.GetAsync(
-						predicate: p => p.Id == request.Id && !p.Deleted,
-						includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Pet, object>>>
-						{
-							p => p.Area
-						})
-				).FirstOrDefault();
+		var Pet = await _unitOfWork.PetRepository
+				.Get(predicate: p => p.Id == request.Id && !p.Deleted)
+				.Include(p => p.PetAreas.Where(pa => pa.EndTime == null))
+				.ThenInclude(pa => pa.Area)
+				.Include(p => p.PetRattings)
+				.FirstOrDefaultAsync();
 
 
 		if (Pet == null)
@@ -66,6 +64,7 @@ internal class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
 		var TopDonations = _unitOfWork.TransactionRepository
 			.Get(tr => tr.PetId == Pet.Id &&
 						tr.TransactionStatus == Domain.Enums.TransactionStatus.Done)
+
 			.Include(tr => tr.CreatedBy)
 			.GroupBy(tr => tr.CreatedBy)
 			.Select(group => new DonationAccount()

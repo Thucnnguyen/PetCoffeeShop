@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -39,13 +40,13 @@ public class GetPetsByShopIdHandler : IRequestHandler<GetPetsByShopIdQuery, Pagi
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
-		var Pets = await _unitOfWork.PetRepository
-					.GetAsync(
-							predicate: request.GetExpressions(),
-							includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Pet, object>>>
-							{
-								p => p.Area
-							});
+		var Pets = _unitOfWork.PetRepository
+					.Get(predicate: request.GetExpressions())
+					.Include(p => p.PetAreas.Where(pa => pa.EndTime == null))
+					.ThenInclude(pa => pa.Area)
+					.Include(p => p.PetRattings)
+					.AsQueryable();
+
 		return new PaginationResponse<Domain.Entities.Pet, PetResponse>(
 				Pets,
 				request.PageNumber,

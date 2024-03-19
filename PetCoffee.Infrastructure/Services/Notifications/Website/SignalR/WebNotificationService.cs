@@ -1,13 +1,11 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Application.Service.Notifications.Models;
 using PetCoffee.Domain.Entities;
-using PetCoffee.Infrastructure.SinalR.Notifications;
 using PetCoffee.Infrastructure.SinalR;
+using PetCoffee.Infrastructure.SinalR.Notifications;
 
 namespace PetCoffee.Infrastructure.Services.Notifications.Website.SignalR;
 
@@ -21,8 +19,8 @@ public class WebNotificationService : IWebNotificationService
 	private const string ReceiveNotificationFunctionName = "ReceiveNotification";
 
 
-	public WebNotificationService(ILogger<WebNotificationService> logger, 
-		IHubContext<NotificationHub> notificationHubContext, 
+	public WebNotificationService(ILogger<WebNotificationService> logger,
+		IHubContext<NotificationHub> notificationHubContext,
 		IMapper mapper,
 		ConnectionManagerServiceResolver connectionManagerServiceResolver,
 		INotificationAdapter notificationAdapter)

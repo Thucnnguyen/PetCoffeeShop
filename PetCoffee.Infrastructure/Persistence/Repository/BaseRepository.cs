@@ -44,7 +44,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 	public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null)
 	{
 		IQueryable<T> query = _dbContext.Set<T>();
-		if(predicate != null)
+		if (predicate != null)
 		{
 			query = query.Where(predicate);
 		}
@@ -90,9 +90,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 	}
 
 	public IQueryable<T> Get(
-		Expression<Func<T, bool>>? predicate = null, 
-		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
-		List<Expression<Func<T, object>>>? includes = null, 
+		Expression<Func<T, bool>>? predicate = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+		List<Expression<Func<T, object>>>? includes = null,
 		bool disableTracking = false)
 	{
 		IQueryable<T> query = _dbContext.Set<T>();
@@ -101,11 +101,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 			query = query.AsNoTracking();
 		}
 
-		if(includes != null)
+		if (includes != null)
 		{
 			query = includes.Aggregate(query, (current, include) => current.Include(include));
 		}
-		if(predicate != null)
+		if (predicate != null)
 		{
 			query = query.Where(predicate);
 		}
@@ -117,9 +117,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
 	}
 
 	public Task<IQueryable<T>> GetAsync(
-		Expression<Func<T, bool>>? predicate = null, 
-		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, 
-		List<Expression<Func<T, object>>>? includes = null, 
+		Expression<Func<T, bool>>? predicate = null,
+		Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+		List<Expression<Func<T, object>>>? includes = null,
 		bool disableTracking = false)
 	{
 		return Task.FromResult(Get(predicate, orderBy, includes, disableTracking));

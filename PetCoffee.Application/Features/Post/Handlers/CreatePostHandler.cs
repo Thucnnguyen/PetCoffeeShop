@@ -113,22 +113,22 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 			response.Categories = listCategory.Select(s => _mapper.Map<CategoryForPostModel>(s)).ToList();
 		}
 
-		//if (newPostData != null)
-		//{
-		//	var follows = await _unitOfWork.FollowPetCfShopRepository.Get(a => a.ShopId == newPostData.ShopId)
-		//																.Include(a => a.CreatedBy)
-		//																.ToListAsync();
-		//	foreach (var acc in follows)
-		//	{
-		//		var notification = new Notification(
-		//			account: acc.CreatedBy,
-		//			type: NotificationType.NewPost,
-		//			entityType: EntityType.Post,
-		//			data: newPostData
-		//		);
-		//		await _notifier.NotifyAsync(notification, true);
-		//	}
-		//}
+		if (newPostData != null)
+		{
+			var follows = await _unitOfWork.FollowPetCfShopRepository.Get(a => a.ShopId == newPostData.ShopId)
+																		.Include(a => a.CreatedBy)
+																		.ToListAsync();
+			foreach (var acc in follows)
+			{
+				var notification = new Notification(
+					account: acc.CreatedBy,
+					type: NotificationType.NewPost,
+					entityType: EntityType.Post,
+					data: newPostData
+				);
+				await _notifier.NotifyAsync(notification, true);
+			}
+		}
 
 		return response;
 	}

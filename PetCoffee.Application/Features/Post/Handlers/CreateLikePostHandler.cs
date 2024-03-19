@@ -42,7 +42,7 @@ public class CreateLikePostHandler : IRequestHandler<CreateLikePostCommand, bool
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var post = await _unitOfWork.PostRepository.Get( p => p.Id == request.PostId)
+		var post = await _unitOfWork.PostRepository.Get(p => p.Id == request.PostId)
 													.Include(p => p.CreatedBy)
 													.FirstOrDefaultAsync();
 		if (post == null)
@@ -51,7 +51,7 @@ public class CreateLikePostHandler : IRequestHandler<CreateLikePostCommand, bool
 		}
 
 		var LikePost = await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == request.PostId && l.CreatedById == curAccount.Id);
-		if(LikePost.Any())
+		if (LikePost.Any())
 		{
 			return false;
 		}
@@ -59,14 +59,14 @@ public class CreateLikePostHandler : IRequestHandler<CreateLikePostCommand, bool
 		await _unitOfWork.LikeRepository.AddAsync(newLikePost);
 		await _unitOfWork.SaveChangesAsync();
 		newLikePost.CreatedBy = curAccount;
-		if(post.ShopId != null)
+		if (post.ShopId != null)
 		{
 			var listOfStaffsAndManagers = await _unitOfWork.AccountRepository
 				.Get(a => a.AccountShops.Any(a => a.ShopId == post.ShopId))
 				.Include(a => a.AccountShops)
 				.ToListAsync();
 
-			foreach(var staff in listOfStaffsAndManagers) 
+			foreach (var staff in listOfStaffsAndManagers)
 			{
 				var notification = new Notification(
 					account: staff,
@@ -75,19 +75,23 @@ public class CreateLikePostHandler : IRequestHandler<CreateLikePostCommand, bool
 					data: newLikePost
 				);
 
-				await _notifier.NotifyAsync(notification,true);
+				await _notifier.NotifyAsync(notification, true);
 			}
 		}
 		else
 		{
-			var notification = new Notification(
+			if (post.CreatedById != curAccount.Id)
+			{
+				var notification = new Notification(
 					account: post.CreatedBy,
 					type: NotificationType.LikePost,
 					entityType: EntityType.Like,
 					data: newLikePost
 				);
 
-			await _notifier.NotifyAsync(notification, true);
+				await _notifier.NotifyAsync(notification, true);
+			}
+
 		}
 		return true;
 	}

@@ -13,7 +13,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly ILogger<AuditableEntitySaveChangesInterceptor> _logger;
 
-	public AuditableEntitySaveChangesInterceptor(ICurrentAccountService currentAccountService, 
+	public AuditableEntitySaveChangesInterceptor(ICurrentAccountService currentAccountService,
 		ILogger<AuditableEntitySaveChangesInterceptor> logger)
 	{
 		_currentAccountService = currentAccountService;
@@ -35,7 +35,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 		{
 			if (entry.State == EntityState.Added)
 			{
-				if(entry.Entity.CreatedById != 0)
+				if (entry.Entity.CreatedById != 0)
 				{
 					entry.Entity.CreatedById = currentAccountId;
 				}
@@ -52,7 +52,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 			}
 		}
 	}
-	
+
 }
 public static class Extensions
 {
@@ -60,5 +60,5 @@ public static class Extensions
 		entry.References.Any(r =>
 			r.TargetEntry != null &&
 			r.TargetEntry.Metadata.IsOwned() &&
-			r.TargetEntry.State == EntityState.Added );
+			r.TargetEntry.State == EntityState.Added);
 }

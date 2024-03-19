@@ -6,7 +6,7 @@ namespace PetCoffee.API.Controllers;
 
 public class ApiControllerBase : ControllerBase
 {
-    private ISender? _mediator;
+	private ISender? _mediator;
 
-    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
+	protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetRequiredService<ISender>();
 }

@@ -1,6 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
-using PetCoffee.Application.Persistence.Repository;
+﻿using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Infrastructure.Persistence.Context;
 

@@ -23,13 +23,14 @@ using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
+using PetCoffee.Application.Features.RatePets.Models;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Reservation.Commands;
-using PetCoffee.Application.Features.Reservation.Handlers;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
+
 using PetCoffee.Application.Features.Transactions.Models;
 using PetCoffee.Application.Features.Vaccination.Commands;
 using PetCoffee.Application.Features.Vaccination.Models;
@@ -85,8 +86,16 @@ public class MappingProfile : Profile
 		//pets
 		CreateMap<Pet, PetResponse>()
 				.ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound))
-				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area));
+				.ForMember(dest => dest.Rate, opt => opt.MapFrom(src => src.PetRattings != null && src.PetRattings.Any() ? (decimal)(src.PetRattings.Sum(pr => pr.Rate)/ (decimal)src.PetRattings.Count()) : 0))
+				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.PetAreas.Select(pa => new AreaResponseForPet { Id = pa.Id, StartTime = pa.StartTime, EndTime = pa.EndTime,Order = pa.Area.Order })));
+
+
 		CreateMap<Area, AreaResponseForPet>();
+		CreateMap<PetArea, AreaResponseForPet>()
+				.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.EndTime))
+				.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.StartTime));
+
+		CreateMap<Pet, PetResponseForArea>();
 
 		CreateMap<CreatePetCommand, Pet>().ReverseMap();
 
@@ -247,5 +256,10 @@ public class MappingProfile : Profile
 
 		// transaction
 		CreateMap<Transaction, TransactionResponse>().ReverseMap();
+		//RatePet
+		CreateMap<RatePet, RatePetResponse>()
+			.ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
+
+
 	}
 }

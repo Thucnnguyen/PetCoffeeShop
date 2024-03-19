@@ -9,7 +9,7 @@ public class PetResponse : BaseAuditableEntityResponse
 	public string Name { get; set; }
 	public int? BirthYear { get; set; }
 	public double? Weight { get; set; }
-
+	public decimal? Rate { get; set; } = 0;
 	public string? Avatar { get; set; }
 	public string? Backgrounds { get; set; }
 	public string? Description { get; set; }
@@ -18,7 +18,7 @@ public class PetResponse : BaseAuditableEntityResponse
 	public PetGender Gender { get; set; }
 	public TypeSpecies TypeSpecies { get; set; }
 	public bool Spayed { get; set; } = false;
-	public AreaResponseForPet Area { get; set; }
+	public List<AreaResponseForPet> Area { get; set; }
 	public long PetCoffeeShopId { get; set; }
 	public List<DonationAccount> Accounts { get; set; }
 }

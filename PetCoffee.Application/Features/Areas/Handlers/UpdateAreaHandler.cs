@@ -4,17 +4,10 @@ using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PetCoffee.Application.Features.Areas.Handlers
 {
@@ -51,7 +44,8 @@ namespace PetCoffee.Application.Features.Areas.Handlers
                 includes: new List<Expression<Func<Domain.Entities.Area, object>>>()
                 {
                     //c => c.CreatedBy,
-                })).First();
+                })).FirstOrDefault();
+
             if (area == null)
             {
                 throw new ApiException(ResponseCode.AreaNotExist);
@@ -59,7 +53,8 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 
             area.Description = request.Description;
             area.Order = request.Order;
-            
+            area.TotalSeat = request.TotalSeat;
+            area.PricePerHour = request.PricePerHour;
 
             if (request.Image != null)
             {

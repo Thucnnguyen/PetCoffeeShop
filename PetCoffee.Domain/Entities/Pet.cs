@@ -21,8 +21,7 @@ public class Pet : BaseAuditableEntity
 	public bool Spayed { get; set; } = false;
 	public long PetCoffeeShopId { get; set; }
 	public PetCoffeeShop PetCoffeeShop { get; set; }
-	public long? AreaId { get; set; }
-	public Area? Area { get; set; }
+
 	[InverseProperty(nameof(Vaccination.Pet))]
 	public IList<Vaccination> Vaccinations { get; set; } = new List<Vaccination>();
 	[InverseProperty(nameof(Moment.Pet))]
@@ -31,4 +30,6 @@ public class Pet : BaseAuditableEntity
 	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 	[InverseProperty(nameof(RatePet.Pet))]
 	public IList<RatePet> PetRattings { get; set; } = new List<RatePet>();
+	[InverseProperty(nameof(PetArea.Pet))]
+	public IList<PetArea> PetAreas { get; set; } = new List<PetArea>();
 }

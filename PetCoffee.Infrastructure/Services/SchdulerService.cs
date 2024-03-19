@@ -36,7 +36,8 @@ public class SchdulerService : ISchedulerService
 					.StartAt(time)
 					.Build();
 			await scheduler.ScheduleJob(job, trigger);
-		}catch(Exception ex)
+		}
+		catch (Exception ex)
 		{
 			_logger.LogError("Schedule to clear expired account error {error}", ex.Message);
 		}

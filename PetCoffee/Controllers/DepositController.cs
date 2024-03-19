@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Features.Payments.Commands;
 using PetCoffee.Application.Features.Payments.Models;
-using PetCoffee.Application.Features.Payments.Queries;
 
 namespace PetCoffee.API.Controllers
 {
@@ -12,13 +11,13 @@ namespace PetCoffee.API.Controllers
 	{
 		[HttpPost("recharges")]
 		[Authorize]
-		public async Task<ActionResult<PaymentResponse>> CreateDepositTransaction ([FromBody] CreatePaymentCommand request)
+		public async Task<ActionResult<PaymentResponse>> CreateDepositTransaction([FromBody] CreatePaymentCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
 		}
 
-		
+
 		[HttpGet("payments/callback/vnpay/{referenceId}")]
 		public async Task<ActionResult<PaymentResponse>> CallbackVNPay([FromRoute] string referenceId, [FromQuery] ProcessVnpayPaymentIpnCommand request)
 		{

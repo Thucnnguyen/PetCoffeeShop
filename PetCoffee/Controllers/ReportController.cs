@@ -1,18 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Comment.Commands;
-using PetCoffee.Application.Features.PetCfShop.Commands;
-using PetCoffee.Application.Features.PetCfShop.Models;
-using PetCoffee.Application.Features.Post.Commands;
-using PetCoffee.Application.Features.PostCategory.Models;
-using PetCoffee.Application.Features.PostCategory.Queries;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Handlers;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Report.Queries;
-using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
 {

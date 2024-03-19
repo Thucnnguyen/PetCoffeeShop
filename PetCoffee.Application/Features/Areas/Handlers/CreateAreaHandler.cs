@@ -48,7 +48,24 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             {
                 throw new ApiException(ResponseCode.ShopNotExisted);
             }
+            var IsExistedArea = await _unitOfWork.AreaRepsitory
+                                    .Get(p => p.PetcoffeeShopId == shop.Id && p.Order == request.Order && !p.Deleted)
+                                    .FirstOrDefaultAsync();
+            if (IsExistedArea == null)
+            {
+                throw new ApiException(ResponseCode.AreaIsExist);
+            }
 
+            if(request.Order > 1)
+            {
+				var IsExistedPreviousArea = await _unitOfWork.AreaRepsitory
+								   .Get(p => p.PetcoffeeShopId == shop.Id && p.Order == request.Order-1)
+								   .FirstOrDefaultAsync();
+				if (IsExistedArea == null)
+				{
+					throw new ApiException(ResponseCode.NotHasPreviousArea);
+				}
+			}
 
             var newArea = _mapper.Map<Domain.Entities.Area>(request);
             if (request.Image != null)

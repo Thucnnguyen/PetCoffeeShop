@@ -11,14 +11,14 @@ public class AzureSettings
 	public string KeyContentModerator { get; set; }
 	[Required]
 	public string UrlConetentModerator { get; set; }
-	
+
 	[Required]
 	public string KeyTranslator { get; set; }
 	[Required]
 	public string UrlTranslator { get; set; }
 	[Required]
 	public string LocationTranslator { get; set; }
-	
+
 	[Required]
 	public string BlobConnectionString { get; set; }
 	[Required]

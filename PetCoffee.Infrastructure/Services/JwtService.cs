@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Infrastructure.Settings;
@@ -38,6 +37,6 @@ public class JwtService : IJwtService
 	}
 	public string GenerateJwtToken(Account account)
 	{
-		return GenerateJwtToken(account,_jwtSettings.TokenExpire);
+		return GenerateJwtToken(account, _jwtSettings.TokenExpire);
 	}
 }

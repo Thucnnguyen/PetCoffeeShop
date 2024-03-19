@@ -19,10 +19,16 @@ public class Area : BaseAuditableEntity
 	[Projectable]
 	public bool Deleted => DeletedAt != null;
 
-	[InverseProperty(nameof(Reservation.Area))]
-	public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
-	[InverseProperty(nameof(Pet.Area))]
-	public IList<Pet> Pets { get; set; } = new List<Pet>();
+	//[InverseProperty(nameof(Reservation.Area))]
+	//public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
+	[InverseProperty(nameof(PetArea.Area))]
+	public IList<PetArea> PetAreas { get; set; } = new List<PetArea>();
 
+	public long PricePerHour { get; set; }
+	public int TotalSeat { get; set; }
+
+
+    [InverseProperty(nameof(Reservation.Area))]
+    public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
 
 }

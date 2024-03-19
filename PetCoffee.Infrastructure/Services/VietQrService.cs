@@ -1,7 +1,4 @@
-﻿
-
-using Azure;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Service;
 using PetCoffee.Infrastructure.Settings;
