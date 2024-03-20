@@ -24,6 +24,8 @@ using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.RatePets.Models;
+using PetCoffee.Application.Features.Product.Commands;
+using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Reservation.Commands;
@@ -86,8 +88,8 @@ public class MappingProfile : Profile
 		//pets
 		CreateMap<Pet, PetResponse>()
 				.ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound))
-				.ForMember(dest => dest.Rate, opt => opt.MapFrom(src => src.PetRattings != null && src.PetRattings.Any() ? (decimal)(src.PetRattings.Sum(pr => pr.Rate)/ (decimal)src.PetRattings.Count()) : 0))
-				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.PetAreas.Select(pa => new AreaResponseForPet { Id = pa.Id, StartTime = pa.StartTime, EndTime = pa.EndTime,Order = pa.Area.Order })));
+				.ForMember(dest => dest.Rate, opt => opt.MapFrom(src => src.PetRattings != null && src.PetRattings.Any() ? (decimal)(src.PetRattings.Sum(pr => pr.Rate) / (decimal)src.PetRattings.Count()) : 0))
+				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.PetAreas.Select(pa => new AreaResponseForPet { Id = pa.Id, StartTime = pa.StartTime, EndTime = pa.EndTime, Order = pa.Area.Order })));
 
 
 		CreateMap<Area, AreaResponseForPet>();
@@ -260,6 +262,9 @@ public class MappingProfile : Profile
 		CreateMap<RatePet, RatePetResponse>()
 			.ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
 
+		//product
+		CreateMap<Product, ProductResponse>().ReverseMap();
+		CreateMap<CreateProductCommand, Product>().ReverseMap();
 
 	}
 }

@@ -41,7 +41,7 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		// check is shop Expired
+		// check is shop expired
 		if(request.ShopId != null)
 		{
 			var shop = await _unitOfWork.PetCoffeeShopRepository

@@ -24,7 +24,7 @@ public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery
 		int TotalShop = 0;
 		if(request.ShopType != null)
 		{
-			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s =>s.Type == request.ShopType && s.Status == ShopStatus.Active);
+			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s =>s.Type == request.ShopType && s.Status == ShopStatus.Active && s.IsBuyPackage);
 		}
 		else
 		{

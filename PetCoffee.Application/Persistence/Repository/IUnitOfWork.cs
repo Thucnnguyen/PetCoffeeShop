@@ -41,4 +41,7 @@ public interface IUnitOfWork
 	ITransactionItemRepository TransactionItemRepository { get; }
 	IRatePetRepository RatePetRespository { get; }
 	IPetAreaRespository PetAreaRespository { get; }
+    IProductRepository ProductRepository { get; }
+    IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
+    IInvoiceRepository InvoiceRepository { get; }
 }

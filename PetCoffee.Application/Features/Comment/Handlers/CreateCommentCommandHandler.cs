@@ -108,6 +108,7 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 					entityType: EntityType.Like,
 					data: NewCommentData
 				);
+
 		await _notifier.NotifyAsync(notificationForReply, true);
 		return response;
 
