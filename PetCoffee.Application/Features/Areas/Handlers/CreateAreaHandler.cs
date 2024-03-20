@@ -61,7 +61,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 				var IsExistedPreviousArea = await _unitOfWork.AreaRepsitory
 								   .Get(p => p.PetcoffeeShopId == shop.Id && p.Order == request.Order-1 && !p.Deleted)
 								   .FirstOrDefaultAsync();
-				if (IsExistedArea == null)
+				if (IsExistedPreviousArea == null)
 				{
 					throw new ApiException(ResponseCode.NotHasPreviousArea);
 				}
