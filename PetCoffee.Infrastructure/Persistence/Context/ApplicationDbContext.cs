@@ -72,4 +72,5 @@ public class ApplicationDbContext : DbContext
 	public DbSet<Wallet> Wallets => Set<Wallet>();
 	public DbSet<PostPetCoffeeShop> PostPetCoffeeShops => Set<PostPetCoffeeShop>();
 	public DbSet<FollowPetCfShop> FollowPetCfShops => Set<FollowPetCfShop>();
+	public DbSet<PackagePromotion> PackagePromotions => Set<PackagePromotion>();
 }

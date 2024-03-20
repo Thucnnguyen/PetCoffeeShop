@@ -81,6 +81,7 @@ public class UnitOfWork : IUnitOfWork
 	private IProductRepository? _productRepository;
 	private IPetCoffeeShopProductRepository? _petCoffeeShopProductRepository;
 	private IInvoiceRepository? _invoiceRepository;
+	private IPackagePromotionRespository? _packagePromotionRespository;
 
 
 
@@ -115,8 +116,9 @@ public class UnitOfWork : IUnitOfWork
 	public IRatePetRepository RatePetRespository => _ratePetRepository ??= new RatePetRespository(_dbContext);
 	public IPetAreaRespository PetAreaRespository => _petAreaRespository ??= new PetAreaRespository(_dbContext);
 
-	public IProductRepository? ProductRepository => _productRepository ??= new ProductRepository(_dbContext);
+	public IProductRepository ProductRepository => _productRepository ??= new ProductRepository(_dbContext);
 
 	public IPetCoffeeShopProductRepository PetCoffeeShopProductRepository => _petCoffeeShopProductRepository ??= new PetCoffeeShopProductRepository(_dbContext);
 	public IInvoiceRepository InvoiceRepository => _invoiceRepository ??= new InvoiceRepository(_dbContext);
+	public IPackagePromotionRespository PackagePromotionRespository => _packagePromotionRespository ??= new PackagePromotionRespository(_dbContext);
 }

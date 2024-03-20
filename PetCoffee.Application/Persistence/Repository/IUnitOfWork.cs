@@ -6,6 +6,7 @@ namespace PetCoffee.Application.Persistence.Repository;
 
 public interface IUnitOfWork
 {
+
 	Task<int> SaveChangesAsync();
 
 	void Rollback();
@@ -44,4 +45,5 @@ public interface IUnitOfWork
     IProductRepository ProductRepository { get; }
     IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
     IInvoiceRepository InvoiceRepository { get; }
+    IPackagePromotionRespository PackagePromotionRespository { get; }
 }
