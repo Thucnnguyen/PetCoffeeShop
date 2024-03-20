@@ -8,7 +8,9 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.FollowShop.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.FollowShop.Handlers;
 
@@ -17,12 +19,14 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 	private readonly ICurrentAccountService _currentAccountService;
+	private readonly INotifier _notifier;
 
-	public CreateFollowShopHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+	public CreateFollowShopHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 		_currentAccountService = currentAccountService;
+		_notifier = notifier;
 	}
 
 	public async Task<bool> Handle(CreateFollowShopCommand request, CancellationToken cancellationToken)
@@ -50,7 +54,25 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 
 		await _unitOfWork.FollowPetCfShopRepository.AddAsync(NewFollowShop);
 		await _unitOfWork.SaveChangesAsync();
-
+		var newFollowShopData = await _unitOfWork.FollowPetCfShopRepository
+								.Get(f => f.ShopId == NewFollowShop.ShopId && f.CreatedById == NewFollowShop.CreatedById)
+								.Include(p => p.Shop)
+								.Include(p => p.CreatedBy)
+								.FirstOrDefaultAsync();
+		var managerAccount = await _unitOfWork.AccountRepository
+			.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == newFollowShopData.ShopId))
+			.FirstOrDefaultAsync();
+		if (managerAccount != null) 
+		{
+			var notification = new Notification(
+					account: managerAccount,
+					type: NotificationType.NewFollower,
+					entityType: EntityType.Shop,
+					data: newFollowShopData
+				);
+			await _notifier.NotifyAsync(notification, true);
+		}
+		
 		return true;
 	}
 }

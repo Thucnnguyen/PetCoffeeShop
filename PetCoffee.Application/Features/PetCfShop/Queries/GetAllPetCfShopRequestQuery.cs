@@ -38,7 +38,7 @@ public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRe
             Expression = Expression.And(shop => Equals(ShopType, shop.Type));
         }
 
-        Expression = Expression.And(shop => shop.Status != ShopStatus.Processing);
+        Expression = Expression.And(shop => shop.Status != ShopStatus.Processing && shop.IsBuyPackage);
 
 
         return Expression;

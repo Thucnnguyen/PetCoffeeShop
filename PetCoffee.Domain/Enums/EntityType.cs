@@ -13,4 +13,6 @@ public enum EntityType
 	Donation = 7,
 	SubmitingEvent = 8,
 	Post = 9,
+	Transaction = 10,
+	Shop = 11,
 }

@@ -9,7 +9,6 @@ public class Notification : BaseAuditableEntity
 {
 	[Key]
 	public long Id { get; set; }
-
 	public string Title { get; set; }
 	public string Content { get; set; }
 	public string? Data { get; set; }
@@ -127,6 +126,38 @@ public class Notification : BaseAuditableEntity
 					Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
 					Level = NotificationLevel.Information;
 					ReferenceId = newEvent.Id.ToString();
+
+					break;
+				}
+			case NotificationType.Donation:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var transaction = (Transaction)data;
+
+					Title = $"Thú cưng của shop được tặng quà";
+					Content = $"{transaction.Pet.Name} đã được tặng quà bời {transaction.CreatedBy.FullName}";
+					Level = NotificationLevel.Information;
+					ReferenceId = transaction.Id.ToString();
+
+					break;
+				}
+			case NotificationType.NewFollower:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var follow = (FollowPetCfShop)data;
+
+					Title = $"Quán của bạn có người theo dõi mới";
+					Content = $"{follow.Shop.Name} đã được tặng quà bời {follow.CreatedBy.FullName}";
+					Level = NotificationLevel.Information;
+					ReferenceId = follow.ShopId.ToString();
 
 					break;
 				}

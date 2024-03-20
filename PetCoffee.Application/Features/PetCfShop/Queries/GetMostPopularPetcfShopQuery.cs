@@ -23,7 +23,7 @@ public class GetMostPopularPetcfShopQuery : PaginationRequest<PetCoffeeShop>, IR
 		{
 			Expression = Expression.And(store => Equals(ShopType, store.Type));
 		}
-		Expression = Expression.And(Shop => Shop.Status == ShopStatus.Active);
+		Expression = Expression.And(Shop => Shop.Status == ShopStatus.Active && Shop.IsBuyPackage);
 		return Expression;
 	}
 }

@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿
+
+using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.RatePets.Models;
 using PetCoffee.Application.Features.RatePets.Queries;
 using PetCoffee.Application.Persistence.Repository;
@@ -11,20 +13,20 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.RatePets.Handlers;
 
-public class GetRatePetsHandlers : IRequestHandler<GetPetRateQuery, PaginationResponse<RatePet, RatePetResponse>>
+public class GetRandomRatePetHandler : IRequestHandler<GetRandomRatePetQuery, RatePetResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
 
-	public GetRatePetsHandlers(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+	public GetRandomRatePetHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
 	{
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
 	}
 
-	public async Task<PaginationResponse<RatePet, RatePetResponse>> Handle(GetPetRateQuery request, CancellationToken cancellationToken)
+	async Task<RatePetResponse> IRequestHandler<GetRandomRatePetQuery, RatePetResponse>.Handle(GetRandomRatePetQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -37,18 +39,16 @@ public class GetRatePetsHandlers : IRequestHandler<GetPetRateQuery, PaginationRe
 		}
 
 		var petRate = await _unitOfWork.RatePetRespository
-					.GetAsync(
-						predicate: request.GetExpressions(),
+					.Get(
+						predicate: rp => rp.PetId == request.PetId,
 						includes: new List<System.Linq.Expressions.Expression<Func<RatePet, object>>>()
 						{
 							rp => rp.CreatedBy
 						}
-					);
-		
-		return new PaginationResponse<RatePet, RatePetResponse>(
-		   petRate,
-		   request.PageNumber,
-		   request.PageSize,
-		   rp => _mapper.Map<RatePetResponse>(rp));
+					).ToListAsync();
+
+		var petRateResponse = petRate[new Random().Next(petRate.Count)];
+							 
+		return _mapper.Map<RatePetResponse>(petRateResponse);
 	}
 }

@@ -22,7 +22,14 @@ public class RatePetController : ApiControllerBase
 
 	[HttpGet("pet/{PetId}/rate-pets")]
 	[Authorize]
-	public async Task<RatePetResponseForCus> GetRatePets([FromRoute] GetPetRateQuery request)
+	public async Task<PaginationResponse<RatePet, RatePetResponse>> GetRatePets([FromRoute] GetPetRateQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return response;
+	}
+	[HttpGet("pet/{PetId}/rate-pets/random")]
+	[Authorize]
+	public async Task<RatePetResponse> GetRatePetRandom([FromRoute] GetRandomRatePetQuery request)
 	{
 		var response = await Mediator.Send(request);
 		return response;

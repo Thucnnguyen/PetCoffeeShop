@@ -41,7 +41,18 @@ public class CreatePostHandler : IRequestHandler<CreatePostCommand, PostResponse
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-
+		// check is shop Expired
+		if(request.ShopId != null)
+		{
+			var shop = await _unitOfWork.PetCoffeeShopRepository
+						.Get(s => s.Id == request.ShopId && !s.Deleted && s.IsBuyPackage)
+						.FirstOrDefaultAsync();
+			if(shop == null)
+			{
+				throw new ApiException(ResponseCode.ShopIsExpired);
+			}
+		}
+		
 		var newPost = _mapper.Map<Domain.Entities.Post>(request);
 		if (request.Image != null)
 		{

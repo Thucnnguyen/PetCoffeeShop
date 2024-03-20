@@ -43,6 +43,7 @@ public enum ResponseCode
 	//shop
 	[Description("Cửa hàng Không tồn tại")] ShopNotExisted,
 	[Description("Bạn đang có một yêu cầu tạo của hàng rồi")] HasShopRequest,
+	[Description("Cửa hàng đã hết thời gian sử dụng vui lòng mua thêm gói để sử dụng")] ShopIsExpired,
 	//TaxCode
 	[Description("Mã Số thuế không tồn tại")] TaxCodeNotExisted,
 	//pet

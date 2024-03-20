@@ -6,16 +6,21 @@ namespace PetCoffee.Domain.Enums;
 
 public enum NotificationType 
 {
-	[Description("Like post")]
+	[Description("Thích bài viết")]
 	LikePost = 0,
-	[Description("Comment post")]
+	[Description("Bình Luận bài viết")]
 	CommentPost = 1,
-	[Description("Reply comment")]
+	[Description("Phàn hồi bình luận")]
 	ReplyComment = 2,
-	[Description("New Post")]
+	[Description("bài đăng mới")]
 	NewPost = 3,
-	[Description("New Event")]
+	[Description("Sự kiện mới")]
 	NewEvent = 4,
-	[Description("Join Event")]
+	[Description("Tham gia sự kiện")]
 	JoinEvent = 5,
+	[Description("Tặng quà")]
+	Donation = 6,
+	[Description("Người Follow Mới")]
+	NewFollower = 7,
+
 }

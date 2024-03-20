@@ -43,6 +43,18 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
+		// check is shop expired
+		if (request.ShopId != null)
+		{
+			var shop = await _unitOfWork.PetCoffeeShopRepository
+						.Get(s => s.Id == request.ShopId && !s.Deleted && s.IsBuyPackage)
+						.FirstOrDefaultAsync();
+			if (shop == null)
+			{
+				throw new ApiException(ResponseCode.ShopIsExpired);
+			}
+		}
+
 		//check post info
 		var post = await _unitOfWork.PostRepository.Get(po => po.Id == request.PostId)
 													.Include(po => po.CreatedBy)
