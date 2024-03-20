@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Persistence.Repository
 {
-    public interface IPetCoffeeShopProductRepository : IBaseRepository<PetCoffeeProduct>
-    {
-    }
+    //public interface IPetCoffeeShopProductRepository : IBaseRepository<PetCoffeePr
+    //{
+    //}
 }
