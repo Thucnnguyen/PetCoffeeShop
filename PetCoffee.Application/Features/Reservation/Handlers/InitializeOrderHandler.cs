@@ -94,7 +94,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 Deposit = 0, //
                 Code = "test", //
                 CreatedById = currentAccount.Id,
-
+                BookingSeat = request.TotalSeat
                 
 
                 //CreatedAt = DateTime.Now
