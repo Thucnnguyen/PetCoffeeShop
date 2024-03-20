@@ -43,7 +43,7 @@ public interface IUnitOfWork
 	IRatePetRepository RatePetRespository { get; }
 	IPetAreaRespository PetAreaRespository { get; }
     IProductRepository ProductRepository { get; }
-    IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
+    //IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
     IInvoiceRepository InvoiceRepository { get; }
     IPackagePromotionRespository PackagePromotionRespository { get; }
 }

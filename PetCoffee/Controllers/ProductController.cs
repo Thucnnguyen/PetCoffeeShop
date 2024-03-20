@@ -16,14 +16,22 @@ namespace PetCoffee.API.Controllers
     public class ProductController : ApiControllerBase
     {
 
-        [HttpPost("product")]
-        [Authorize]
-        public async Task<ActionResult<ProductResponse>> CreateProduct([FromForm] CreateProductCommand request)
-        {
-            var response = await Mediator.Send(request);
-            return response;
-        }
+        //[HttpPost("product")]
+        //[Authorize]
+        //public async Task<ActionResult<ProductResponse>> CreateProduct([FromForm] CreateProductCommand request)
+        //{
+        //    var response = await Mediator.Send(request);
+        //    return response;
+        //}
 
-        // 
+        //// 
+        //[HttpGet("petCoffeeShops/products")]
+        //[Authorize]
+        //public async Task<ActionResult<PaginationResponse<Domain.Entities.Product, ProductResponse>>> GetProductsByShopId([FromQuery] GetProductsByShopIdQuery request)
+        //{
+        //    var response = await Mediator.Send(request);
+        //    return Ok(response);
+        //}
+
     }
 }

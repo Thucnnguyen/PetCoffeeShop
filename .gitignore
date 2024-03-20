@@ -403,3 +403,15 @@ PetCoffee.Infrastructure/Migrations/20240314120617_init.cs
 PetCoffee.Infrastructure/Migrations/20240314120617_init.Designer.cs
 PetCoffee.Infrastructure/Migrations/20240315042930_init.Designer.cs
 PetCoffee.Infrastructure/Migrations/20240315042930_init.cs
+PetCoffee.Infrastructure/Migrations/20240320014824_add-new2.cs
+PetCoffee.Infrastructure/Migrations/20240320014824_add-new2.Designer.cs
+PetCoffee.Infrastructure/Migrations/20240320034524_add-new3.cs
+PetCoffee.Infrastructure/Migrations/20240320034524_add-new3.Designer.cs
+PetCoffee.Infrastructure/Migrations/20240320034651_add-new4.cs
+PetCoffee.Infrastructure/Migrations/20240320034651_add-new4.Designer.cs
+PetCoffee.Infrastructure/Migrations/20240320013001_ainit.Designer.cs
+PetCoffee.Infrastructure/Migrations/20240320013001_ainit.cs
+PetCoffee.Infrastructure/Migrations/20240320014011_add-new.cs
+PetCoffee.Infrastructure/Migrations/20240320014011_add-new.Designer.cs
+/PetCoffee.Infrastructure/Migrations/ApplicationDbContextModelSnapshot.cs
+/.gitignore

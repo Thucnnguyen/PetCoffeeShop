@@ -35,45 +35,47 @@ namespace PetCoffee.Application.Features.Product.Handlers
         }
         public async Task<ProductResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {
-            var currentAccount = await _currentAccountService.GetCurrentAccount();
-            if (currentAccount == null)
-            {
-                throw new ApiException(ResponseCode.AccountNotExist);
-            }
-            if (currentAccount.IsVerify)
-            {
-                throw new ApiException(ResponseCode.AccountNotActived);
-            }
+            //var currentAccount = await _currentAccountService.GetCurrentAccount();
+            //if (currentAccount == null)
+            //{
+            //    throw new ApiException(ResponseCode.AccountNotExist);
+            //}
+            //if (currentAccount.IsVerify)
+            //{
+            //    throw new ApiException(ResponseCode.AccountNotActived);
+            //}
 
-            var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.PetCoffeeShopId && s.Status == ShopStatus.Active);
-            var petCoffeeShop = PetCoffeeShop.FirstOrDefault();
-            if (petCoffeeShop == null)
-            {
-                throw new ApiException(ResponseCode.ShopNotExisted);
-            }
+            //var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.PetCoffeeShopId && s.Status == ShopStatus.Active);
+            //var petCoffeeShop = PetCoffeeShop.FirstOrDefault();
+            //if (petCoffeeShop == null)
+            //{
+            //    throw new ApiException(ResponseCode.ShopNotExisted);
+            //}
 
-            // check image  - will do later
+            //// check image  - will do later
 
-            var NewProduct = _mapper.Map<Domain.Entities.Product>(request);
-            var addProducted = await _unitOfWork.ProductRepository.AddAsync(NewProduct);
-            await _unitOfWork.SaveChangesAsync();
+            //var NewProduct = _mapper.Map<Domain.Entities.Product>(request);
+            //var addProducted = await _unitOfWork.ProductRepository.AddAsync(NewProduct);
+            //await _unitOfWork.SaveChangesAsync();
 
-            //var id =  addProducted.fir;
-            var response = _mapper.Map<ProductResponse>(NewProduct);
+            ////var id =  addProducted.fir;
+            //var response = _mapper.Map<ProductResponse>(NewProduct);
 
-            response.CreatedById = currentAccount.Id;
+            //response.CreatedById = currentAccount.Id;
 
-            //
-            var petshopProduct = new PetCoffeeProduct
-            {
-                PetCoffeeShopId = request.PetCoffeeShopId,
-                ProductId = addProducted.Id
-            };
-            await _unitOfWork.PetCoffeeShopProductRepository.AddAsync(petshopProduct);
-          
+            ////
+            //var petshopProduct = new PetCoffeeProduct
+            //{
+            //    PetCoffeeShopId = request.PetCoffeeShopId,
+            //    ProductId = addProducted.Id
+            //};
+            //await _unitOfWork.PetCoffeeShopProductRepository.AddAsync(petshopProduct);
 
-            await _unitOfWork.SaveChangesAsync();
-            return response;
+
+            //await _unitOfWork.SaveChangesAsync();
+            //return response;
+
+            return null;
 
 
         }

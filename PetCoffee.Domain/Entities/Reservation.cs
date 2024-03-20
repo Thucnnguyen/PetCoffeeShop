@@ -21,7 +21,9 @@ public class Reservation : BaseAuditableEntity
 	public string? Rate { get; set; }
 	public string? Comment { get; set; }
 
-	public long? AreaId { get; set; }
+    public int BookingSeat { get; set; }
+
+    public long? AreaId { get; set; }
 	public Area? Area { get; set; }
 
     public IList<Transaction> Transactions { get; set; } = new List<Transaction>();

@@ -20,6 +20,8 @@ namespace PetCoffee.Domain.Entities
 
         public ProductStatus ProductStatus { get; set; } = ProductStatus.Active;
 
+        public string Image { get; set; }
+
 
 
         [InverseProperty(nameof(InvoiceProduct.Product))]
@@ -27,8 +29,8 @@ namespace PetCoffee.Domain.Entities
 
 
 
-        [InverseProperty(nameof(PetCoffeeProduct.Product))]
-        public IList<PetCoffeeProduct> PetCoffees { get; set; } = new List<PetCoffeeProduct>();
+        public long PetCoffeeShopId { get; set; }
+        public PetCoffeeShop PetCoffeeShop { get; set; }
 
 
 
