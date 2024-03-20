@@ -165,11 +165,13 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 .ToList();
 
 
-            //var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
+            var totalSeatsBooked = existingReservations.Sum(r => r.BookingSeat);
 
 
-            //var area =  _unitOfWork.AreaRepsitory.Get(a => a.Id == areaId).FirstOrDefault();
-            if(existingReservations.Any())
+
+            var area = _unitOfWork.AreaRepsitory.Get(a => a.Id == areaId).FirstOrDefault();
+            bool res = area.TotalSeat > existingReservations.Sum(r => r.BookingSeat);
+            if (!res)
             {
                 return false;
 
