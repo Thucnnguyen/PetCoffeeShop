@@ -40,10 +40,13 @@ namespace PetCoffee.Application.Features.Areas.Handlers
     
             var shopId = request.ShopId;
 
-        
-            var availableAreas =  _unitOfWork.AreaRepsitory.Get(
-                predicate: a => a.PetcoffeeShopId == shopId &&
-                                 !a.Reservations.Any(r => !(r.StartTime >= request.EndTime || r.EndTime <= request.StartTime))).ToList();
+
+            //var availableAreas =  _unitOfWork.AreaRepsitory.Get(
+            //    predicate: a => a.PetcoffeeShopId == shopId &&
+            //                     !a.Reservations.Any(r => !(r.StartTime >= request.EndTime || r.EndTime <= request.StartTime))).ToList();
+
+            var availableAreas = _unitOfWork.AreaRepsitory.Get(
+                predicate: a => a.PetcoffeeShopId == shopId).ToList();
 
 
             var response = new List<AreaResponse>();
