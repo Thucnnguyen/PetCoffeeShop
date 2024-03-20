@@ -49,7 +49,6 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 			}
 
 			var areas = _unitOfWork.AreaRepsitory.Get(c => c.PetcoffeeShopId == request.ShopId && !c.Deleted, disableTracking: true)
-												//.Include(c => c.table)
 												.ToList();
 
 			var response = new List<AreaResponse>();
@@ -57,7 +56,13 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 			foreach (var area in areas)
 			{
 				var areaResponse = _mapper.Map<AreaResponse>(area);
-				//areaResponse.TotalSubComments = Comments.Count(c => c.ParentCommentId == comment.Id);
+				var pets = await _unitOfWork.PetRepository
+					.Get(p => p.PetAreas.Any(pa => pa.AreaId == area.Id && pa.EndTime == null) && !p.Deleted)
+					.Include(p => p.PetAreas)
+					.ThenInclude(pa => pa.Area)
+					.Select(p => _mapper.Map<PetResponseForArea>(p))
+					.ToListAsync();
+				areaResponse.Pets = pets;
 				response.Add(areaResponse);
 			}
 
