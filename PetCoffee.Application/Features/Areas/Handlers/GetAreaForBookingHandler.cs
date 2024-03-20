@@ -51,11 +51,13 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             foreach (var area in availableAreas)
             {
                 var existingReservations = await _unitOfWork.ReservationRepository
-                    .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing));
+                    .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
+                    && (r.StartTime >= request.EndTime || r.EndTime <= request.StartTime));
 
                 //var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
+                var totalSeated = existingReservations.Sum(x => x.BookingSeat);
 
-                var availableSeat = area.TotalSeat - existingReservations.Count();
+                var availableSeat = area.TotalSeat - totalSeated;
 
                 var areaResponse = _mapper.Map<AreaResponse>(area);
                 areaResponse.AvailableSeat = availableSeat;
