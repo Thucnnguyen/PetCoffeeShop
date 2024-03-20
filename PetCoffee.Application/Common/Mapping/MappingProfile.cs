@@ -23,6 +23,8 @@ using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
+using PetCoffee.Application.Features.Product.Commands;
+using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Reservation.Commands;
@@ -242,6 +244,10 @@ public class MappingProfile : Profile
         CreateMap<Transaction, TransactionResponse>().ReverseMap();
 
 
-       
+
+        //product
+        CreateMap<Product, ProductResponse>().ReverseMap();
+        CreateMap<CreateProductCommand, Product>().ReverseMap();
+
     }
 }

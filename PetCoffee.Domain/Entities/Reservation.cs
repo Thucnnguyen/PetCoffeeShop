@@ -26,7 +26,9 @@ public class Reservation : BaseAuditableEntity
 
     public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 
+    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
-   
+
+
 
 }

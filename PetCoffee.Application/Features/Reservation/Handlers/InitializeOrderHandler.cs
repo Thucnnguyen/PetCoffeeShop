@@ -103,6 +103,17 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             };
 
             await _unitOfWork.ReservationRepository.AddAsync(order);
+            await _unitOfWork.SaveChangesAsync();
+
+            //add value to invoice table
+            var invoice = new Invoice
+            {
+                ReservationId = order.Id,
+                CreatedAt = DateTime.UtcNow,
+                TotalAmount = totalPrice
+            };
+            await _unitOfWork.InvoiceRepository.AddAsync(invoice);
+            await _unitOfWork.SaveChangesAsync();
 
             //add value to transaction table 
 

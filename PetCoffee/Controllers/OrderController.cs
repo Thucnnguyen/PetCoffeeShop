@@ -68,20 +68,6 @@ namespace PetCoffee.API.Controllers
             return await Mediator.Send(command);
         }
 
-
-        //[HttpPut("{id:long}/confirm")]
-        //[Authorize]
-        //public async Task<ActionResult<ReservationResponse>> ConfirmOrder([FromRoute] long id)
-        //{
-        //    var command = new ConfirmOrderCommand()
-        //    {
-        //        OrderId = id,
-        //    };
-
-        //    return await Mediator.Send(command);
-        //}
-
-
         [HttpPut("{id:long}/return")]
         [Authorize]
         public async Task<ActionResult<ReservationResponse>> ReturnOrder([FromRoute] long id)
@@ -90,6 +76,17 @@ namespace PetCoffee.API.Controllers
             {
                 OrderId = id,
             };
+            return await Mediator.Send(command);
+        }
+
+
+        [HttpPut("orders/{id:long}/invoice")]
+        [Authorize]
+        public async Task<ActionResult<bool>> AddProductToBooking(
+        [FromRoute] long id,
+        [FromBody] UpdateProductOfBookingCommand command)
+        {
+            command.OrderId = id;
             return await Mediator.Send(command);
         }
 
