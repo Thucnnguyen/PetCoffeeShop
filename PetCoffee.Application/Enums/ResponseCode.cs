@@ -5,14 +5,10 @@ namespace PetCoffee.Application.Common.Enums;
 public enum ResponseCode
 {
 	//Area
-
-
 	[Description("Tầng không tồn tại")] AreaNotExist,
 	[Description("Tầng không đủ chỗ ngồi để đặt")] AreaInsufficientSeating,
 	[Description("Tầng đã tồn tại trong quán")] AreaIsExist,
 	[Description("Phải có tầng trước")] NotHasPreviousArea,
-
-
 
 	//Comment
 	[Description("Comment không tồn tại")] CommentNotExist,
