@@ -18,8 +18,8 @@ namespace PetCoffee.Application.Features.Areas.Queries
     {
         
         public long ShopId { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTimeOffset StartTime { get; set; }
+        public DateTimeOffset EndTime { get; set; }
         public int? TotalSeat { get; set; }
         public override Expression<Func<Area, bool>> GetExpressions()
         {
