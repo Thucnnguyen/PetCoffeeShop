@@ -47,9 +47,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 throw new ApiException(ResponseCode.AreaNotExist);
             }
 
+            if (area.TotalSeat < request.TotalSeat)
+            {
+                throw new ApiException(ResponseCode.AreaInsufficientSeating);
+            }
+
 
             //check seat is ok ?
-            var isSeat = IsAreaAvailable(request.AreaId, request.StartTime, request.EndTime, request.TotalSeat);
+            var isSeat = IsAreaAvailable(request.AreaId, request.StartTime, request.EndTime, request.TotalSeat, area);
 
             if (!isSeat)
             {
@@ -156,7 +161,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
 
-        public bool IsAreaAvailable(long areaId, DateTimeOffset startTime, DateTimeOffset endTime, int requestedSeats)
+        public bool IsAreaAvailable(long areaId, DateTimeOffset startTime, DateTimeOffset endTime, int requestedSeats, Area area)
         {
 
 
@@ -167,37 +172,27 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             //                 (startTime <= r.StartTime && endTime >= r.EndTime)))
             //    .ToList();
 
+
+
             var existingReservations = _unitOfWork.ReservationRepository
                  .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
                  && (r.StartTime <= endTime || r.EndTime >= startTime));
-
-
-
-
-            //
 
 
             var totalSeatsBooked = existingReservations.Sum(r => r.BookingSeat);
 
 
 
-            var area = _unitOfWork.AreaRepsitory.Get(a => a.Id == areaId).FirstOrDefault();
-            bool res = area.TotalSeat > existingReservations.Sum(r => r.BookingSeat);
+            bool res = requestedSeats <= area.TotalSeat - totalSeatsBooked;
             if (!res)
             {
                 return false;
 
             }
 
-
-
-
             return true;
+
         }
-
-
-
-
     }
 }
 
