@@ -58,7 +58,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
                 //var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
                 var totalSeated = existingReservations.Sum(x => x.BookingSeat);
 
-                var availableSeat = area.TotalSeat - totalSeated;
+                var availableSeat = area.TotalSeat - totalSeated < 0 ? 0 : area.TotalSeat - totalSeated;
 
                 var areaResponse = _mapper.Map<AreaResponse>(area);
                 areaResponse.AvailableSeat = availableSeat;
