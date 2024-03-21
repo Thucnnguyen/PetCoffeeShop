@@ -78,5 +78,5 @@ public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetc
 			request.PageSize);
 	}
 
-	
+
 }

@@ -35,7 +35,7 @@ public class DeleteFollowShopHandler : IRequestHandler<DeleteFollowShopCommand, 
 		}
 
 		var followShop = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.ShopId == request.PetCoffeeShopId && f.CreatedById == curAccount.Id)).FirstOrDefault();
-		if(followShop == null)
+		if (followShop == null)
 		{
 			throw new ApiException(ResponseCode.FollowNotExisted);
 		}

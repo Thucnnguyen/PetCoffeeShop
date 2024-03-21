@@ -22,9 +22,9 @@ public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery
 	public async Task<IList<PetCoffeeShopForCardResponse>> Handle(GetRandomPetCfShopQuery request, CancellationToken cancellationToken)
 	{
 		int TotalShop = 0;
-		if(request.ShopType != null)
+		if (request.ShopType != null)
 		{
-			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s =>s.Type == request.ShopType && s.Status == ShopStatus.Active && s.IsBuyPackage);
+			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync(s => s.Type == request.ShopType && s.Status == ShopStatus.Active && s.IsBuyPackage);
 		}
 		else
 		{

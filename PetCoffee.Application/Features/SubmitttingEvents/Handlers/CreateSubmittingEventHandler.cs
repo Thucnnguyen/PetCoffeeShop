@@ -38,17 +38,17 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 
 		var CheckEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId)
 															.Include(e => e.SubmittingEvents).FirstOrDefaultAsync();
-		if(CheckEvent == null) 
+		if (CheckEvent == null)
 		{
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
-		if(CheckEvent.SubmittingEvents.Any(se => se.CreatedById == currentAccount.Id)) 
+		if (CheckEvent.SubmittingEvents.Any(se => se.CreatedById == currentAccount.Id))
 		{
 			throw new ApiException(ResponseCode.SubmittingEventIsExist);
 		}
 
-        if (request.Answers!= null)
-        {
+		if (request.Answers != null)
+		{
 			foreach (var anwser in request.Answers)
 			{
 				var checkField = await _unitOfWork.EventFieldRepsitory.GetAsync(ef => ef.Id == anwser.EventFieldId && ef.EventId == request.EventId);
@@ -66,9 +66,9 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 
 		if (request.Answers != null)
 		{
-			var newAnwsers =  request.Answers.Select( a =>
+			var newAnwsers = request.Answers.Select(a =>
 			{
-				var field =  _unitOfWork.EventFieldRepsitory.Get(f => f.Id == a.EventFieldId).FirstOrDefault();
+				var field = _unitOfWork.EventFieldRepsitory.Get(f => f.Id == a.EventFieldId).FirstOrDefault();
 				var fieldSubmit = _mapper.Map<SubmittingEventField>(field);
 				fieldSubmit.SubmittingContent = a.SubmittingContent;
 				fieldSubmit.SubmittingEventId = NewSubmittingEvent.Id;

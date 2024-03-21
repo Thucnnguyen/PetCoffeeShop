@@ -8,12 +8,12 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Areas.Queries
 {
-    public class GetAreaByPetCfShopIdQuery : PaginationRequest<Area>, IRequest<PaginationResponse<Area, AreaResponse>>
-    {
-        public long ShopId { get; set; }
-        public override Expression<Func<Area, bool>> GetExpressions()
-        {
-            return Expression;
-        }
-    }
+	public class GetAreaByPetCfShopIdQuery : PaginationRequest<Area>, IRequest<PaginationResponse<Area, AreaResponse>>
+	{
+		public long ShopId { get; set; }
+		public override Expression<Func<Area, bool>> GetExpressions()
+		{
+			return Expression;
+		}
+	}
 }

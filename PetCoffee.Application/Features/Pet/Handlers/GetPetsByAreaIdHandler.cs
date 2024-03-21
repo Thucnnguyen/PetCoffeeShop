@@ -41,7 +41,7 @@ public class GetPetsByAreaIdHandler : IRequestHandler<GetPetsByAreaIdQuery, Pagi
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 
-		var Pets =  _unitOfWork.PetRepository
+		var Pets = _unitOfWork.PetRepository
 					.Get(predicate: request.GetExpressions())
 					.Include(p => p.PetAreas)
 					.ThenInclude(pa => pa.Area)

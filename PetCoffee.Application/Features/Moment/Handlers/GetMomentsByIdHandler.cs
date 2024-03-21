@@ -46,7 +46,7 @@ public class GetMomentsByIdHandler : IRequestHandler<GetMomentByPetIdQuery, ILis
 			}
 			return MomentsPublic.Select(m => _mapper.Map<MomentResponse>(m)).ToList();
 		}
-		   
+
 		var Moments = await _unitOfWork.MomentRepository
 							.GetAsync(m => m.PetId == request.Id);
 		if (Moments == null)

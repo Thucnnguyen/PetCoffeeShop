@@ -17,12 +17,12 @@ public class ExceptionResponse
 
 	public Dictionary<string, List<string>>? Details { get; set; }
 
-    public ExceptionResponse()
-    {
-        ErrorCode = (int) ResponseCode.CommonError;
+	public ExceptionResponse()
+	{
+		ErrorCode = (int)ResponseCode.CommonError;
 		Error = ResponseCode.CommonError.ToString();
 		Message = ResponseCode.CommonError.GetDescription();
-    }
+	}
 
 	public ExceptionResponse(ApiException apiException)
 	{
@@ -45,7 +45,7 @@ public class ExceptionResponse
 		Message = exception.Message.Split(":")[2].Trim();
 		Details ??= new Dictionary<string, List<string>>();
 
-		foreach(var error in exception.Errors)
+		foreach (var error in exception.Errors)
 		{
 			if (Details.TryGetValue(error.PropertyName, out var value))
 				value.Add(error.ErrorMessage);

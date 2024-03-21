@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace PetCoffee.Domain.Enums;
 
-public enum NotificationType 
+public enum NotificationType
 {
 	[Description("Thích bài viết")]
 	LikePost = 0,

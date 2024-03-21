@@ -14,13 +14,13 @@ public class Transaction : BaseAuditableEntity
 	public decimal Amount { get; set; }
 
 	public long? RemitterId { get; set; }
-	public Wallet? Remitter {  get; set; }
+	public Wallet? Remitter { get; set; }
 
 	public long? PetId { get; set; }
 	public Pet? Pet { get; set; }
 
 	public string? ReferenceTransactionId { get; set; }
-	public string? Url {  get; set; }
+	public string? Url { get; set; }
 	public long? ReservationId { get; set; }
 
 	public Reservation? Reservation { get; set; }

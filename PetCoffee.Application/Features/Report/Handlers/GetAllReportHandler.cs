@@ -2,13 +2,10 @@
 using AutoMapper;
 using MediatR;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Report.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using static Google.Apis.Requests.BatchRequest;
 
 namespace PetCoffee.Application.Features.Report.Handlers;
 

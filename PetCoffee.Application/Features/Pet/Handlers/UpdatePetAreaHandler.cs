@@ -65,7 +65,7 @@ public class UpdatePetAreaHandler : IRequestHandler<UpdatePetAreaCommand, bool>
 				request.PetIds.Remove(pet.Id);
 			}
 		}
-		foreach(var petId in request.PetIds)
+		foreach (var petId in request.PetIds)
 		{
 			var checkPet = await _unitOfWork.PetRepository.GetAsync(p => p.Id == petId && !p.Deleted);
 			if (!checkPet.Any())

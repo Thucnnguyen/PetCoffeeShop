@@ -10,13 +10,13 @@ namespace PetCoffee.Application.Common.Exceptions;
 public class ExceptionMidleware
 {
 	private readonly RequestDelegate _next;
-    public ExceptionMidleware(RequestDelegate next)
-    {
-        _next = next;
-    }
+	public ExceptionMidleware(RequestDelegate next)
+	{
+		_next = next;
+	}
 
-    public async Task InvokeAsync(HttpContext context)
-    {
+	public async Task InvokeAsync(HttpContext context)
+	{
 		try
 		{
 			await _next(context);
@@ -40,7 +40,7 @@ public class ExceptionMidleware
 		await HandleExceptionAsync(context, HttpStatusCode.InternalServerError, new ExceptionResponse(exception));
 	}
 
-	private async Task HandleValidationExceptionASync(HttpContext context, ValidationException	 exception)
+	private async Task HandleValidationExceptionASync(HttpContext context, ValidationException exception)
 	{
 		await HandleExceptionAsync(context, HttpStatusCode.BadRequest, new ExceptionResponse(exception));
 	}

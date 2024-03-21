@@ -3,5 +3,5 @@
 public enum DeviceType
 {
 	Android,
-	 Ios
+	Ios
 }

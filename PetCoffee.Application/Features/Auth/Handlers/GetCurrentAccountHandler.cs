@@ -38,9 +38,9 @@ public class GetCurrentAccountHandler : IRequestHandler<GetCurrentAccountInfomat
 					{
 						a => a.PetCoffeeShop
 					});
-		
-		var response =  _mapper.Map<AccountResponse>(currentAccount);
-		if(listPetCoffeeShop != null)
+
+		var response = _mapper.Map<AccountResponse>(currentAccount);
+		if (listPetCoffeeShop != null)
 		{
 			response.ShopResponses = listPetCoffeeShop.Select(shop => _mapper.Map<ShopResponseForAccount>(shop.PetCoffeeShop)).ToList();
 		}

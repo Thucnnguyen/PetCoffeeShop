@@ -8,8 +8,8 @@ namespace PetCoffee.Application.Features.Comment.Commands;
 
 public class CreateCommentValidation : AbstractValidator<CreateCommentCommand>
 {
-    public CreateCommentValidation()
-    {
+	public CreateCommentValidation()
+	{
 		RuleFor(command => command)
 		   .Custom((command, context) =>
 		   {

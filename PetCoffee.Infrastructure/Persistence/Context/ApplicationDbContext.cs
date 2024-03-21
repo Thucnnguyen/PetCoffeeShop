@@ -40,11 +40,11 @@ public class ApplicationDbContext : DbContext
 			.HasKey(e => new { e.WalletId, e.ItemId });
 		modelBuilder.Entity<RatePet>()
 			.HasKey(e => new { e.PetId, e.CreatedById });
-        modelBuilder.Entity<InvoiceProduct>()
-            .HasKey(e => new { e.ProductId, e.InvoiceId });
-      
+		modelBuilder.Entity<InvoiceProduct>()
+			.HasKey(e => new { e.ProductId, e.InvoiceId });
 
-    }
+
+	}
 
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
 	{

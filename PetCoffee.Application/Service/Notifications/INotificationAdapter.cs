@@ -6,7 +6,7 @@ using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Service.Notifications;
 
-public interface INotificationAdapter 
+public interface INotificationAdapter
 {
 	public Task<WebNotification> ToWebNotification(Notification notification, string connectionId);
 

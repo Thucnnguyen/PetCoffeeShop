@@ -29,6 +29,6 @@ public class GetReportByIdHandler : IRequestHandler<GetReportByIdQuery, ReportRe
 			throw new ApiException(ResponseCode.ReportNotExisted);
 		}
 
-		return _mapper.Map<ReportResponse>(Report);	
+		return _mapper.Map<ReportResponse>(Report);
 	}
 }

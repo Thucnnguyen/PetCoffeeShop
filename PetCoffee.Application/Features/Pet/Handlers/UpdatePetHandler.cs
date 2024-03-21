@@ -40,7 +40,7 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		if (currentAccount.IsCustomer )
+		if (currentAccount.IsCustomer)
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		};
@@ -51,7 +51,7 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
-		if ( !currentAccount.AccountShops.Any(a => a.ShopId == pet.PetCoffeeShopId))
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == pet.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
@@ -73,7 +73,7 @@ public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 		await _unitOfWork.SaveChangesAsync();
 
 		var response = _mapper.Map<PetResponse>(pet);
-		await _cacheService.SetAsync(response.Id.ToString(), response,cancellationToken);
+		await _cacheService.SetAsync(response.Id.ToString(), response, cancellationToken);
 
 		return response;
 	}

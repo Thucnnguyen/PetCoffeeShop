@@ -6,7 +6,6 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 
@@ -27,7 +26,7 @@ public class VerifiedOTPForForgotPasswordHandler : IRequestHandler<VerifiedOTPFo
 	{
 		var currentAccount = (await _unitOfWork.AccountRepository.GetAsync(a => a.Email == request.Email)).First();
 
-		if(currentAccount == null)
+		if (currentAccount == null)
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}

@@ -46,7 +46,7 @@ public class GetPostCreatedByCurrentAccountIdHandler : IRequestHandler<GetPostCr
 		}
 		var response = Posts.Select(post => _mapper.Map<PostResponse>(post)).ToList();
 
-		
+
 		return response;
 	}
 }

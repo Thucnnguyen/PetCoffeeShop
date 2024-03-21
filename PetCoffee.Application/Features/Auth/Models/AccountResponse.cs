@@ -3,7 +3,7 @@ using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Auth.Models;
 
-public class AccountResponse 
+public class AccountResponse
 {
 	public long Id { get; set; }
 	public string? FullName { get; set; }
@@ -16,7 +16,7 @@ public class AccountResponse
 	public Role Role { get; set; }
 	public AccountStatus Status { get; set; }
 	public DateTime? EndTimeBlockPost { get; set; }
-	public DateTime? EndTimeBlockComment { get; set; } 
+	public DateTime? EndTimeBlockComment { get; set; }
 	public long TotalIsFollowing { get; set; } = 0;
-	public IList<ShopResponseForAccount>? ShopResponses { get; set; }	
+	public IList<ShopResponseForAccount>? ShopResponses { get; set; }
 }

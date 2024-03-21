@@ -8,8 +8,8 @@ namespace PetCoffee.Application.Features.Auth.Commands;
 
 public class CustomerRegisterCommandValidator : AbstractValidator<CustomerRegisterCommand>
 {
-    public CustomerRegisterCommandValidator()
-    {
+	public CustomerRegisterCommandValidator()
+	{
 		RuleFor(model => model.Password).NotEmpty().WithMessage("Password không được để trống");
 		RuleFor(model => model.Password).MinimumLength(6).WithMessage("Password có độ dài tối thiểu là 6");
 
@@ -17,7 +17,7 @@ public class CustomerRegisterCommandValidator : AbstractValidator<CustomerRegist
 
 		RuleFor(model => model.PhoneNumber)
 		.NotEmpty()
-		.Matches("^\\d{10}$")  
+		.Matches("^\\d{10}$")
 		.WithMessage("Hãy nhập đúng số điện thoại gồm 10 chữ số");
 	}
 }

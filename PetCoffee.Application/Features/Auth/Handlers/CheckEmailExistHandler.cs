@@ -16,7 +16,7 @@ public class CheckEmailExistHandler : IRequestHandler<CheckEmailExistQuery, bool
 	public async Task<bool> Handle(CheckEmailExistQuery request, CancellationToken cancellationToken)
 	{
 		var account = await _unitOfWork.AccountRepository.GetAsync(a => a.Email == request.Email);
-		
+
 		return account.Any();
 	}
 }

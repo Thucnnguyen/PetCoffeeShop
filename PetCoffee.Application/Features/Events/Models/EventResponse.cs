@@ -15,7 +15,7 @@ public class EventResponse
 	public string? Location { get; set; }
 	public long PetCoffeeShopId { get; set; }
 	public int TotalJoinEvent { get; set; } = 0;
-	public bool IsJoin {  get; set; } = false;
+	public bool IsJoin { get; set; } = false;
 	public bool IsCanceled { get; set; } = false;
 	public List<FieldEventResponseForEventResponse>? Fields { get; set; }
 }

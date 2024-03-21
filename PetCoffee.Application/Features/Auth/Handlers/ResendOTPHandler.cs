@@ -30,7 +30,7 @@ public class ResendOTPHandler : IRequestHandler<ResendOTPQuery, bool>
 	public async Task<bool> Handle(ResendOTPQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
-		if(currentAccount == null)
+		if (currentAccount == null)
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
@@ -46,7 +46,7 @@ public class ResendOTPHandler : IRequestHandler<ResendOTPQuery, bool>
 		await _unitOfWork.SaveChangesAsync();
 		//send email
 		var EmailContent = string.Format(EmailConstant.EmailForm, currentAccount.FullName, currentAccount.OTP);
-		 await _azureService.SendEmail(currentAccount.Email, EmailContent, EmailConstant.EmailSubject);
+		await _azureService.SendEmail(currentAccount.Email, EmailContent, EmailConstant.EmailSubject);
 		return true;
 	}
 }

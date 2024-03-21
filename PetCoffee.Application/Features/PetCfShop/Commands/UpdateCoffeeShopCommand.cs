@@ -26,8 +26,8 @@ public class UpdateCoffeeShopCommand : IRequest<PetCoffeeShopResponse>
 	public IFormFile? Avatar { get; set; }
 	public IFormFile? Background { get; set; }
 	public string? WebsiteUrl { get; set; }
-	public string? FbUrl { get; set; } 
-	public string? InstagramUrl { get; set; } 
+	public string? FbUrl { get; set; }
+	public string? InstagramUrl { get; set; }
 	public string? Location { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }

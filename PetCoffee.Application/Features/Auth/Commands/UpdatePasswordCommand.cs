@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using PetCoffee.Application.Features.Auth.Models;
-using PetCoffee.Application.Features.Pet.Models;
 
 namespace PetCoffee.Application.Features.Auth.Commands;
 

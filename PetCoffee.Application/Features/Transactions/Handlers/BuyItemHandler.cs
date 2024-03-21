@@ -51,7 +51,7 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 			itemDic.Add(item.ItemId, item.Quantity);
 		}
 
-		var	wallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == currentAccount.Id)
+		var wallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == currentAccount.Id)
 					.FirstOrDefaultAsync();
 		if (wallet == null)
 		{
@@ -64,13 +64,13 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 			totalMoney += item.Price * itemDic[item.ItemId];
 		}
 
-		if((decimal)totalMoney > wallet.Balance) 
+		if ((decimal)totalMoney > wallet.Balance)
 		{
 			throw new ApiException(ResponseCode.NotEnoughBalance);
 		}
 
 		wallet.Balance -= (decimal)totalMoney;
-		foreach(var item in items)
+		foreach (var item in items)
 		{
 			var itemWallet = await _unitOfWork.WalletItemRepository
 								.Get(iw => iw.WalletId == wallet.Id && iw.ItemId == item.ItemId)
@@ -90,9 +90,9 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 			itemWallet.TotalItem += itemDic[item.ItemId];
 			await _unitOfWork.WalletItemRepository.UpdateAsync(itemWallet);
 			await _unitOfWork.SaveChangesAsync();
-			
+
 		}
-		
+
 		var donateTransaction = new Transaction()
 		{
 			Amount = (decimal)totalMoney,

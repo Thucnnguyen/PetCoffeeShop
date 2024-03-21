@@ -14,7 +14,7 @@ public class SubmittingEventResponse : BaseAuditableEntityResponse
 	public DateTime EndTime { get; set; }
 	public string? Location { get; set; }
 	public long PetCoffeeShopId { get; set; }
-	public bool IsJoin { get; set; } = true; 
-	public bool IsCanceled { get; set; } = false; 
+	public bool IsJoin { get; set; } = true;
+	public bool IsCanceled { get; set; } = false;
 	public List<EventFieldResponse> EventFields { get; set; }
 }

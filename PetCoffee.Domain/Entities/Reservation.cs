@@ -1,17 +1,16 @@
 ﻿using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
 
 
 namespace PetCoffee.Domain.Entities;
 [Table("Order")]
 public class Reservation : BaseAuditableEntity
 {
-	[Key] 
+	[Key]
 	public long Id { get; set; }
 	public decimal TotalPrice { get; set; }
-	public OrderStatus Status { get; set; }	
+	public OrderStatus Status { get; set; }
 	public decimal? Discount { get; set; }
 	public DateTime StartTime { get; set; }
 	public DateTime EndTime { get; set; }
@@ -21,14 +20,14 @@ public class Reservation : BaseAuditableEntity
 	public string? Rate { get; set; }
 	public string? Comment { get; set; }
 
-    public int BookingSeat { get; set; }
+	public int BookingSeat { get; set; }
 
-    public long? AreaId { get; set; }
+	public long? AreaId { get; set; }
 	public Area? Area { get; set; }
 
-    public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
+	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-    public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+	public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 
 
 

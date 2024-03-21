@@ -27,7 +27,7 @@ public class CreateMomentHandlers : IRequestHandler<CreateMomentCommand, MomentR
 	public async Task<MomentResponse> Handle(CreateMomentCommand request, CancellationToken cancellationToken)
 	{
 		//get Current account 
-		var currentAccount  = await _currentAccountService.GetRequiredCurrentAccount();
+		var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
 		if (currentAccount == null)
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
@@ -37,11 +37,11 @@ public class CreateMomentHandlers : IRequestHandler<CreateMomentCommand, MomentR
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		
+
 
 		//check pet info
 		var Pet = await _unitOfWork.PetRepository.GetByIdAsync(request.PetId);
-		if(Pet == null)
+		if (Pet == null)
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
@@ -55,7 +55,7 @@ public class CreateMomentHandlers : IRequestHandler<CreateMomentCommand, MomentR
 		var NewMemory = _mapper.Map<Domain.Entities.Moment>(request);
 		//upload image
 		NewMemory.Image = await _azureService.UpdateloadImages(request.Image);
-		
+
 
 		await _unitOfWork.MomentRepository.AddAsync(NewMemory);
 		await _unitOfWork.SaveChangesAsync();

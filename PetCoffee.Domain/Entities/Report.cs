@@ -13,8 +13,8 @@ public class Report : BaseAuditableEntity
 
 	public long? CommentId { get; set; }
 	public Comment? Comment { get; set; }
-	
-	public long? PostID { get; set; } 
+
+	public long? PostID { get; set; }
 	public Post? Post { get; set; }
 
 	public string? Reason { get; set; }

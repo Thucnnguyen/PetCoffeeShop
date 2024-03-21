@@ -44,7 +44,7 @@ public class GetRatePetsHandlers : IRequestHandler<GetPetRateQuery, PaginationRe
 							rp => rp.CreatedBy
 						}
 					);
-		
+
 		return new PaginationResponse<RatePet, RatePetResponse>(
 		   petRate,
 		   request.PageNumber,

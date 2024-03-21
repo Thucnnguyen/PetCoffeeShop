@@ -1,5 +1,4 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Post.Model;
@@ -11,9 +10,9 @@ public class PostResponse : BaseAuditableEntityResponse
 	public string PosterAvatar { get; set; }
 	public string? Content { get; set; }
 	public PostStatus Status { get; set; }
-	public string? Image {  get; set; } 
-	public long? ShopId {  get; set; } 
-	public long AccountId {  get; set; }
+	public string? Image { get; set; }
+	public long? ShopId { get; set; }
+	public long AccountId { get; set; }
 	public IList<CategoryForPostModel> Categories { get; set; } = new List<CategoryForPostModel>();
 	public IList<CoffeeshopForPostModel> PetCoffeeShops { get; set; } = new List<CoffeeshopForPostModel>();
 

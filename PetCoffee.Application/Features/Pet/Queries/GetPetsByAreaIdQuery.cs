@@ -14,7 +14,7 @@ public class GetPetsByAreaIdQuery : PaginationRequest<Domain.Entities.Pet>, IReq
 {
 	public long AreaId { get; set; }
 	public TypeSpecies? TypeSpecies { get; set; }
-	public PetType? PetType {  get; set; }
+	public PetType? PetType { get; set; }
 
 	private string? _search;
 
@@ -30,7 +30,7 @@ public class GetPetsByAreaIdQuery : PaginationRequest<Domain.Entities.Pet>, IReq
 			Expression = Expression.And(p => p.Name != null && p.Name.ToLower().Contains(Search));
 		}
 
-		if(TypeSpecies is not null)
+		if (TypeSpecies is not null)
 		{
 			Expression = Expression.And(p => (p.TypeSpecies == TypeSpecies));
 		}
@@ -40,7 +40,7 @@ public class GetPetsByAreaIdQuery : PaginationRequest<Domain.Entities.Pet>, IReq
 			Expression = Expression.And(p => p.PetType == PetType);
 		}
 
-		Expression = Expression.And(p => p.PetAreas.Any(pa => pa.AreaId == AreaId && pa.EndTime == null)  && !p.Deleted);
+		Expression = Expression.And(p => p.PetAreas.Any(pa => pa.AreaId == AreaId && pa.EndTime == null) && !p.Deleted);
 
 
 		return Expression;

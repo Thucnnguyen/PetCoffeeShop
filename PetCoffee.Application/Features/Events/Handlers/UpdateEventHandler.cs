@@ -43,10 +43,10 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, EventRespo
 			throw new ApiException(ResponseCode.PermissionDenied);
 		};
 
-		var UpdateEvent =  _unitOfWork.EventRepository.Get(e => e.Id == request.Id)
+		var UpdateEvent = _unitOfWork.EventRepository.Get(e => e.Id == request.Id)
 														.Include(e => e.EventFields)
 														.FirstOrDefault();
-		if(UpdateEvent.StartDate <= DateTime.UtcNow)
+		if (UpdateEvent.StartDate <= DateTime.UtcNow)
 		{
 			throw new ApiException(ResponseCode.EventCannotChanged);
 		}
@@ -55,13 +55,13 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, EventRespo
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
 
-        if (!currentAccount.AccountShops.Any(a => a.ShopId == UpdateEvent.PetCoffeeShopId) )
-        {
+		if (!currentAccount.AccountShops.Any(a => a.ShopId == UpdateEvent.PetCoffeeShopId))
+		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
 
 		Assign.Partial(request, UpdateEvent);
-		if(request.NewImageFile != null)
+		if (request.NewImageFile != null)
 		{
 			await _azureService.CreateBlob(request.NewImageFile.FileName, request.NewImageFile);
 			UpdateEvent.Image = await _azureService.GetBlob(request.NewImageFile.FileName);
@@ -70,7 +70,7 @@ public class UpdateEventHandler : IRequestHandler<UpdateEventCommand, EventRespo
 		await _unitOfWork.EventRepository.UpdateAsync(UpdateEvent);
 		await _unitOfWork.SaveChangesAsync();
 		var response = _mapper.Map<EventResponse>(UpdateEvent);
-		if (UpdateEvent.EventFields.Any()) 
+		if (UpdateEvent.EventFields.Any())
 		{
 			response.Fields = UpdateEvent.EventFields.Select(e => _mapper.Map<FieldEventResponseForEventResponse>(e)).ToList();
 		}

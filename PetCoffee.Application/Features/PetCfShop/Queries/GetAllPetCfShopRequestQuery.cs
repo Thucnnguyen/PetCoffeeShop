@@ -11,36 +11,36 @@ namespace PetCoffee.Application.Features.PetCfShop.Queries;
 
 public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
 {
-    private string? _search;
+	private string? _search;
 
-    public string? Search
-    {
-        get => _search;
-        set => _search = value?.Trim().ToLower();
-    }
+	public string? Search
+	{
+		get => _search;
+		set => _search = value?.Trim().ToLower();
+	}
 
-    public ShopType? ShopType { get; set; }
+	public ShopType? ShopType { get; set; }
 
-    public double Longitude { get; set; }
-    public double Latitude { get; set; }
+	public double Longitude { get; set; }
+	public double Latitude { get; set; }
 
 
 
 	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
-    {
-        if (Search is not null)
-        {
-            Expression = Expression.And(shop => shop.Name != null && shop.Name.ToLower().Contains(Search));
-        }
+	{
+		if (Search is not null)
+		{
+			Expression = Expression.And(shop => shop.Name != null && shop.Name.ToLower().Contains(Search));
+		}
 
-        if (ShopType is not null)
-        {
-            Expression = Expression.And(shop => Equals(ShopType, shop.Type));
-        }
+		if (ShopType is not null)
+		{
+			Expression = Expression.And(shop => Equals(ShopType, shop.Type));
+		}
 
-        Expression = Expression.And(shop => shop.Status != ShopStatus.Processing && shop.IsBuyPackage);
+		Expression = Expression.And(shop => shop.Status != ShopStatus.Processing && shop.IsBuyPackage);
 
 
-        return Expression;
-    }
+		return Expression;
+	}
 }

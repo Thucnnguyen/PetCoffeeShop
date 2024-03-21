@@ -44,7 +44,7 @@ public class UpdateShopIdOfPetHandler : IRequestHandler<UpdateShopIdOfPetCommand
 
 		var pet = await _unitOfWork.PetRepository.Get(p => p.Id == request.PetId && !p.Deleted).FirstOrDefaultAsync();
 
-		if(pet == null)
+		if (pet == null)
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
@@ -58,7 +58,7 @@ public class UpdateShopIdOfPetHandler : IRequestHandler<UpdateShopIdOfPetCommand
 		await _unitOfWork.PetRepository.UpdateAsync(pet);
 		await _unitOfWork.SaveChangesAsync();
 
-		await _cacheService.SetAsync(pet.Id.ToString(), _mapper.Map<PetResponse>(pet),cancellationToken);
+		await _cacheService.SetAsync(pet.Id.ToString(), _mapper.Map<PetResponse>(pet), cancellationToken);
 		return true;
 	}
 }

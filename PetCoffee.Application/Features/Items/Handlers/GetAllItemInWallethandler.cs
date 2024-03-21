@@ -37,7 +37,7 @@ public class GetAllItemInWallethandler : IRequestHandler<GetAllItemInWalletQuery
 
 		var wallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == currentAccount.Id)
 						.FirstOrDefaultAsync();
-		if (wallet == null) 
+		if (wallet == null)
 		{
 			return new List<ItemWalletResponse> { };
 		}

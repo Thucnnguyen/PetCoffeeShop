@@ -7,7 +7,7 @@ namespace PetCoffee.Domain.Entities;
 public class Vaccination
 {
 	[Key]
-	public long Id { get; set; }	
+	public long Id { get; set; }
 	public DateTime VaccinationDate { get; set; }
 	public DateTime ExpireTime { get; set; }
 	public VaccinationType VaccinationType { get; set; }

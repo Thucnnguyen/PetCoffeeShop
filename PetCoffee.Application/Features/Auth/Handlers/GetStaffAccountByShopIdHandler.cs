@@ -10,7 +10,6 @@ using PetCoffee.Application.Features.Auth.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
-using static Google.Apis.Requests.BatchRequest;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 

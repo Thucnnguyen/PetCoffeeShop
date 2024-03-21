@@ -24,7 +24,7 @@ public class GetAllReportQuery : PaginationRequest<Domain.Entities.Report>, IReq
 		{
 			Expression = Expression.And(r => r.PostID != null);
 		}
-		if(Status != null)
+		if (Status != null)
 		{
 			Expression = Expression.And(r => r.Status == Status);
 

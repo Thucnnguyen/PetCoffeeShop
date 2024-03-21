@@ -20,7 +20,7 @@ public interface IUnitOfWork
 	IEventFieldRepsitory EventFieldRepsitory { get; }
 	IEventRepository EventRepository { get; }
 	IAreaRepsitory AreaRepsitory { get; }
-    IJoinEventRepository JoinEventRepository { get; }
+	IJoinEventRepository JoinEventRepository { get; }
 	IItemRepository ItemRepository { get; }
 	ILikeRepository LikeRepository { get; }
 	INotificationRepository NotificationRepository { get; }
@@ -42,8 +42,8 @@ public interface IUnitOfWork
 	ITransactionItemRepository TransactionItemRepository { get; }
 	IRatePetRepository RatePetRespository { get; }
 	IPetAreaRespository PetAreaRespository { get; }
-    IProductRepository ProductRepository { get; }
-    //IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
-    IInvoiceRepository InvoiceRepository { get; }
-    IPackagePromotionRespository PackagePromotionRespository { get; }
+	IProductRepository ProductRepository { get; }
+	//IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
+	IInvoiceRepository InvoiceRepository { get; }
+	IPackagePromotionRespository PackagePromotionRespository { get; }
 }

@@ -6,5 +6,5 @@ namespace PetCoffee.Application.Features.Moment.Queries;
 
 public class GetMomentByIdQuery : IRequest<MomentResponse>
 {
-	public long MomentId {  get; set; } 
+	public long MomentId { get; set; }
 }

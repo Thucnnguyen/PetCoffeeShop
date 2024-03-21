@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace PetCoffee.Domain.Enums;
 
-public enum TypeSpecies 
+public enum TypeSpecies
 {
 	//cat
 	[Description("Mèo Ba Tư")]

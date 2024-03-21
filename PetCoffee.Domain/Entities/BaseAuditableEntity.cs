@@ -5,16 +5,16 @@ namespace PetCoffee.Domain.Entities;
 
 public class BaseAuditableEntity
 {
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 	[ForeignKey("CreatedBy")]
 	public long? CreatedById { get; set; }
 	public Account? CreatedBy { get; set; }
 
-    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+	public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 	public DateTime? DeletedAt { get; set; }
 
-    [Projectable]
-    public bool Deleted => DeletedAt != null;
-    
+	[Projectable]
+	public bool Deleted => DeletedAt != null;
+
 }

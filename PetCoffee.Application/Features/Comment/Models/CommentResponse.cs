@@ -1,7 +1,6 @@
 ﻿
 
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Post.Models;
 
 namespace PetCoffee.Application.Features.Comment.Models;
 
@@ -16,5 +15,5 @@ public class CommentResponse : BaseAuditableEntityResponse
 	public long? ParentCommentId { get; set; }
 	public long? AccountId { get; set; }
 	public long? ShopId { get; set; }
-	public long TotalSubComments { get; set; } =0;
+	public long TotalSubComments { get; set; } = 0;
 }

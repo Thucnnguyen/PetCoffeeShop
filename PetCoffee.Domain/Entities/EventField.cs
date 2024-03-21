@@ -11,7 +11,7 @@ public class EventField
 	public string Question { get; set; }
 	public string Type { get; set; }
 	public bool IsOptional { get; set; }
-	public string? Answer {  get; set; }
+	public string? Answer { get; set; }
 
 	public long EventId { get; set; }
 	public Event Event { get; set; }

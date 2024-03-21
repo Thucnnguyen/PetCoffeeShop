@@ -1,6 +1,6 @@
 ﻿namespace PetCoffee.Domain.Entities;
 
-public class PostPetCoffeeShop :BaseAuditableEntity
+public class PostPetCoffeeShop : BaseAuditableEntity
 {
 	public long PostId { get; set; }
 	public Post Post { get; set; }
