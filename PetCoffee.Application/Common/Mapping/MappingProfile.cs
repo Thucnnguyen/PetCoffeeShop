@@ -28,7 +28,6 @@ using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Reservation.Commands;
-using PetCoffee.Application.Features.Reservation.Handlers;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
@@ -47,9 +46,9 @@ public class MappingProfile : Profile
 
 
         //Account
-        CreateMap<CustomerRegisterCommand,Account>().ReverseMap();
-        CreateMap<AccountResponse,Account>().ReverseMap();
-        CreateMap<AccountForPostModel,Account>().ReverseMap();
+        CreateMap<CustomerRegisterCommand, Account>().ReverseMap();
+        CreateMap<AccountResponse, Account>().ReverseMap();
+        CreateMap<AccountForPostModel, Account>().ReverseMap();
         CreateMap<RegisterShopStaffAccountCommand, Account>().ReverseMap();
 
         //Area
@@ -70,27 +69,27 @@ public class MappingProfile : Profile
         CreateMap<ShopResponseForAccount, PetCoffeeShop>().ReverseMap();
 
 
-		//category
-		CreateMap<Category,PostCategoryResponse>().ReverseMap();
-		CreateMap<Category, CreatePostCategoryCommand>().ReverseMap();
+        //category
+        CreateMap<Category, PostCategoryResponse>().ReverseMap();
+        CreateMap<Category, CreatePostCategoryCommand>().ReverseMap();
 
         //post
         CreateMap<CreatePostCommand, Post>().ReverseMap();
         CreateMap<PetCoffeeShop, CoffeeshopForPostModel>().ReverseMap();
         CreateMap<Category, CategoryForPostModel>().ReverseMap();
-		CreateMap<Post, PostResponse>()
-			   .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories.Select(pc => pc.Category)))
-			   .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops.Select(ppc => ppc.Shop)))
-			   .ForMember(dest => dest.NamePoster, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
-			   .ForMember(dest => dest.PosterAvatar, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar))
-			   .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CreatedBy.Id));
-		//pets
-		CreateMap<Pet, PetResponse>()
-				.ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound))
-				.ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area));
-		CreateMap<Area, AreaResponseForPet>();
+        CreateMap<Post, PostResponse>()
+               .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories.Select(pc => pc.Category)))
+               .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops.Select(ppc => ppc.Shop)))
+               .ForMember(dest => dest.NamePoster, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
+               .ForMember(dest => dest.PosterAvatar, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar))
+               .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CreatedBy.Id));
+        //pets
+        CreateMap<Pet, PetResponse>()
+                .ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound))
+                .ForMember(dest => dest.Area, opt => opt.MapFrom(src => src.Area));
+        CreateMap<Area, AreaResponseForPet>();
 
-		CreateMap<CreatePetCommand, Pet>().ReverseMap();
+        CreateMap<CreatePetCommand, Pet>().ReverseMap();
 
         //Vaccination
         CreateMap<VaccinationResponse, Vaccination>().ReverseMap();
@@ -99,16 +98,16 @@ public class MappingProfile : Profile
         //moment
         CreateMap<MomentResponse, Moment>().ReverseMap();
         CreateMap<CreateMomentCommand, Moment>().ReverseMap();
-		//comment 
-		CreateMap<Comment, CommentForPost>()
-			.ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.CreatedBy.FullName));
+        //comment 
+        CreateMap<Comment, CommentForPost>()
+            .ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.CreatedBy.FullName));
         CreateMap<Comment, CreateCommentCommand>().ReverseMap();
-		CreateMap<Comment, CommentResponse>()
-			.ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
-			.ForMember(dest => dest.CommentorImage, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar));
-			
-		//like
-		CreateMap<CreateLikePostCommand, Like>().ReverseMap();
+        CreateMap<Comment, CommentResponse>()
+            .ForMember(dest => dest.CommentorName, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
+            .ForMember(dest => dest.CommentorImage, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar));
+
+        //like
+        CreateMap<CreateLikePostCommand, Like>().ReverseMap();
 
         //report
         CreateMap<CreateReportPostCommand, Report>().ReverseMap();
@@ -117,96 +116,96 @@ public class MappingProfile : Profile
 
         //Event
         CreateMap<CreateEventCommand, Event>().ReverseMap();
-		CreateMap<Event, EventForCardResponse>()
-				.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
-		CreateMap<EventResponse, Event>();
-		CreateMap<Event, EventResponse>()
-				.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()))
-				.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Deleted));
-				
-
-		//eventfield
-		CreateMap<CreateFieldEvent, EventField>().ReverseMap();
-		CreateMap<FieldEventResponseForEventResponse, EventField>().ReverseMap();
-
-		//SubmittingEvent
-		CreateMap<CreateSubmittingEventCommand, SubmittingEvent>().ReverseMap();
-		CreateMap<Event,SubmittingEventResponse>()
-				.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
-
-		//SubmittingEventField
-		CreateMap<CreateSubmittingEventField,SubmittingEventField>().ReverseMap();
-		CreateMap<EventField, SubmittingEventField>()
-			 .ForMember(dest => dest.Id, opt => opt.Ignore());
+        CreateMap<Event, EventForCardResponse>()
+                .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
+        CreateMap<EventResponse, Event>();
+        CreateMap<Event, EventResponse>()
+                .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()))
+                .ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Deleted));
 
 
+        //eventfield
+        CreateMap<CreateFieldEvent, EventField>().ReverseMap();
+        CreateMap<FieldEventResponseForEventResponse, EventField>().ReverseMap();
 
-		CreateMap<SubmittingEventField, EventFieldResponse>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
-			.ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
-			.ForMember(dest => dest.IsOptional, opt => opt.MapFrom(src => src.IsOptional))
-			.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Submitcontent))
-			.ForMember(dest => dest.SubmittinhEventId, opt => opt.MapFrom(src => src.SubmittingEventId))
-			.ForMember(dest => dest.SubmmitContent, opt => opt.MapFrom(src => src.Submitcontent));
+        //SubmittingEvent
+        CreateMap<CreateSubmittingEventCommand, SubmittingEvent>().ReverseMap();
+        CreateMap<Event, SubmittingEventResponse>()
+                .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
 
-		CreateMap<SubmittingEventField, FieldEventResponseForEventResponse>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
-			.ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
-			.ForMember(dest => dest.IsOptional, opt => opt.MapFrom(src => src.IsOptional))
-			.ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Submitcontent))
-			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.SubmittingEventId))
-			.ForMember(dest => dest.SubmmitContent, opt => opt.MapFrom(src => src.Submitcontent));
+        //SubmittingEventField
+        CreateMap<CreateSubmittingEventField, SubmittingEventField>().ReverseMap();
+        CreateMap<EventField, SubmittingEventField>()
+             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-		CreateMap<SubmittingEvent, SubmittingEventResponse>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
-			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
-			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
-			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
-			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
-			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
-			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location))
-			.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
-			.ForMember(dest => dest.PetCoffeeShopId, opt => opt.MapFrom(src => src.Event.PetCoffeeShopId));
 
-		CreateMap<SubmittingEvent, EventForCardResponse>()
-			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
-			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
-			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
-			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
-			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
-			.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
-			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
-			.ForMember(dest => dest.IsJoin, opt => opt.MapFrom(src => src.Event.SubmittingEvents.Any()))
-			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
 
-		CreateMap<SubmittingEvent, EventSubmittingForCardResponse>()
-			.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
-			.ForMember(dest => dest.SubmitEventId, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
-			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
-			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
-			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
-			.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
-			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
-			.ForMember(dest => dest.AccountForPostModel, opt => opt.MapFrom(src => src.CreatedBy))
-			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+        CreateMap<SubmittingEventField, EventFieldResponse>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+            .ForMember(dest => dest.IsOptional, opt => opt.MapFrom(src => src.IsOptional))
+            .ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Submitcontent))
+            .ForMember(dest => dest.SubmittinhEventId, opt => opt.MapFrom(src => src.SubmittingEventId))
+            .ForMember(dest => dest.SubmmitContent, opt => opt.MapFrom(src => src.Submitcontent));
 
-		CreateMap<SubmittingEvent, EventResponse>()
-			.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-			.ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
-			.ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
-			.ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
-			.ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
-			.ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
-			.ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
-			.ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
-			.ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+        CreateMap<SubmittingEventField, FieldEventResponseForEventResponse>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.Question))
+            .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type))
+            .ForMember(dest => dest.IsOptional, opt => opt.MapFrom(src => src.IsOptional))
+            .ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Submitcontent))
+            .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.SubmittingEventId))
+            .ForMember(dest => dest.SubmmitContent, opt => opt.MapFrom(src => src.Submitcontent));
 
-		// notification
-		CreateMap<Notification, NotificationResponse>().ReverseMap();
+        CreateMap<SubmittingEvent, SubmittingEventResponse>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
+            .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location))
+            .ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
+            .ForMember(dest => dest.PetCoffeeShopId, opt => opt.MapFrom(src => src.Event.PetCoffeeShopId));
+
+        CreateMap<SubmittingEvent, EventForCardResponse>()
+            .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
+            .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
+            .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+            .ForMember(dest => dest.IsJoin, opt => opt.MapFrom(src => src.Event.SubmittingEvents.Any()))
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+
+        CreateMap<SubmittingEvent, EventSubmittingForCardResponse>()
+            .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.EventId))
+            .ForMember(dest => dest.SubmitEventId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
+            .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
+            .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+            .ForMember(dest => dest.AccountForPostModel, opt => opt.MapFrom(src => src.CreatedBy))
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+
+        CreateMap<SubmittingEvent, EventResponse>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Event.Title))
+            .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Event.Image))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
+            .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
+            .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
+            .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
+            .ForMember(dest => dest.IsCanceled, opt => opt.MapFrom(src => src.Event.Deleted))
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Event.Location));
+
+        // notification
+        CreateMap<Notification, NotificationResponse>().ReverseMap();
 
         // reservation
         CreateMap<Reservation, ReservationResponse>().ReverseMap();
@@ -214,20 +213,20 @@ public class MappingProfile : Profile
 
         CreateMap<UpdateAreaCommand, Area>().ReverseMap();
 
-		//transaction
-		CreateMap<Transaction, PaymentResponse>()
-			.ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet != null ? src.Pet.Name : null))
-			.ForMember(dest => dest.TransactionItems, opt => opt.MapFrom(src => src.Items))
-			.ForMember(dest => dest.ShopName, opt => opt.MapFrom(src => src.Reservation != null ? src.Reservation.Area.PetCoffeeShop.Name : null));
+        //transaction
+        CreateMap<Transaction, PaymentResponse>()
+            .ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet != null ? src.Pet.Name : null))
+            .ForMember(dest => dest.TransactionItems, opt => opt.MapFrom(src => src.Items))
+            .ForMember(dest => dest.ShopName, opt => opt.MapFrom(src => src.Reservation != null ? src.Reservation.Area.PetCoffeeShop.Name : null));
 
-		CreateMap<TransactionItem, TransactionItemResponse>()
-			.ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name));
-		CreateMap<PaymentResponse, Transaction>();
-		//wallet
-		CreateMap<WalletItem,ItemWalletResponse>()
-			.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))
-			.ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Item.Price))
-			.ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
+        CreateMap<TransactionItem, TransactionItemResponse>()
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name));
+        CreateMap<PaymentResponse, Transaction>();
+        //wallet
+        CreateMap<WalletItem, ItemWalletResponse>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Item.Price))
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
 
 
 

@@ -8,7 +8,6 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System.Data.Entity;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -41,7 +40,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             }
 
             //check exist area
-           var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
+            var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
 
             if (area == null)
             {
@@ -50,7 +49,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
             //check seat is ok ?
-           var isSeat = IsAreaAvailable(request.AreaId, request.StartTime, request.EndTime, request.TotalSeat);
+            var isSeat = IsAreaAvailable(request.AreaId, request.StartTime, request.EndTime, request.TotalSeat);
 
             if (!isSeat)
             {
@@ -67,7 +66,8 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
 
-            if (customerWallet == null) {
+            if (customerWallet == null)
+            {
                 throw new ApiException(ResponseCode.WalletNotAvailable);
             }
             var isEnoughMoney = customerWallet.Balance >= totalPrice;
@@ -77,7 +77,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
             }
 
-            
+
 
 
 
@@ -95,15 +95,15 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 Code = "test", //
                 CreatedById = currentAccount.Id,
                 BookingSeat = request.TotalSeat
-                
+
 
                 //CreatedAt = DateTime.Now
 
 
             };
 
-            await _unitOfWork.ReservationRepository.AddAsync(order);
-            await _unitOfWork.SaveChangesAsync();
+            //await _unitOfWork.ReservationRepository.AddAsync(order);
+            //await _unitOfWork.SaveChangesAsync();
 
             //add value to invoice table
             var invoice = new Invoice
@@ -112,8 +112,12 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 CreatedAt = DateTime.UtcNow,
                 TotalAmount = totalPrice
             };
-            await _unitOfWork.InvoiceRepository.AddAsync(invoice);
-            await _unitOfWork.SaveChangesAsync();
+
+            order.Invoices.Add(invoice);
+
+            
+            //await _unitOfWork.InvoiceRepository.AddAsync(invoice);
+            //await _unitOfWork.SaveChangesAsync();
 
             //add value to transaction table 
 
@@ -129,8 +133,9 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 ReservationId = order.Id,
             };
 
-            await _unitOfWork.TransactionRepository.AddAsync(newTransaction);
-            await _unitOfWork.SaveChangesAsync();
+            order.Transactions.Add(newTransaction);
+            //await _unitOfWork.TransactionRepository.AddAsync(newTransaction);
+            //await _unitOfWork.SaveChangesAsync();
 
 
             // minus money in wallet for booking
@@ -139,30 +144,37 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             await _unitOfWork.WalletRepsitory.UpdateAsync(customerWallet);
 
 
+            await _unitOfWork.ReservationRepository.AddAsync(order);
             await _unitOfWork.SaveChangesAsync();
 
             return _mapper.Map<ReservationResponse>(order);
 
+            
 
+                
         }
 
 
 
-        public  bool IsAreaAvailable(long areaId, DateTime startTime, DateTime endTime, int requestedSeats)
+        public  bool IsAreaAvailable(long areaId, DateTimeOffset startTime, DateTimeOffset endTime, int requestedSeats)
         {
-           
-          
-            var existingReservations =  _unitOfWork.ReservationRepository
-                .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing) &&
-                            ((startTime >= r.StartTime && startTime < r.EndTime) ||
-                             (endTime > r.StartTime && endTime <= r.EndTime) ||
-                             (startTime <= r.StartTime && endTime >= r.EndTime)))
-                .ToList();
 
-          
-            existingReservations = existingReservations
-                .Where(r => r.Status == OrderStatus.Success)
-                .ToList();
+
+            //var existingReservations = _unitOfWork.ReservationRepository
+            //    .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing) &&
+            //                ((startTime >= r.StartTime && startTime < r.EndTime) ||
+            //                 (endTime > r.StartTime && endTime <= r.EndTime) ||
+            //                 (startTime <= r.StartTime && endTime >= r.EndTime)))
+            //    .ToList();
+
+            var existingReservations =  _unitOfWork.ReservationRepository
+                 .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
+                 && (r.StartTime <= endTime || r.EndTime >= startTime));
+
+
+
+        
+            //
 
 
             var totalSeatsBooked = existingReservations.Sum(r => r.BookingSeat);
@@ -176,10 +188,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 return false;
 
             }
-         
-            
 
-        
+
+
+
             return true;
         }
 

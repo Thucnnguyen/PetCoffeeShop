@@ -1,16 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
 using PetCoffee.Application.Features.Areas.Queries;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Comment.Queries;
-using PetCoffee.Application.Features.FollowShop.Commands;
-using PetCoffee.Application.Features.PostCategory.Commands;
-using PetCoffee.Application.Features.PostCategory.Models;
-using PetCoffee.Application.Features.PostCategory.Queries;
 using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
@@ -28,15 +21,15 @@ namespace PetCoffee.API.Controllers
             return response;
         }
 
-		[HttpGet("areas/{AreaId}")]
-		[Authorize]
-		public async Task<ActionResult< AreaResponse>> GetAreaById([FromRoute] GetAreaByIdQuery request)
-		{
-			var response = await Mediator.Send(request);
-			return response;
-		}
+        [HttpGet("areas/{AreaId}")]
+        [Authorize]
+        public async Task<ActionResult<AreaResponse>> GetAreaById([FromRoute] GetAreaByIdQuery request)
+        {
+            var response = await Mediator.Send(request);
+            return response;
+        }
 
-		[HttpPost("Areas")]
+        [HttpPost("Areas")]
         [Authorize]
 
         public async Task<ActionResult<AreaResponse>> Post([FromForm] CreateAreaCommand request)
@@ -67,7 +60,7 @@ namespace PetCoffee.API.Controllers
         [Authorize]
         public async Task<ActionResult<PaginationResponse<Area, AreaResponse>>> GetAreaForBooking([FromQuery] GetAreaForBookingQuery request)
         {
-            
+
             var response = await Mediator.Send(request);
             return response;
         }

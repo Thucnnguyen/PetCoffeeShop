@@ -7,5 +7,5 @@ namespace PetCoffee.Application.Features.Events.Queries;
 
 public class GetSubmittingEventByIdForCustomerQuery : IRequest<EventResponse>
 {
-	public long EventId { get; set; }
+    public long EventId { get; set; }
 }

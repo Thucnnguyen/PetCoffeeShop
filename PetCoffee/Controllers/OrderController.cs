@@ -6,7 +6,6 @@ using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;
 using PetCoffee.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.API.Controllers
 {
@@ -57,11 +56,11 @@ namespace PetCoffee.API.Controllers
         [Authorize]
         public async Task<ActionResult<IList<ReservationResponse>>> GetOrderByAreaId([FromQuery] GetReservationByAreaIdQuery request)
         {
-    
+
             return Ok(await Mediator.Send(request));
         }
 
-        [HttpPost]
+        [HttpPost("orders")]
         [Authorize]
         public async Task<ActionResult<ReservationResponse>> CreateOrder([FromForm] InitializeOrderCommand command)
         {

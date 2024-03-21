@@ -13,67 +13,67 @@ namespace PetCoffee.Application.Features.Report.Handlers;
 
 public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscommand, bool>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IMapper _mapper;
-	private readonly ICurrentAccountService _currentAccountService;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+    private readonly ICurrentAccountService _currentAccountService;
 
-	public async Task<bool> Handle(UpdateReportStatuscommand request, CancellationToken cancellationToken)
-	{
-		var report = await _unitOfWork.ReportRepository
-							.Get(r => r.Id == request.ReportId && r.Status == ReportStatus.Processing)
-							.FirstOrDefaultAsync();
+    public async Task<bool> Handle(UpdateReportStatuscommand request, CancellationToken cancellationToken)
+    {
+        var report = await _unitOfWork.ReportRepository
+                            .Get(r => r.Id == request.ReportId && r.Status == ReportStatus.Processing)
+                            .FirstOrDefaultAsync();
 
-		if (report == null)
-		{
-			throw new ApiException(ResponseCode.ReportNotExisted);
-		}
+        if (report == null)
+        {
+            throw new ApiException(ResponseCode.ReportNotExisted);
+        }
 
-		if (request.Status == ReportStatus.Accept)
-		{
-			report.Status = ReportStatus.Accept;
-			if (report.PostID != null)
-			{
-				var AnyAcceptedReport = await _unitOfWork.ReportRepository
-					.Get(r => r.PostID == report.PostID && r.Status == ReportStatus.Accept)
-					.AnyAsync();
+        if (request.Status == ReportStatus.Accept)
+        {
+            report.Status = ReportStatus.Accept;
+            if (report.PostID != null)
+            {
+                var AnyAcceptedReport = await _unitOfWork.ReportRepository
+                    .Get(r => r.PostID == report.PostID && r.Status == ReportStatus.Accept)
+                    .AnyAsync();
 
-				if (AnyAcceptedReport)
-				{
-					var post = await _unitOfWork.PostRepository.Get(p => p.Id == report.PostID && !p.Deleted)
-							.FirstOrDefaultAsync();
-					if (post != null)
-					{
-						post.DeletedAt = DateTime.UtcNow;
-						await _unitOfWork.PostRepository.UpdateAsync(post);
-					}
-				}
-				report.Status = ReportStatus.Accept;
-			}
+                if (AnyAcceptedReport)
+                {
+                    var post = await _unitOfWork.PostRepository.Get(p => p.Id == report.PostID && !p.Deleted)
+                            .FirstOrDefaultAsync();
+                    if (post != null)
+                    {
+                        post.DeletedAt = DateTime.UtcNow;
+                        await _unitOfWork.PostRepository.UpdateAsync(post);
+                    }
+                }
+                report.Status = ReportStatus.Accept;
+            }
 
-			if (report.CommentId != null)
-			{
-				var AnyAcceptedReport = await _unitOfWork.ReportRepository
-					.Get(r => r.CommentId == report.CommentId && r.Status == ReportStatus.Accept)
-					.AnyAsync();
-				if (AnyAcceptedReport)
-				{
-					var comments = await _unitOfWork.CommentRepository
-												.GetAsync(c => c.Id == report.CommentId && c.ParentCommentId == report.CommentId);
-					if (comments != null)
-					{
-						await _unitOfWork.CommentRepository.DeleteRange(comments);
-					}
-				}
-				report.Status = ReportStatus.Accept;
-			}
-		}
-		else
-		{
-			report.Status = request.Status;
-		}
+            if (report.CommentId != null)
+            {
+                var AnyAcceptedReport = await _unitOfWork.ReportRepository
+                    .Get(r => r.CommentId == report.CommentId && r.Status == ReportStatus.Accept)
+                    .AnyAsync();
+                if (AnyAcceptedReport)
+                {
+                    var comments = await _unitOfWork.CommentRepository
+                                                .GetAsync(c => c.Id == report.CommentId && c.ParentCommentId == report.CommentId);
+                    if (comments != null)
+                    {
+                        await _unitOfWork.CommentRepository.DeleteRange(comments);
+                    }
+                }
+                report.Status = ReportStatus.Accept;
+            }
+        }
+        else
+        {
+            report.Status = request.Status;
+        }
 
-		await _unitOfWork.SaveChangesAsync();
-		return true;
+        await _unitOfWork.SaveChangesAsync();
+        return true;
 
-	}
+    }
 }

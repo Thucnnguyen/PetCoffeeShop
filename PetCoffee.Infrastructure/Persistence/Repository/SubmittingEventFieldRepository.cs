@@ -7,10 +7,10 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class SubmittingEventFieldRepository : BaseRepository<SubmittingEventField>, ISubmittingEventFieldRepository
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-	public SubmittingEventFieldRepository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public SubmittingEventFieldRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

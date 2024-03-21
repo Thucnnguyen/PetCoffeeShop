@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using LinqKit;
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;

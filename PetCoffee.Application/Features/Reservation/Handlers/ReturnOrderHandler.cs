@@ -7,11 +7,6 @@ using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -40,7 +35,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             {
                 throw new ApiException(ResponseCode.AccountNotActived);
             }
-            
+
             var reservation = _unitOfWork.ReservationRepository.Get(p => p.Id == request.OrderId && p.CreatedById == currentAccount.Id && !p.Status.Equals(OrderStatus.Reject)).FirstOrDefault();
             if (reservation == null)
             {

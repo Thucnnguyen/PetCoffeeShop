@@ -4,13 +4,7 @@ using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Post.Commands;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
 //using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Post.Handlers
 {

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Domain.Entities
 {
@@ -23,12 +18,12 @@ namespace PetCoffee.Domain.Entities
         public decimal TotalAmount { get; set; }
 
 
-            
+
         [InverseProperty(nameof(InvoiceProduct.Invoice))]
         public ICollection<InvoiceProduct> Products { get; set; }
 
 
-        
+
 
 
 

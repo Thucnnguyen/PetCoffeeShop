@@ -9,11 +9,6 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Areas.Handlers
 {
@@ -37,7 +32,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
                 throw new ApiException(ResponseCode.AccountNotExist);
             }
 
-    
+
             var shopId = request.ShopId;
 
 
@@ -55,7 +50,10 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             {
                 var existingReservations = await _unitOfWork.ReservationRepository
                     .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
-                    && (r.StartTime >= request.EndTime || r.EndTime <= request.StartTime));
+                    && (r.StartTime <= request.EndTime || r.EndTime >= request.StartTime));
+
+                var test = await _unitOfWork.ReservationRepository
+                    .GetAsync(r => r.AreaId == area.Id);
 
                 //var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
                 var totalSeated = existingReservations.Sum(x => x.BookingSeat);

@@ -7,10 +7,10 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class JoinEventRepository : BaseRepository<JoinEvent>, IJoinEventRepository
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-	public JoinEventRepository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public JoinEventRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

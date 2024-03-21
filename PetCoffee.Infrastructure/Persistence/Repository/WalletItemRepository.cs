@@ -7,10 +7,10 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class WalletItemRepository : BaseRepository<WalletItem>, IWalletItemRepository
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-	public WalletItemRepository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public WalletItemRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

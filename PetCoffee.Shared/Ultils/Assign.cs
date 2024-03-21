@@ -21,5 +21,5 @@ public class Assign
             property.SetValue(dest, value);
         }
     }
-    
+
 }

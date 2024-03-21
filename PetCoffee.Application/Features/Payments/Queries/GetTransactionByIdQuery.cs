@@ -5,5 +5,5 @@ namespace PetCoffee.Application.Features.Payments.Queries;
 
 public class GetTransactionByIdQuery : IRequest<PaymentResponse>
 {
-	public long TransactionId { get; set; }
+    public long TransactionId { get; set; }
 }

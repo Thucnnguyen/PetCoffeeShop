@@ -8,9 +8,9 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class AccountShopRespository : BaseRepository<AccountShop>, IAccountShopRespository
 {
-	private readonly ApplicationDbContext _dbContext;
-	public AccountShopRespository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    private readonly ApplicationDbContext _dbContext;
+    public AccountShopRespository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

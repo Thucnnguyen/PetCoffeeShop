@@ -4,6 +4,6 @@ namespace PetCoffee.Application.Service;
 
 public interface IVietQrService
 {
-	public Task<TaxCodeResponse> CheckQrCode( string code);
+    public Task<TaxCodeResponse> CheckQrCode(string code);
 }
 

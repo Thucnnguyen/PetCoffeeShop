@@ -11,14 +11,14 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.API.Controllers
 {
-	[Route("/api/v1")]
-	[ApiController]
-	public class PostController : ApiControllerBase
-	{
-		// GET: api/<PostController>
-		[HttpGet("posts")]
-		[Authorize]
-		//[Authorize]
+    [Route("/api/v1")]
+    [ApiController]
+    public class PostController : ApiControllerBase
+    {
+        // GET: api/<PostController>
+        [HttpGet("posts")]
+        [Authorize]
+        //[Authorize]
         public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPost(
             [FromQuery] GetAllPostQuery request)
         {
@@ -35,38 +35,38 @@ namespace PetCoffee.API.Controllers
 
         // GET api/<PostController>/5
         [HttpGet("currentAccounts/posts")]
-		[Authorize]
-		public async Task<ActionResult<IList<PostResponse>>> GetPostCreateByCurrentAccount([FromQuery]GetPostCreatedByCurrentAccountIdQuery request)
-		{
-			var response = await Mediator.Send(request);
-			return Ok(response);
-		}
+        [Authorize]
+        public async Task<ActionResult<IList<PostResponse>>> GetPostCreateByCurrentAccount([FromQuery] GetPostCreatedByCurrentAccountIdQuery request)
+        {
+            var response = await Mediator.Send(request);
+            return Ok(response);
+        }
 
-		// POST api/<PostController>
-		[HttpPost("posts")]
-		[Authorize]
-		public async Task<ActionResult<PostResponse>> Post([FromForm] CreatePostCommand request )
-		{
-			var response = await Mediator.Send(request);
-			return response;
-		}
-		[HttpPost("posts/{PostId}/likes")]
-		[Authorize]
-		public async Task<ActionResult<bool>> CreateLikePost([FromRoute] CreateLikePostCommand request)
+        // POST api/<PostController>
+        [HttpPost("posts")]
+        [Authorize]
+        public async Task<ActionResult<PostResponse>> Post([FromForm] CreatePostCommand request)
+        {
+            var response = await Mediator.Send(request);
+            return response;
+        }
+        [HttpPost("posts/{PostId}/likes")]
+        [Authorize]
+        public async Task<ActionResult<bool>> CreateLikePost([FromRoute] CreateLikePostCommand request)
 
-		{
-			var response = await Mediator.Send(request);
-			return response;
-		}
-		[HttpDelete("posts/{PostId}/likes")]
-		[Authorize]
-		public async Task<ActionResult<bool>> DeleteLikePost([FromRoute] DeleteLikePostCommand request)
+        {
+            var response = await Mediator.Send(request);
+            return response;
+        }
+        [HttpDelete("posts/{PostId}/likes")]
+        [Authorize]
+        public async Task<ActionResult<bool>> DeleteLikePost([FromRoute] DeleteLikePostCommand request)
 
-		{
-			var response = await Mediator.Send(request);
-			return response;
-		}
-		[HttpPut("{id:long}/posts/status")]
+        {
+            var response = await Mediator.Send(request);
+            return response;
+        }
+        [HttpPut("{id:long}/posts/status")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<bool>> UpdatePostStatus([FromRoute] long id, [FromBody] UpdatePostStatusCommand request)
         {

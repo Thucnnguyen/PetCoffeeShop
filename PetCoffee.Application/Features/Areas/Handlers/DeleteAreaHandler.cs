@@ -3,14 +3,8 @@ using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Areas.Commands;
-using PetCoffee.Application.Features.FollowShop.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Areas.Handlers
 {
@@ -45,8 +39,8 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             {
                 throw new ApiException(ResponseCode.AreaNotExist);
             }
-			area.DeletedAt = DateTime.UtcNow;
-			await _unitOfWork.AreaRepsitory.UpdateAsync(area);
+            area.DeletedAt = DateTime.UtcNow;
+            await _unitOfWork.AreaRepsitory.UpdateAsync(area);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

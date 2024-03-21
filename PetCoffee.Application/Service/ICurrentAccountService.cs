@@ -5,6 +5,6 @@ namespace PetCoffee.Application.Service;
 
 public interface ICurrentAccountService
 {
-	public Task<Account?> GetCurrentAccount();
-	public Task<Account> GetRequiredCurrentAccount();
+    public Task<Account?> GetCurrentAccount();
+    public Task<Account> GetRequiredCurrentAccount();
 }

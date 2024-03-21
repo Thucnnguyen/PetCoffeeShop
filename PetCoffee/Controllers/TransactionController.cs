@@ -12,26 +12,26 @@ namespace PetCoffee.API.Controllers;
 [ApiController]
 public class TransactionController : ApiControllerBase
 {
-	[HttpPost("transactions/items")]
-	[Authorize]
-	public async Task<ActionResult<bool>> BuyItems([FromBody] BuyItemsCommand request)
-	{
-		var response = await Mediator.Send(request);
-		return response;
-	}
+    [HttpPost("transactions/items")]
+    [Authorize]
+    public async Task<ActionResult<bool>> BuyItems([FromBody] BuyItemsCommand request)
+    {
+        var response = await Mediator.Send(request);
+        return response;
+    }
 
-	[HttpGet("transactions/{TransactionId}")]
-	public async Task<ActionResult<PaymentResponse>> GetDepositTransaction([FromRoute] GetTransactionByIdQuery request)
-	{
-		var response = await Mediator.Send(request);
-		return response;
-	}
+    [HttpGet("transactions/{TransactionId}")]
+    public async Task<ActionResult<PaymentResponse>> GetDepositTransaction([FromRoute] GetTransactionByIdQuery request)
+    {
+        var response = await Mediator.Send(request);
+        return response;
+    }
 
-	[HttpGet("transactions")]
-	[Authorize]
-	public async Task<ActionResult<PaginationResponse<Transaction, PaymentResponse>>> GetAllTransaction([FromQuery] GetAllTransactionQuery request)
-	{
-		var response = await Mediator.Send(request);
-		return response;
-	}
+    [HttpGet("transactions")]
+    [Authorize]
+    public async Task<ActionResult<PaginationResponse<Transaction, PaymentResponse>>> GetAllTransaction([FromQuery] GetAllTransactionQuery request)
+    {
+        var response = await Mediator.Send(request);
+        return response;
+    }
 }

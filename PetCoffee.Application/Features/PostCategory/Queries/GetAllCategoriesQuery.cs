@@ -7,11 +7,11 @@ namespace PetCoffee.Application.Features.PostCategory.Queries;
 
 public class GetAllCategoriesQuery : IRequest<IList<PostCategoryResponse>>
 {
-	private string? _search;
+    private string? _search;
 
-	public string? Search
-	{
-		get => _search;
-		set => _search = value?.Trim().ToLower();
-	}
+    public string? Search
+    {
+        get => _search;
+        set => _search = value?.Trim().ToLower();
+    }
 }

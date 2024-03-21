@@ -4,5 +4,5 @@ namespace PetCoffee.Application.Features.Auth.Commands;
 
 public class SendOTPForForgotPasswordCommand : IRequest<bool>
 {
-	public string Email { get; set; }
+    public string Email { get; set; }
 }

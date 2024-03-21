@@ -9,24 +9,24 @@ using System.Reflection;
 
 namespace PetCoffee.Application;
 
-public static class ConfigureService 
+public static class ConfigureService
 {
-	public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services,
-	IConfiguration configuration)
-	{
-		// Auto mapper
-		services.AddAutoMapper(typeof(MappingProfile));
+    public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services,
+    IConfiguration configuration)
+    {
+        // Auto mapper
+        services.AddAutoMapper(typeof(MappingProfile));
 
-		// FluentAPI validation
-		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        // FluentAPI validation
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-		// MediatR
-		services.AddMediatR(cfg =>
-		{
-			cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-			cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationErrorBehaviour<,>));
-		});
+        // MediatR
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationErrorBehaviour<,>));
+        });
 
-		return services;
-	}
+        return services;
+    }
 }

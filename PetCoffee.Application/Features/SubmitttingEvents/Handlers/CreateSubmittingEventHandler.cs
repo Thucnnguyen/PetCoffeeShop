@@ -13,82 +13,82 @@ namespace PetCoffee.Application.Features.SubmitttingEvents.Handlers;
 
 public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEventCommand, SubmittingEventResponse>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly ICurrentAccountService _currentAccountService;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentAccountService _currentAccountService;
+    private readonly IMapper _mapper;
 
-	public CreateSubmittingEventHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
-	{
-		_unitOfWork = unitOfWork;
-		_currentAccountService = currentAccountService;
-		_mapper = mapper;
-	}
+    public CreateSubmittingEventHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _currentAccountService = currentAccountService;
+        _mapper = mapper;
+    }
 
-	public async Task<SubmittingEventResponse> Handle(CreateSubmittingEventCommand request, CancellationToken cancellationToken)
-	{
-		var currentAccount = await _currentAccountService.GetCurrentAccount();
-		if (currentAccount == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (currentAccount.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
-
-		var CheckEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId)
-															.Include(e => e.SubmittingEvents).FirstOrDefaultAsync();
-		if(CheckEvent == null) 
-		{
-			throw new ApiException(ResponseCode.EventNotExisted);
-		}
-		if(CheckEvent.SubmittingEvents.Any(se => se.CreatedById == currentAccount.Id)) 
-		{
-			throw new ApiException(ResponseCode.SubmittingEventIsExist);
-		}
-
-        if (request.Answers!= null)
+    public async Task<SubmittingEventResponse> Handle(CreateSubmittingEventCommand request, CancellationToken cancellationToken)
+    {
+        var currentAccount = await _currentAccountService.GetCurrentAccount();
+        if (currentAccount == null)
         {
-			foreach (var anwser in request.Answers)
-			{
-				var checkField = await _unitOfWork.EventFieldRepsitory.GetAsync(ef => ef.Id == anwser.EventFieldId && ef.EventId == request.EventId);
-				if (checkField.Any())
-				{
-					continue;
-				}
-				throw new ApiException(ResponseCode.SubmittingEventNotCorrectForm);
-			}
-		}
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (currentAccount.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
 
-		var NewSubmittingEvent = _mapper.Map<SubmittingEvent>(request);
-		await _unitOfWork.SubmittingEventRepsitory.AddAsync(NewSubmittingEvent);
-		await _unitOfWork.SaveChangesAsync();
+        var CheckEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId)
+                                                            .Include(e => e.SubmittingEvents).FirstOrDefaultAsync();
+        if (CheckEvent == null)
+        {
+            throw new ApiException(ResponseCode.EventNotExisted);
+        }
+        if (CheckEvent.SubmittingEvents.Any(se => se.CreatedById == currentAccount.Id))
+        {
+            throw new ApiException(ResponseCode.SubmittingEventIsExist);
+        }
 
-		if (request.Answers != null)
-		{
-			var newAnwsers =  request.Answers.Select( a =>
-			{
-				var field =  _unitOfWork.EventFieldRepsitory.Get(f => f.Id == a.EventFieldId).FirstOrDefault();
-				var fieldSubmit = _mapper.Map<SubmittingEventField>(field);
-				fieldSubmit.Submitcontent = a.Submitcontent;
-				fieldSubmit.SubmittingEventId = NewSubmittingEvent.Id;
-				return fieldSubmit;
-			});
+        if (request.Answers != null)
+        {
+            foreach (var anwser in request.Answers)
+            {
+                var checkField = await _unitOfWork.EventFieldRepsitory.GetAsync(ef => ef.Id == anwser.EventFieldId && ef.EventId == request.EventId);
+                if (checkField.Any())
+                {
+                    continue;
+                }
+                throw new ApiException(ResponseCode.SubmittingEventNotCorrectForm);
+            }
+        }
 
-			await _unitOfWork.SubmittingEventFieldRepository.AddRange(newAnwsers);
-			await _unitOfWork.SaveChangesAsync();
-		}
-		var GetNewSubmittingEvent = _unitOfWork.SubmittingEventRepsitory.Get(s => s.Id == NewSubmittingEvent.Id)
-									.Include(s => s.Event)
-									.Include(s => s.SubmittingEventFields)
-									.FirstOrDefault();
+        var NewSubmittingEvent = _mapper.Map<SubmittingEvent>(request);
+        await _unitOfWork.SubmittingEventRepsitory.AddAsync(NewSubmittingEvent);
+        await _unitOfWork.SaveChangesAsync();
 
-		var response = _mapper.Map<SubmittingEventResponse>(GetNewSubmittingEvent);
+        if (request.Answers != null)
+        {
+            var newAnwsers = request.Answers.Select(a =>
+            {
+                var field = _unitOfWork.EventFieldRepsitory.Get(f => f.Id == a.EventFieldId).FirstOrDefault();
+                var fieldSubmit = _mapper.Map<SubmittingEventField>(field);
+                fieldSubmit.Submitcontent = a.Submitcontent;
+                fieldSubmit.SubmittingEventId = NewSubmittingEvent.Id;
+                return fieldSubmit;
+            });
 
-		if (GetNewSubmittingEvent.SubmittingEventFields.Any())
-		{
-			response.EventFields = GetNewSubmittingEvent.SubmittingEventFields.Select(a => _mapper.Map<EventFieldResponse>(a)).ToList();
-		}
-		return response;
-	}
+            await _unitOfWork.SubmittingEventFieldRepository.AddRange(newAnwsers);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        var GetNewSubmittingEvent = _unitOfWork.SubmittingEventRepsitory.Get(s => s.Id == NewSubmittingEvent.Id)
+                                    .Include(s => s.Event)
+                                    .Include(s => s.SubmittingEventFields)
+                                    .FirstOrDefault();
+
+        var response = _mapper.Map<SubmittingEventResponse>(GetNewSubmittingEvent);
+
+        if (GetNewSubmittingEvent.SubmittingEventFields.Any())
+        {
+            response.EventFields = GetNewSubmittingEvent.SubmittingEventFields.Select(a => _mapper.Map<EventFieldResponse>(a)).ToList();
+        }
+        return response;
+    }
 }

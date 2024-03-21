@@ -14,73 +14,73 @@ namespace PetCoffee.Application.Features.PetCfShop.Handlers;
 
 public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, PetCoffeeShopResponse>
 {
-	private readonly IMapper _mapper;
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly ICurrentAccountService _currentAccountService;
-	private readonly IAzureService _azureService;
-	private readonly IVietQrService _vietQrService;
-	public CreatePetCfShopHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IAzureService azureService, IVietQrService vietQrService)
-	{
-		_mapper = mapper;
-		_unitOfWork = unitOfWork;
-		_currentAccountService = currentAccountService;
-		_azureService = azureService;
-		_vietQrService = vietQrService;
-	}
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentAccountService _currentAccountService;
+    private readonly IAzureService _azureService;
+    private readonly IVietQrService _vietQrService;
+    public CreatePetCfShopHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IAzureService azureService, IVietQrService vietQrService)
+    {
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+        _currentAccountService = currentAccountService;
+        _azureService = azureService;
+        _vietQrService = vietQrService;
+    }
 
-	public async Task<PetCoffeeShopResponse> Handle(CreatePetCfShopCommand request, CancellationToken cancellationToken)
-	{
-		var CurrentUser = await _currentAccountService.GetCurrentAccount();
-		if (CurrentUser == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (CurrentUser.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
+    public async Task<PetCoffeeShopResponse> Handle(CreatePetCfShopCommand request, CancellationToken cancellationToken)
+    {
+        var CurrentUser = await _currentAccountService.GetCurrentAccount();
+        if (CurrentUser == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (CurrentUser.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
 
-		var isHasRequest = await _unitOfWork.PetCoffeeShopRepository.Get(p => p.CreatedById == CurrentUser.Id && p.Status == ShopStatus.Processing)
-								.AnyAsync();
-		if (isHasRequest)
-		{
-			throw new ApiException(ResponseCode.HasShopRequest);
-		}
-		var NewPetCoffeeShop = _mapper.Map<PetCoffeeShop>(request);
-		//check TaxCode 
-		var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
+        var isHasRequest = await _unitOfWork.PetCoffeeShopRepository.Get(p => p.CreatedById == CurrentUser.Id && p.Status == ShopStatus.Processing)
+                                .AnyAsync();
+        if (isHasRequest)
+        {
+            throw new ApiException(ResponseCode.HasShopRequest);
+        }
+        var NewPetCoffeeShop = _mapper.Map<PetCoffeeShop>(request);
+        //check TaxCode 
+        var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
 
-		if (TaxCodeResponse == null || TaxCodeResponse.Code == "51")
-		{
-			throw new ApiException(ResponseCode.TaxCodeNotExisted);
-		}
+        if (TaxCodeResponse == null || TaxCodeResponse.Code == "51")
+        {
+            throw new ApiException(ResponseCode.TaxCodeNotExisted);
+        }
 
-		//upload avatar
-		if (request.Avatar != null)
-		{
-			await _azureService.CreateBlob(request.Avatar.FileName, request.Avatar);
-			NewPetCoffeeShop.AvatarUrl = await _azureService.GetBlob(request.Avatar.FileName);
-		}
-		//upload background
-		if (request.Background != null)
-		{
-			await _azureService.CreateBlob(request.Background.FileName, request.Background);
-			NewPetCoffeeShop.BackgroundUrl = await _azureService.GetBlob(request.Background.FileName);
-		}
-		await _unitOfWork.PetCoffeeShopRepository.AddAsync(NewPetCoffeeShop);
-		await _unitOfWork.SaveChangesAsync();
+        //upload avatar
+        if (request.Avatar != null)
+        {
+            await _azureService.CreateBlob(request.Avatar.FileName, request.Avatar);
+            NewPetCoffeeShop.AvatarUrl = await _azureService.GetBlob(request.Avatar.FileName);
+        }
+        //upload background
+        if (request.Background != null)
+        {
+            await _azureService.CreateBlob(request.Background.FileName, request.Background);
+            NewPetCoffeeShop.BackgroundUrl = await _azureService.GetBlob(request.Background.FileName);
+        }
+        await _unitOfWork.PetCoffeeShopRepository.AddAsync(NewPetCoffeeShop);
+        await _unitOfWork.SaveChangesAsync();
 
-		var NewAccountShop = new AccountShop()
-		{
-			AccountId = CurrentUser.Id,
-			ShopId = NewPetCoffeeShop.Id
-		};
+        var NewAccountShop = new AccountShop()
+        {
+            AccountId = CurrentUser.Id,
+            ShopId = NewPetCoffeeShop.Id
+        };
 
-		await _unitOfWork.AccountShopRespository.AddAsync(NewAccountShop);
-		await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.AccountShopRespository.AddAsync(NewAccountShop);
+        await _unitOfWork.SaveChangesAsync();
 
-		var response = _mapper.Map<PetCoffeeShopResponse>(NewPetCoffeeShop);
-		response.CreatedById = CurrentUser.Id;
-		return response;
-	}
+        var response = _mapper.Map<PetCoffeeShopResponse>(NewPetCoffeeShop);
+        response.CreatedById = CurrentUser.Id;
+        return response;
+    }
 }

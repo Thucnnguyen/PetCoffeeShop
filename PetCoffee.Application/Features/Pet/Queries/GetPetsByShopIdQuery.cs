@@ -9,10 +9,10 @@ namespace PetCoffee.Application.Features.Pet.Queries;
 
 public class GetPetsByShopIdQuery : PaginationRequest<Domain.Entities.Pet>, IRequest<PaginationResponse<Domain.Entities.Pet, PetResponse>>
 {
-	public long ShopId { get; set; }
+    public long ShopId { get; set; }
 
-	public override Expression<Func<Domain.Entities.Pet, bool>> GetExpressions()
-	{
-		return Expression;
-	}
+    public override Expression<Func<Domain.Entities.Pet, bool>> GetExpressions()
+    {
+        return Expression;
+    }
 }

@@ -22,8 +22,8 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
-		[JsonConverter(typeof(JsonStringEnumConverter))]
-		public ShopStatus Status { get; set; } = ShopStatus.Active;
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public ShopStatus Status { get; set; } = ShopStatus.Active;
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public ShopType Type { get; set; }
         public DateTime? StartTime { get; set; }
@@ -31,7 +31,7 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
 
         public double? Distance { get; set; } = 0;
         public double? TotalFollow { get; set; } = 0;
-        public bool IsFollow {  get; set; }
+        public bool IsFollow { get; set; }
         public AccountForPostModel? CreatedBy { get; set; }
 
     }

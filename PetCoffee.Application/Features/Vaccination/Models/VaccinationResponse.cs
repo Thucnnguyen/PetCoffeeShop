@@ -1,10 +1,9 @@
-﻿using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Domain.Enums;
+﻿using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.Application.Features.Vaccination.Models
 {
-    public class VaccinationResponse 
+    public class VaccinationResponse
     {
         [Key]
         public long Id { get; set; }
@@ -15,6 +14,6 @@ namespace PetCoffee.Application.Features.Vaccination.Models
 
         public long PetId { get; set; }
 
-        public bool IsVerified { get; set; }    
+        public bool IsVerified { get; set; }
     }
 }

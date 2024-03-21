@@ -7,10 +7,10 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class ReportRepository : BaseRepository<Report>, IReportRepository
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-	public ReportRepository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public ReportRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

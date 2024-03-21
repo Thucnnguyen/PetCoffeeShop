@@ -12,33 +12,33 @@ namespace PetCoffee.Application.Features.Vaccination.Handlers;
 
 public class GetVaccinationByIdHandler : IRequestHandler<GetVaccinationByIdQuery, VaccinationResponse>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly ICurrentAccountService _currentAccountService;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentAccountService _currentAccountService;
+    private readonly IMapper _mapper;
 
-	public GetVaccinationByIdHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
-	{
-		_unitOfWork = unitOfWork;
-		_mapper = mapper;
-		_currentAccountService = currentAccountService;
-	}
+    public GetVaccinationByIdHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+        _currentAccountService = currentAccountService;
+    }
 
-	public async Task<VaccinationResponse> Handle(GetVaccinationByIdQuery request, CancellationToken cancellationToken)
-	{
-		var CurrentUser = await _currentAccountService.GetCurrentAccount();
-		if (CurrentUser == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (CurrentUser.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
-		var Vaccination = await _unitOfWork.VaccinationRepository.GetByIdAsync(request.Id);
-		if (Vaccination == null)
-		{
-			throw new ApiException(ResponseCode.MomentNotExisted);
-		}
-		return _mapper.Map<VaccinationResponse>(Vaccination);
-	}
+    public async Task<VaccinationResponse> Handle(GetVaccinationByIdQuery request, CancellationToken cancellationToken)
+    {
+        var CurrentUser = await _currentAccountService.GetCurrentAccount();
+        if (CurrentUser == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (CurrentUser.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
+        var Vaccination = await _unitOfWork.VaccinationRepository.GetByIdAsync(request.Id);
+        if (Vaccination == null)
+        {
+            throw new ApiException(ResponseCode.MomentNotExisted);
+        }
+        return _mapper.Map<VaccinationResponse>(Vaccination);
+    }
 }

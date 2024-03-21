@@ -2,5 +2,5 @@
 
 public class AzureConstant
 {
-	public static string ContainerName = "petcoffeeshop";
+    public static string ContainerName = "petcoffeeshop";
 }

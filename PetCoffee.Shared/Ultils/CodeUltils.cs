@@ -21,5 +21,5 @@ public class CodeUltils
     public static string GenerateRandomToken()
     {
         return Guid.NewGuid().ToString();
-    }   
+    }
 }

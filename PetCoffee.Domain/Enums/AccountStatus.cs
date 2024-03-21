@@ -6,12 +6,12 @@ namespace PetCoffee.Domain.Enums;
 
 public enum AccountStatus
 {
-	[Description("Đang hoạt động")]
-	Active = 0,
+    [Description("Đang hoạt động")]
+    Active = 0,
 
-	[Description("Ngừng hoạt động")]
-	Inactive = 1,
+    [Description("Ngừng hoạt động")]
+    Inactive = 1,
 
-	[Description("Mới khởi tạo")]
-	Verifying = 2
+    [Description("Mới khởi tạo")]
+    Verifying = 2
 }

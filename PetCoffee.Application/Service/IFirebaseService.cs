@@ -5,5 +5,5 @@ namespace PetCoffee.Application.Service;
 
 public interface IFirebaseService
 {
-	public Task<UserRecord?> VerifyFirebaseToken(string firebaseToken);
+    public Task<UserRecord?> VerifyFirebaseToken(string firebaseToken);
 }

@@ -13,65 +13,65 @@ namespace PetCoffee.Application.Features.Pet.Handlers;
 
 public class UpdatePetHandler : IRequestHandler<UpdatePetCommand, PetResponse>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IAzureService _azureService;
-	private readonly ICurrentAccountService _currentAccountService;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAzureService _azureService;
+    private readonly ICurrentAccountService _currentAccountService;
+    private readonly IMapper _mapper;
 
-	public UpdatePetHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
-	{
-		_unitOfWork = unitOfWork;
-		_azureService = azureService;
-		_currentAccountService = currentAccountService;
-		_mapper = mapper;
-	}
+    public UpdatePetHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _azureService = azureService;
+        _currentAccountService = currentAccountService;
+        _mapper = mapper;
+    }
 
-	public async Task<PetResponse> Handle(UpdatePetCommand request, CancellationToken cancellationToken)
-	{
-		var currentAccount = await _currentAccountService.GetCurrentAccount();
-		if (currentAccount == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (currentAccount.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
+    public async Task<PetResponse> Handle(UpdatePetCommand request, CancellationToken cancellationToken)
+    {
+        var currentAccount = await _currentAccountService.GetCurrentAccount();
+        if (currentAccount == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (currentAccount.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
 
-		if (currentAccount.IsCustomer )
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		};
+        if (currentAccount.IsCustomer)
+        {
+            throw new ApiException(ResponseCode.PermissionDenied);
+        };
 
-		var pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
+        var pet = (await _unitOfWork.PetRepository.GetAsync(p => p.Id == request.Id && !p.Deleted)).FirstOrDefault();
 
-		if (pet == null)
-		{
-			throw new ApiException(ResponseCode.PetNotExisted);
-		}
-		if ( !currentAccount.AccountShops.Any(a => a.ShopId == pet.PetCoffeeShopId))
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+        if (pet == null)
+        {
+            throw new ApiException(ResponseCode.PetNotExisted);
+        }
+        if (!currentAccount.AccountShops.Any(a => a.ShopId == pet.PetCoffeeShopId))
+        {
+            throw new ApiException(ResponseCode.PermissionDenied);
+        }
 
-		Assign.Partial<UpdatePetCommand, Domain.Entities.Pet>(request, pet);
-		//upload new avatar
-		if (request.NewAvatar != null)
-		{
-			await _azureService.CreateBlob(request.NewAvatar.FileName, request.NewAvatar);
-			pet.Avatar = await _azureService.GetBlob(request.NewAvatar.FileName);
-		}
-		//upload Backgrounds
-		if (request.NewBackgrounds != null)
-		{
-			pet.Backgound = await _azureService.UpdateloadImages(request.NewBackgrounds);
-		}
+        Assign.Partial<UpdatePetCommand, Domain.Entities.Pet>(request, pet);
+        //upload new avatar
+        if (request.NewAvatar != null)
+        {
+            await _azureService.CreateBlob(request.NewAvatar.FileName, request.NewAvatar);
+            pet.Avatar = await _azureService.GetBlob(request.NewAvatar.FileName);
+        }
+        //upload Backgrounds
+        if (request.NewBackgrounds != null)
+        {
+            pet.Backgound = await _azureService.UpdateloadImages(request.NewBackgrounds);
+        }
 
-		await _unitOfWork.PetRepository.UpdateAsync(pet);
-		await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.PetRepository.UpdateAsync(pet);
+        await _unitOfWork.SaveChangesAsync();
 
-		var response = _mapper.Map<PetResponse>(pet);
+        var response = _mapper.Map<PetResponse>(pet);
 
-		return response;
-	}
+        return response;
+    }
 }

@@ -16,14 +16,14 @@ namespace PetCoffee.Application.Features.Items.Handlers
         private readonly IAzureService _azureService;
         private readonly IMapper _mapper;
 
-		public CreateItemHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper, IAzureService azureService)
-		{
-			_unitOfWork = unitOfWork;
-			_currentAccountService = currentAccountService;
-			_mapper = mapper;
-			_azureService = azureService;
-		}
-		public async Task<ItemResponse> Handle(CreateItemCommand request, CancellationToken cancellationToken)
+        public CreateItemHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper, IAzureService azureService)
+        {
+            _unitOfWork = unitOfWork;
+            _currentAccountService = currentAccountService;
+            _mapper = mapper;
+            _azureService = azureService;
+        }
+        public async Task<ItemResponse> Handle(CreateItemCommand request, CancellationToken cancellationToken)
         {
             //get Current account 
             var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
@@ -47,12 +47,12 @@ namespace PetCoffee.Application.Features.Items.Handlers
             var newItem = _mapper.Map<Domain.Entities.Item>(request);
             newItem.CreatedById = currentAccount.Id;
             newItem.CreatedAt = DateTime.Now;
-			if (request.IconImg != null)
-			{
-				await _azureService.CreateBlob(request.IconImg.FileName, request.IconImg);
-				newItem.Icon = await _azureService.GetBlob(request.IconImg.FileName);
-			}
-			await _unitOfWork.ItemRepository.AddAsync(newItem);
+            if (request.IconImg != null)
+            {
+                await _azureService.CreateBlob(request.IconImg.FileName, request.IconImg);
+                newItem.Icon = await _azureService.GetBlob(request.IconImg.FileName);
+            }
+            await _unitOfWork.ItemRepository.AddAsync(newItem);
             await _unitOfWork.SaveChangesAsync();
 
             var response = _mapper.Map<ItemResponse>(newItem);

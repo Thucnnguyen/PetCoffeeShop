@@ -7,5 +7,5 @@ namespace PetCoffee.Application.Features.Report.Queries;
 
 public class GetReportByIdQuery : IRequest<ReportResponse>
 {
-	public long Id { get; set; }
+    public long Id { get; set; }
 }

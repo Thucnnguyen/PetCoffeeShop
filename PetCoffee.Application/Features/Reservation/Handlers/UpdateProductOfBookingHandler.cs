@@ -7,11 +7,6 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -26,7 +21,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-            _currentAccountService = currentAccountService; 
+            _currentAccountService = currentAccountService;
         }
         public async Task<bool> Handle(UpdateProductOfBookingCommand request, CancellationToken cancellationToken)
         {
@@ -60,12 +55,12 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
         .FirstOrDefault(ip => ip.ProductId == request.ProductId);
             if (existingInvoiceProduct != null)
             {
-              
+
                 existingInvoiceProduct.TotalProduct += request.Quantity;
             }
             else
             {
-             
+
                 var newInvoiceProduct = new InvoiceProduct
                 {
                     InvoiceId = reservation.Id,
@@ -73,7 +68,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                     TotalProduct = request.Quantity
                 };
 
-               
+
                 var firstInvoice = reservation.Invoices.FirstOrDefault();
                 //if (firstInvoice != null)
                 //{
@@ -81,16 +76,16 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 //}
                 //else
                 //{
-                 
-                    var newInvoice = new Invoice
-                    {
-                        ReservationId = reservation.Id,
-                        TotalAmount = product.Price * request.Quantity,
-                        Products = new List<InvoiceProduct>()
-                    };
+
+                var newInvoice = new Invoice
+                {
+                    ReservationId = reservation.Id,
+                    TotalAmount = product.Price * request.Quantity,
+                    Products = new List<InvoiceProduct>()
+                };
                 newInvoice.Products.Add(newInvoiceProduct);
 
-            
+
                 reservation.Invoices.Add(newInvoice);
                 //}
             }
@@ -98,7 +93,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
             await _unitOfWork.SaveChangesAsync();
 
-            return true; 
+            return true;
 
 
         }

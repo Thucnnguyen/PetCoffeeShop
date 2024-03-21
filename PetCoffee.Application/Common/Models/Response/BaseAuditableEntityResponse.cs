@@ -7,9 +7,9 @@ namespace PetCoffee.Application.Common.Models.Response
         public DateTime CreatedAt { get; set; }
         public long? CreatedById { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
 
-        public DateTime? DeletedAt { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
 
         public bool Deleted => DeletedAt != null;
     }

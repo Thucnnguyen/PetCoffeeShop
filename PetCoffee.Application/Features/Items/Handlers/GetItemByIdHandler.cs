@@ -2,17 +2,10 @@
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.Events.Models;
-using PetCoffee.Application.Features.Events.Queries;
 using PetCoffee.Application.Features.Items.Models;
 using PetCoffee.Application.Features.Items.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Items.Handlers
 {
@@ -49,7 +42,7 @@ namespace PetCoffee.Application.Features.Items.Handlers
             }
 
             var response = _mapper.Map<ItemResponse>(item);
-        
+
             return response;
         }
     }

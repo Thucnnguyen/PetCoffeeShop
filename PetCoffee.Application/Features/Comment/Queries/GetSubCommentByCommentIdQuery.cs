@@ -9,9 +9,9 @@ namespace PetCoffee.Application.Features.Comment.Queries;
 
 public class GetSubCommentByCommentIdQuery : PaginationRequest<Domain.Entities.Comment>, IRequest<PaginationResponse<Domain.Entities.Comment, CommentResponse>>
 {
-	public long CommentId { get; set; }
-	public override Expression<Func<Domain.Entities.Comment, bool>> GetExpressions()
-	{
-		return Expression;
-	}
+    public long CommentId { get; set; }
+    public override Expression<Func<Domain.Entities.Comment, bool>> GetExpressions()
+    {
+        return Expression;
+    }
 }

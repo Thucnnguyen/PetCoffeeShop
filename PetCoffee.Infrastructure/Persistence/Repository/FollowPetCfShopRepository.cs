@@ -7,7 +7,7 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class FollowPetCfShopRepository : BaseRepository<FollowPetCfShop>, IFollowPetCfShopRepository
 {
-	public FollowPetCfShopRepository(DbContext dbContext) : base(dbContext)
-	{
-	}
+    public FollowPetCfShopRepository(DbContext dbContext) : base(dbContext)
+    {
+    }
 }

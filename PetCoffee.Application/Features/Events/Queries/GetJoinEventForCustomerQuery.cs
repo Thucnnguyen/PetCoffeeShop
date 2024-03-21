@@ -10,20 +10,20 @@ namespace PetCoffee.Application.Features.Events.Queries;
 
 public class GetJoinEventForCustomerQuery : PaginationRequest<SubmittingEvent>, IRequest<PaginationResponse<SubmittingEvent, EventSubmittingForCardResponse>>
 {
-	private string? _search;
+    private string? _search;
 
-	public string? Search
-	{
-		get => _search;
-		set => _search = value?.Trim().ToLower();
-	}
+    public string? Search
+    {
+        get => _search;
+        set => _search = value?.Trim().ToLower();
+    }
 
-	public override Expression<Func<SubmittingEvent, bool>> GetExpressions()
-	{
-		if (Search is not null)
-		{
-			Expression = Expression.And(e => e.Event.Title.ToLower().Contains(Search) || e.Event.Description.ToLower().Contains(Search));
-		}
-		return Expression;
-	}
+    public override Expression<Func<SubmittingEvent, bool>> GetExpressions()
+    {
+        if (Search is not null)
+        {
+            Expression = Expression.And(e => e.Event.Title.ToLower().Contains(Search) || e.Event.Description.ToLower().Contains(Search));
+        }
+        return Expression;
+    }
 }

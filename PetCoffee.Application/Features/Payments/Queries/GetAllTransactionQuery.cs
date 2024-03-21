@@ -13,45 +13,45 @@ namespace PetCoffee.Application.Features.Payments.Queries;
 
 public class GetAllTransactionQuery : PaginationRequest<Domain.Entities.Transaction>, IRequest<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
-	public DateTime? From { get; set; }
+    public DateTime? From { get; set; }
 
-	public DateTime? To { get; set; }
+    public DateTime? To { get; set; }
 
-	public TransactionStatus? Status { get; set; }
+    public TransactionStatus? Status { get; set; }
 
-	public TransactionType? Type { get; set; }
-	public long? CustomerId { get; set; }
-	public long? ShopId { get; set; }
+    public TransactionType? Type { get; set; }
+    public long? CustomerId { get; set; }
+    public long? ShopId { get; set; }
 
-	public override Expression<Func<Domain.Entities.Transaction, bool>> GetExpressions()
-	{
+    public override Expression<Func<Domain.Entities.Transaction, bool>> GetExpressions()
+    {
 
-		if (From != null)
-		{
-			Expression = Expression.And(Transaction => Transaction.CreatedAt >= From);
-		}
+        if (From != null)
+        {
+            Expression = Expression.And(Transaction => Transaction.CreatedAt >= From);
+        }
 
-		if (To != null)
-		{
-			Expression = Expression.And(Transaction => Transaction.CreatedAt <= To);
-		}
+        if (To != null)
+        {
+            Expression = Expression.And(Transaction => Transaction.CreatedAt <= To);
+        }
 
-		if (Status != null)
-		{
-			Expression = Expression.And(Transaction => Transaction.TransactionStatus == Status);
-		}
+        if (Status != null)
+        {
+            Expression = Expression.And(Transaction => Transaction.TransactionStatus == Status);
+        }
 
-		if (ShopId != null)
-		{
-			Expression = Expression
-				.And(Transaction => (Transaction.Pet != null && Transaction.Pet.PetCoffeeShopId == ShopId)
-									|| (Transaction.Reservation != null && Transaction.Reservation.Area != null && Transaction.Reservation.Area.PetcoffeeShopId == ShopId));
-		}
+        if (ShopId != null)
+        {
+            Expression = Expression
+                .And(Transaction => (Transaction.Pet != null && Transaction.Pet.PetCoffeeShopId == ShopId)
+                                    || (Transaction.Reservation != null && Transaction.Reservation.Area != null && Transaction.Reservation.Area.PetcoffeeShopId == ShopId));
+        }
 
-		if (CustomerId != null)
-		{
-			Expression = Expression.And(Transaction => Transaction.CreatedById == CustomerId || Transaction.RemitterId == CustomerId);
-		}
-		return Expression;
-	}
+        if (CustomerId != null)
+        {
+            Expression = Expression.And(Transaction => Transaction.CreatedById == CustomerId || Transaction.RemitterId == CustomerId);
+        }
+        return Expression;
+    }
 }

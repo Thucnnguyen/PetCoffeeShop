@@ -10,13 +10,13 @@ namespace PetCoffee.Application.Features.Events.Queries;
 
 public class GetEventsByShopIdQuery : PaginationRequest<Event>, IRequest<PaginationResponse<Event, EventForCardResponse>>
 {
-	public long ShopId { get; set; }
+    public long ShopId { get; set; }
 
-	public override Expression<Func<Event, bool>> GetExpressions()
-	{
+    public override Expression<Func<Event, bool>> GetExpressions()
+    {
 
-		Expression = Expression.And(e => e.PetCoffeeShopId == ShopId && !e.Deleted);
-		
-		return Expression;
-	}
+        Expression = Expression.And(e => e.PetCoffeeShopId == ShopId && !e.Deleted);
+
+        return Expression;
+    }
 }

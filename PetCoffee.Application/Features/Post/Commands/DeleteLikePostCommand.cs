@@ -6,5 +6,5 @@ namespace PetCoffee.Application.Features.Post.Commands;
 
 public class DeleteLikePostCommand : IRequest<bool>
 {
-	public long PostId { get; set; }
+    public long PostId { get; set; }
 }

@@ -2,9 +2,9 @@
 
 namespace PetCoffee.Domain.Enums;
 
-public enum ReportStatus 
+public enum ReportStatus
 {
-	Accept,
-	Processing,
-	Reject
+    Accept,
+    Processing,
+    Reject
 }

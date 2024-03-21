@@ -7,10 +7,10 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class VaccinationRepository : BaseRepository<Vaccination>, IVaccinationRepository
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-	public VaccinationRepository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public VaccinationRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

@@ -6,5 +6,5 @@ namespace PetCoffee.Application.Features.Vaccination.Queries;
 
 public class GetVaccinationByIdQuery : IRequest<VaccinationResponse>
 {
-	public long Id { get; set; }
+    public long Id { get; set; }
 }

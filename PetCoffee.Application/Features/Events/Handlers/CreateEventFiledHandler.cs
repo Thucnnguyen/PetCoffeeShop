@@ -14,56 +14,56 @@ namespace PetCoffee.Application.Features.Events.Handlers;
 
 public class CreateEventFiledHandler : IRequestHandler<CreateEventFieldCommand, List<FieldEventResponseForEventResponse>>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly ICurrentAccountService _currentAccountService;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentAccountService _currentAccountService;
+    private readonly IMapper _mapper;
 
-	public CreateEventFiledHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
-	{
-		_unitOfWork = unitOfWork;
-		_currentAccountService = currentAccountService;
-		_mapper = mapper;
-	}
+    public CreateEventFiledHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _currentAccountService = currentAccountService;
+        _mapper = mapper;
+    }
 
-	public async Task<List<FieldEventResponseForEventResponse>> Handle(CreateEventFieldCommand request, CancellationToken cancellationToken)
-	{
+    public async Task<List<FieldEventResponseForEventResponse>> Handle(CreateEventFieldCommand request, CancellationToken cancellationToken)
+    {
 
-		var currentAccount = await _currentAccountService.GetCurrentAccount();
-		if (currentAccount == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (currentAccount.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
+        var currentAccount = await _currentAccountService.GetCurrentAccount();
+        if (currentAccount == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (currentAccount.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
 
-		if (currentAccount.IsCustomer)
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+        if (currentAccount.IsCustomer)
+        {
+            throw new ApiException(ResponseCode.PermissionDenied);
+        }
 
-		var updateEvent = await _unitOfWork.EventRepository.GetByIdAsync(request.EventId);
-		if (updateEvent == null)
-		{
-			throw new ApiException(ResponseCode.EventNotExisted);
-		}
+        var updateEvent = await _unitOfWork.EventRepository.GetByIdAsync(request.EventId);
+        if (updateEvent == null)
+        {
+            throw new ApiException(ResponseCode.EventNotExisted);
+        }
 
-		if (!currentAccount.AccountShops.Any(a => a.ShopId == updateEvent.PetCoffeeShopId))
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+        if (!currentAccount.AccountShops.Any(a => a.ShopId == updateEvent.PetCoffeeShopId))
+        {
+            throw new ApiException(ResponseCode.PermissionDenied);
+        }
 
-		var NewFieldEvents = request.Fields.Select(f =>
-		{
-			var newField = _mapper.Map<EventField>(f);
-			newField.EventId = updateEvent.Id;
-			return newField;
-		});
-		await _unitOfWork.EventFieldRepsitory.AddRange(NewFieldEvents);
-		await _unitOfWork.SaveChangesAsync();
+        var NewFieldEvents = request.Fields.Select(f =>
+        {
+            var newField = _mapper.Map<EventField>(f);
+            newField.EventId = updateEvent.Id;
+            return newField;
+        });
+        await _unitOfWork.EventFieldRepsitory.AddRange(NewFieldEvents);
+        await _unitOfWork.SaveChangesAsync();
 
-		var response = NewFieldEvents.Select(f => _mapper.Map<FieldEventResponseForEventResponse>(f)).ToList();
-		return response;
-	}
+        var response = NewFieldEvents.Select(f => _mapper.Map<FieldEventResponseForEventResponse>(f)).ToList();
+        return response;
+    }
 }

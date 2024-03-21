@@ -17,6 +17,6 @@ public class LoginUserNamePassValidation : AbstractValidator<LoginEmailPassComma
 
 public class LoginEmailPassCommand : IRequest<AccessTokenResponse>
 {
-	public string Username { get; set; }	
-	public string Password { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

@@ -2,7 +2,7 @@
 
 public enum MomentType
 {
-	Playing,
-	Eating,
-	Walking
+    Playing,
+    Eating,
+    Walking
 }

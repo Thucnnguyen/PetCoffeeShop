@@ -11,56 +11,56 @@ namespace PetCoffee.Application.Features.Memory.Handlers;
 
 public class CreateMomentHandlers : IRequestHandler<CreateMomentCommand, MomentResponse>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IAzureService _azureService;
-	private readonly ICurrentAccountService _currentAccountService;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IAzureService _azureService;
+    private readonly ICurrentAccountService _currentAccountService;
+    private readonly IMapper _mapper;
 
-	public CreateMomentHandlers(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
-	{
-		_unitOfWork = unitOfWork;
-		_azureService = azureService;
-		_currentAccountService = currentAccountService;
-		_mapper = mapper;
-	}
+    public CreateMomentHandlers(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _azureService = azureService;
+        _currentAccountService = currentAccountService;
+        _mapper = mapper;
+    }
 
-	public async Task<MomentResponse> Handle(CreateMomentCommand request, CancellationToken cancellationToken)
-	{
-		//get Current account 
-		var currentAccount  = await _currentAccountService.GetRequiredCurrentAccount();
-		if (currentAccount == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (currentAccount.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
+    public async Task<MomentResponse> Handle(CreateMomentCommand request, CancellationToken cancellationToken)
+    {
+        //get Current account 
+        var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
+        if (currentAccount == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (currentAccount.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
 
-		
 
-		//check pet info
-		var Pet = await _unitOfWork.PetRepository.GetByIdAsync(request.PetId);
-		if(Pet == null)
-		{
-			throw new ApiException(ResponseCode.PetNotExisted);
-		}
-		//check permission
 
-		if (!currentAccount.AccountShops.Any(a => a.ShopId == Pet.PetCoffeeShopId))
-		{
-			throw new ApiException(ResponseCode.PermissionDenied);
-		}
+        //check pet info
+        var Pet = await _unitOfWork.PetRepository.GetByIdAsync(request.PetId);
+        if (Pet == null)
+        {
+            throw new ApiException(ResponseCode.PetNotExisted);
+        }
+        //check permission
 
-		var NewMemory = _mapper.Map<Domain.Entities.Moment>(request);
-		//upload image
-		NewMemory.Image = await _azureService.UpdateloadImages(request.Image);
-		
+        if (!currentAccount.AccountShops.Any(a => a.ShopId == Pet.PetCoffeeShopId))
+        {
+            throw new ApiException(ResponseCode.PermissionDenied);
+        }
 
-		await _unitOfWork.MomentRepository.AddAsync(NewMemory);
-		await _unitOfWork.SaveChangesAsync();
-		var response = _mapper.Map<MomentResponse>(NewMemory);
-		response.CreatedById = currentAccount.Id;
-		return response;
-	}
+        var NewMemory = _mapper.Map<Domain.Entities.Moment>(request);
+        //upload image
+        NewMemory.Image = await _azureService.UpdateloadImages(request.Image);
+
+
+        await _unitOfWork.MomentRepository.AddAsync(NewMemory);
+        await _unitOfWork.SaveChangesAsync();
+        var response = _mapper.Map<MomentResponse>(NewMemory);
+        response.CreatedById = currentAccount.Id;
+        return response;
+    }
 }

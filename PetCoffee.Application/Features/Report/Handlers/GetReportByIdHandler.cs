@@ -12,23 +12,23 @@ namespace PetCoffee.Application.Features.Report.Handlers;
 
 public class GetReportByIdHandler : IRequestHandler<GetReportByIdQuery, ReportResponse>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-	public GetReportByIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
-	{
-		_unitOfWork = unitOfWork;
-		_mapper = mapper;
-	}
+    public GetReportByIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-	public async Task<ReportResponse> Handle(GetReportByIdQuery request, CancellationToken cancellationToken)
-	{
-		var Report = await _unitOfWork.ReportRepository.GetByIdAsync(request.Id);
-		if (Report == null)
-		{
-			throw new ApiException(ResponseCode.ReportNotExisted);
-		}
+    public async Task<ReportResponse> Handle(GetReportByIdQuery request, CancellationToken cancellationToken)
+    {
+        var Report = await _unitOfWork.ReportRepository.GetByIdAsync(request.Id);
+        if (Report == null)
+        {
+            throw new ApiException(ResponseCode.ReportNotExisted);
+        }
 
-		return _mapper.Map<ReportResponse>(Report);	
-	}
+        return _mapper.Map<ReportResponse>(Report);
+    }
 }

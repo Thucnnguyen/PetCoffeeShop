@@ -6,5 +6,5 @@ namespace PetCoffee.Application.Service.Notifications;
 
 public interface INotifier
 {
-	Task NotifyAsync(Notification notification, bool IsSaved);
+    Task NotifyAsync(Notification notification, bool IsSaved);
 }

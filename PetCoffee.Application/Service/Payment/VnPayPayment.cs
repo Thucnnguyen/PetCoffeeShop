@@ -3,13 +3,13 @@ namespace PetCoffee.Application.Service.Payment;
 
 public class VnPayPayment
 {
-	public string PaymentReferenceId { get; set; } = default!;
+    public string PaymentReferenceId { get; set; } = default!;
 
-	public long Amount { get; set; }
+    public long Amount { get; set; }
 
-	public string? Info { get; set; }
+    public string? Info { get; set; }
 
-	public string OrderType { get; set; } = default!;
+    public string OrderType { get; set; } = default!;
 
-	public DateTimeOffset Time { get; set; }
+    public DateTimeOffset Time { get; set; }
 }

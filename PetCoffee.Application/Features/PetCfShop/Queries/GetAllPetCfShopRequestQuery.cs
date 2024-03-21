@@ -26,7 +26,7 @@ public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRe
 
 
 
-	public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
+    public override Expression<Func<PetCoffeeShop, bool>> GetExpressions()
     {
         if (Search is not null)
         {

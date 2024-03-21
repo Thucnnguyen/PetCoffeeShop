@@ -6,5 +6,5 @@ namespace PetCoffee.Application.Features.Pet.Queries;
 
 public class GetPetByIdQuery : IRequest<PetResponse>
 {
-	public long Id { get; set; }
+    public long Id { get; set; }
 }

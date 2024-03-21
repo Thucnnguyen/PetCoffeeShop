@@ -6,5 +6,5 @@ namespace PetCoffee.Application.Service.Notifications;
 
 public interface INotificationService
 {
-	public Task NotifyAsync(Notification notification);
-}	
+    public Task NotifyAsync(Notification notification);
+}

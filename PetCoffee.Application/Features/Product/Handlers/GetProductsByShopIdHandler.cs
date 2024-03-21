@@ -3,17 +3,10 @@ using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Pet.Models;
-using PetCoffee.Application.Features.Pet.Queries;
 using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Product.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Product.Handlers
 {

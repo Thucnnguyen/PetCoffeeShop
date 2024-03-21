@@ -2,11 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using PetCoffee.Application.Features.Areas.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Areas.Commands
 {

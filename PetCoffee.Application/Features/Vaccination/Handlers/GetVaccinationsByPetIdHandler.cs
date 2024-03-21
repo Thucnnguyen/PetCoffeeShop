@@ -2,20 +2,17 @@
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Vaccination.Models;
 using PetCoffee.Application.Features.Vaccination.Queries;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Vaccination.Handlers
 {
     public class GetVaccinationsByPetIdHandler : IRequestHandler<GetVaccinationsByPetIdQuery, IList<VaccinationResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        
+
         private readonly IMapper _mapper;
 
         public GetVaccinationsByPetIdHandler(IUnitOfWork unitOfWork, IMapper mapper)
@@ -26,7 +23,7 @@ namespace PetCoffee.Application.Features.Vaccination.Handlers
 
         public async Task<IList<VaccinationResponse>> Handle(GetVaccinationsByPetIdQuery request, CancellationToken cancellationToken)
         {
-       
+
 
             var Pet = (await _unitOfWork.PetRepository.GetAsync(
                     predicate: p => p.Id == request.PetId && p.PetStatus == PetStatus.Active,

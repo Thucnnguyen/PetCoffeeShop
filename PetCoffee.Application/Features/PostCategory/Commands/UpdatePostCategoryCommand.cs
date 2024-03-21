@@ -15,6 +15,6 @@ public class UpdatePostCategoryValidation : AbstractValidator<UpdatePostCategory
 
 public class UpdatePostCategoryCommand : IRequest<PostCategoryResponse>
 {
-	public long Id { get; set; }
-	public string Name { get; set; }
+    public long Id { get; set; }
+    public string Name { get; set; }
 }

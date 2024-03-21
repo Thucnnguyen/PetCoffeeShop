@@ -8,8 +8,8 @@ namespace PetCoffee.Application.Features.Moment.Commands;
 
 public class UpdateMomentCommand : IRequest<MomentResponse>
 {
-	public long Id { get; set; }
-	public string? Content { get; set; }
-	public IList<IFormFile>? NewImages { get; set; }
-	public MomentType? MomentType { get; set; }
+    public long Id { get; set; }
+    public string? Content { get; set; }
+    public IList<IFormFile>? NewImages { get; set; }
+    public MomentType? MomentType { get; set; }
 }

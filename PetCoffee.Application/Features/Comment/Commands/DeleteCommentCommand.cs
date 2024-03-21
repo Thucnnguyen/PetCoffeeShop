@@ -5,5 +5,5 @@ namespace PetCoffee.Application.Features.Comment.Commands;
 
 public class DeleteCommentCommand : IRequest<bool>
 {
-	public long CommentId { get; set; }
+    public long CommentId { get; set; }
 }

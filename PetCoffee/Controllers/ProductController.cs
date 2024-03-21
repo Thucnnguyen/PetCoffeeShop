@@ -1,13 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Comment.Commands;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Pet.Models;
-using PetCoffee.Application.Features.Pet.Queries;
-using PetCoffee.Application.Features.Product.Commands;
-using PetCoffee.Application.Features.Product.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace PetCoffee.API.Controllers
 {

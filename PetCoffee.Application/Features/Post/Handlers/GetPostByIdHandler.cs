@@ -27,11 +27,11 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
         public async Task<PostResponse> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
         {
-			var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
-			if (currentAccount == null)
-			{
-				throw new ApiException(ResponseCode.AccountNotExist);
-			}
+            var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
+            if (currentAccount == null)
+            {
+                throw new ApiException(ResponseCode.AccountNotExist);
+            }
             var reportedPostIds = (await _unitOfWork.ReportRepository.GetAsync(r => r.CreatedById == currentAccount.Id && r.PostID != null)).Select(r => r.PostID).ToList();
             var post = await _unitOfWork.PostRepository.Get(p => p.Id == request.Id && p.Status == PostStatus.Active)
             .Include(p => p.Comments)
@@ -50,11 +50,11 @@ namespace PetCoffee.Application.Features.Post.Handlers
             }
             //var response = new PostResponse();
             var postResponse = _mapper.Map<PostResponse>(post);
-			postResponse.TotalComment = post.Comments.Count();
-			postResponse.TotalLike = post.Likes.Count();
-			postResponse.IsLiked = (await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == post.Id && l.CreatedById == currentAccount.Id)).Any();
+            postResponse.TotalComment = post.Comments.Count();
+            postResponse.TotalLike = post.Likes.Count();
+            postResponse.IsLiked = (await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == post.Id && l.CreatedById == currentAccount.Id)).Any();
 
-			return postResponse;
+            return postResponse;
 
         }
     }

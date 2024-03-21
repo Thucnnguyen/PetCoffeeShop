@@ -1,12 +1,9 @@
-﻿
-using System.Security.Claims;
-
-namespace PetCoffee.Application.Service;
+﻿namespace PetCoffee.Application.Service;
 
 public interface ICurrentPrincipalService
 {
-	public string? CurrentPrincipal { get; }
+    public string? CurrentPrincipal { get; }
 
-	public long? CurrentSubjectId { get; }
+    public long? CurrentSubjectId { get; }
 
 }

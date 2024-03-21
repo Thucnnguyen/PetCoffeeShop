@@ -1,16 +1,11 @@
 ﻿using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Domain.Entities
 {
     [Table("Product")]
-    public class Product: BaseAuditableEntity
+    public class Product : BaseAuditableEntity
     {
 
         [Key]
@@ -25,7 +20,7 @@ namespace PetCoffee.Domain.Entities
 
 
         [InverseProperty(nameof(InvoiceProduct.Product))]
-        public IList<InvoiceProduct> Invoices  { get; set; } = new List<InvoiceProduct>();
+        public IList<InvoiceProduct> Invoices { get; set; } = new List<InvoiceProduct>();
 
 
 

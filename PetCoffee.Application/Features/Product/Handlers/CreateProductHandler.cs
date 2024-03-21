@@ -1,21 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using PetCoffee.Application.Common.Enums;
-using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.Pet.Commands;
-using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Product.Commands;
 using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Product.Handlers
 {

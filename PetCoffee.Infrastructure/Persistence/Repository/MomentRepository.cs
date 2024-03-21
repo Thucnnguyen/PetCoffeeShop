@@ -6,10 +6,10 @@ namespace PetCoffee.Infrastructure.Persistence.Repository;
 
 public class MomentRepository : BaseRepository<Moment>, IMomentRepository
 {
-	private readonly ApplicationDbContext _dbContext;
+    private readonly ApplicationDbContext _dbContext;
 
-	public MomentRepository(ApplicationDbContext dbContext) : base(dbContext)
-	{
-		_dbContext = dbContext;
-	}
+    public MomentRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+        _dbContext = dbContext;
+    }
 }

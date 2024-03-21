@@ -24,7 +24,7 @@ namespace PetCoffee.Application.Features.Vaccination.Handlers
             //_jwtService = jwtService;
             _mapper = mapper;
             _azureService = azureService;
-            _currentAccountService = currentAccountService; 
+            _currentAccountService = currentAccountService;
         }
 
         public async Task<VaccinationResponse> Handle(AddVaccinationCommand request, CancellationToken cancellationToken)

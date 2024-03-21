@@ -10,28 +10,28 @@ namespace PetCoffee.Application.Features.Auth.Handlers;
 
 public class ChangePasswordForForgotHandler : IRequestHandler<ChangePasswordForForgotCommand, bool>
 {
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-	public ChangePasswordForForgotHandler(IUnitOfWork unitOfWork, IMapper mapper)
-	{
-		_unitOfWork = unitOfWork;
-		_mapper = mapper;
-	}
+    public ChangePasswordForForgotHandler(IUnitOfWork unitOfWork, IMapper mapper)
+    {
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-	public async Task<bool> Handle(ChangePasswordForForgotCommand request, CancellationToken cancellationToken)
-	{
-		var AccountIsExist = await _unitOfWork.AccountRepository.GetAsync(a => a.Email == request.Email);
+    public async Task<bool> Handle(ChangePasswordForForgotCommand request, CancellationToken cancellationToken)
+    {
+        var AccountIsExist = await _unitOfWork.AccountRepository.GetAsync(a => a.Email == request.Email);
 
-		if (AccountIsExist == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
+        if (AccountIsExist == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
 
-		var account = AccountIsExist.First();
-		account.Password = HashHelper.HashPassword(request.NewPassword);
-		await _unitOfWork.AccountRepository.UpdateAsync(account);
-		await _unitOfWork.SaveChangesAsync();
-		return true;
-	}
+        var account = AccountIsExist.First();
+        account.Password = HashHelper.HashPassword(request.NewPassword);
+        await _unitOfWork.AccountRepository.UpdateAsync(account);
+        await _unitOfWork.SaveChangesAsync();
+        return true;
+    }
 }

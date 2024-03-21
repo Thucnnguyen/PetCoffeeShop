@@ -4,17 +4,9 @@ using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Areas.Commands;
 using PetCoffee.Application.Features.Areas.Models;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Areas.Handlers
 {
@@ -59,7 +51,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 
             area.Description = request.Description;
             area.Order = request.Order;
-            
+
 
             if (request.Image != null)
             {
@@ -69,7 +61,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             await _unitOfWork.AreaRepsitory.UpdateAsync(area);
             await _unitOfWork.SaveChangesAsync();
             var response = _mapper.Map<AreaResponse>(area);
-            
+
             return response;
 
         }

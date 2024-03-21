@@ -15,20 +15,20 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-	options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-	{
-		Description = "Standard Authorization header using the Bearer scheme (example: bearer {Token})",
-		In = ParameterLocation.Header,
-		Name = "Authorization",
-		Type = SecuritySchemeType.ApiKey,
-	});
-	options.OperationFilter<SecurityRequirementsOperationFilter>();
-	options.SwaggerDoc("v1", new OpenApiInfo
-	{
-		Version = "v1",
-		Title = "PetCoffeeShop",
-		Description = "APi for Pet coffee shop platform",
-	});
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme (example: bearer {Token})",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+    });
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "PetCoffeeShop",
+        Description = "APi for Pet coffee shop platform",
+    });
 
 });
 
@@ -41,9 +41,9 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.UseCors(builder =>
 {
-	builder.AllowAnyHeader();
-	builder.AllowAnyMethod();
-	builder.AllowAnyOrigin();
+    builder.AllowAnyHeader();
+    builder.AllowAnyMethod();
+    builder.AllowAnyOrigin();
 });
 
 app.UseHttpsRedirection();

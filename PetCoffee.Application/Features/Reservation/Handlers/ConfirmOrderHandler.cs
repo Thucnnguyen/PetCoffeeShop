@@ -2,18 +2,11 @@
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.PostCategory.Commands;
-using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -64,7 +57,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             // update area information
 
             var area = await _unitOfWork.AreaRepsitory.GetByIdAsync(order.AreaId);
-            if (area == null) 
+            if (area == null)
             {
                 throw new ApiException(ResponseCode.AreaNotExist);
             }

@@ -17,66 +17,66 @@ public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetc
 {
 
 
-	private readonly IMapper _mapper;
-	private readonly IUnitOfWork _unitOfWork;
-	private readonly ICurrentAccountService _currentAccountService;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly ICurrentAccountService _currentAccountService;
 
-	public GetMostPopularPetcfShopHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
-	{
-		_mapper = mapper;
-		_unitOfWork = unitOfWork;
-		_currentAccountService = currentAccountService;
-	}
+    public GetMostPopularPetcfShopHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
+    {
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+        _currentAccountService = currentAccountService;
+    }
 
-	public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetMostPopularPetcfShopQuery request, CancellationToken cancellationToken)
-	{
-		var CurrentUser = await _currentAccountService.GetCurrentAccount();
-		if (CurrentUser == null)
-		{
-			throw new ApiException(ResponseCode.AccountNotExist);
-		}
-		if (CurrentUser.IsVerify)
-		{
-			throw new ApiException(ResponseCode.AccountNotActived);
-		}
+    public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetMostPopularPetcfShopQuery request, CancellationToken cancellationToken)
+    {
+        var CurrentUser = await _currentAccountService.GetCurrentAccount();
+        if (CurrentUser == null)
+        {
+            throw new ApiException(ResponseCode.AccountNotExist);
+        }
+        if (CurrentUser.IsVerify)
+        {
+            throw new ApiException(ResponseCode.AccountNotActived);
+        }
 
-		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-			predicate: request.GetExpressions(),
-			disableTracking: true
-		)).ToList();
-		var response = new List<PetCoffeeShopForCardResponse>();
+        var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
+            predicate: request.GetExpressions(),
+            disableTracking: true
+        )).ToList();
+        var response = new List<PetCoffeeShopForCardResponse>();
 
-		if (request.Longitude == 0 || request.Latitude == 0)
-		{
-			foreach (var store in stores)
-			{
-				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
-				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
-				response.Add(storeRes);
-			}
-		}
-		else
-		{
-			foreach (var store in stores)
-			{
-				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
-				storeRes.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
-				storeRes.TotalFollow = storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+        if (request.Longitude == 0 || request.Latitude == 0)
+        {
+            foreach (var store in stores)
+            {
+                var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+                storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
+                response.Add(storeRes);
+            }
+        }
+        else
+        {
+            foreach (var store in stores)
+            {
+                var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+                storeRes.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
+                storeRes.TotalFollow = storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
 
-				response.Add(storeRes);
-			}
-		}
-		response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
-		response = response
-			   .Skip((request.PageNumber - 1) * request.PageSize)
-			   .Take(request.PageSize)
-			   .ToList();
-		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
-			response,
-			stores.Count(),
-			request.PageNumber,
-			request.PageSize);
-	}
+                response.Add(storeRes);
+            }
+        }
+        response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
+        response = response
+               .Skip((request.PageNumber - 1) * request.PageSize)
+               .Take(request.PageSize)
+               .ToList();
+        return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
+            response,
+            stores.Count(),
+            request.PageNumber,
+            request.PageSize);
+    }
 
-	
+
 }

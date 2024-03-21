@@ -11,20 +11,20 @@ namespace PetCoffee.API.Controllers;
 [ApiController]
 public class NotificationController : ApiControllerBase
 {
-	[HttpGet("notifications")]
-	[Authorize]
+    [HttpGet("notifications")]
+    [Authorize]
 
-	public async Task<ActionResult<PaginationResponse<Notification, NotificationResponse>>> GetNotificaiton([FromQuery] GetAllNotificationQuery request)
-	{
-		var response = await Mediator.Send(request);
-		return Ok(response);
-	}
+    public async Task<ActionResult<PaginationResponse<Notification, NotificationResponse>>> GetNotificaiton([FromQuery] GetAllNotificationQuery request)
+    {
+        var response = await Mediator.Send(request);
+        return Ok(response);
+    }
 
-	[HttpGet("notifications/unread")]
-	[Authorize]
-	public async Task<ActionResult<UnreadNotificationCountResponse>> CountNotificaitonUnread([FromQuery] GetUnreadNotificationQuery request)
-	{
-		var response = await Mediator.Send(request);
-		return Ok(response);
-	}
+    [HttpGet("notifications/unread")]
+    [Authorize]
+    public async Task<ActionResult<UnreadNotificationCountResponse>> CountNotificaitonUnread([FromQuery] GetUnreadNotificationQuery request)
+    {
+        var response = await Mediator.Send(request);
+        return Ok(response);
+    }
 }
