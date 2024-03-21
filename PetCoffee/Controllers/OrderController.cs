@@ -54,7 +54,7 @@ namespace PetCoffee.API.Controllers
 		// view order by speicific arear 
 		[HttpGet("areas/{AreaId}/orders")]
 		[Authorize]
-		public async Task<ActionResult<IList<ReservationResponse>>> GetOrderByAreaId([FromQuery] GetReservationByAreaIdQuery request)
+		public async Task<ActionResult<IList<ReservationResponse>>> GetOrderByAreaId([FromRoute] GetReservationByAreaIdQuery request)
 		{
 
 			return Ok(await Mediator.Send(request));
