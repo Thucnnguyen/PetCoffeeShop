@@ -1,6 +1,6 @@
-﻿using PetCoffee.Domain.Enums;
-using PetCoffee.Application.Common.Models.Response;
+﻿using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Payments.Models;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Transactions.Models
 {

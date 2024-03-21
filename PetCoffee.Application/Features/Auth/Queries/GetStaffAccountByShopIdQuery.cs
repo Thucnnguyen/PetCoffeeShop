@@ -1,5 +1,4 @@
-﻿using LinqKit;
-using MediatR;
+﻿using MediatR;
 using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Auth.Models;

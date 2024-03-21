@@ -1,7 +1,4 @@
-﻿
-using PetCoffee.Domain.Entities;
-
-namespace PetCoffee.Application.Service;
+﻿namespace PetCoffee.Application.Service;
 
 public interface ISchedulerService
 {

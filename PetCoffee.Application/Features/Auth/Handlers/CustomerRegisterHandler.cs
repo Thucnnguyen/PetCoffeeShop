@@ -32,7 +32,7 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 	public async Task<AccessTokenResponse> Handle(CustomerRegisterCommand request, CancellationToken cancellationToken)
 	{
 		var isExisted = _unitOfWork.AccountRepository.IsExisted(a => a.Email.Equals(request.Email));
-		if(isExisted)
+		if (isExisted)
 		{
 			throw new ApiException(ResponseCode.AccountIsExisted);
 		}
@@ -62,7 +62,7 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		//send email
 		var EmailContent = string.Format(EmailConstant.EmailForm, account.FullName, account.OTP);
 		await _azureService.SendEmail(account.Email, EmailContent, EmailConstant.EmailSubject);
-		await _schedulerService.DeleteAccountNotVerify(account.Id,account.CreatedAt.AddDays(2));
+		await _schedulerService.DeleteAccountNotVerify(account.Id, account.CreatedAt.AddDays(2));
 		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(newAccount));
 		return resp;
 	}

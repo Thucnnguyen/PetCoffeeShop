@@ -40,14 +40,14 @@ public class GetAreaByIdHandler : IRequestHandler<GetAreaByIdQuery, AreaResponse
 
 		var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
 
-		if(area == null)
+		if (area == null)
 		{
 			throw new ApiException(ResponseCode.AreaNotExist);
 		}
 
 		var pets = await _unitOfWork.PetRepository
 					.Get(p => p.PetAreas.Any(pa => pa.AreaId == request.AreaId && pa.EndTime == null) && !p.Deleted
-							&& p.Name != null && p.Name.ToLower().Contains(request.Search!= null ? request.Search : ""))
+							&& p.Name != null && p.Name.ToLower().Contains(request.Search != null ? request.Search : ""))
 					.Include(p => p.PetAreas)
 					.ThenInclude(pa => pa.Area)
 					.Select(p => _mapper.Map<PetResponseForArea>(p))

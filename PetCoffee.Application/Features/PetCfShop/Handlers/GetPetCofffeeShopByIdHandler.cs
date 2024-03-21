@@ -40,7 +40,7 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		}
 		var CurrentShop = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
 			predicate: p => p.Id == request.Id && !p.Deleted,
-			includes:  new List<Expression<Func<PetCoffeeShop, object>>>()
+			includes: new List<Expression<Func<PetCoffeeShop, object>>>()
 				{
 					shop => shop.CreatedBy
 				},
@@ -52,7 +52,7 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 		var response = _mapper.Map<PetCoffeeShopResponse>(CurrentShop);
-		if(request.Longitude != 0 && request.Latitude != 0)
+		if (request.Longitude != 0 && request.Latitude != 0)
 		{
 			response.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, CurrentShop.Latitude, CurrentShop.Longitude);
 		}

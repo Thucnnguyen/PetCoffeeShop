@@ -16,7 +16,7 @@ public class GetFollowShopForCurrentUserQuery : PaginationRequest<FollowPetCfSho
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
 	public ShopType? ShopType { get; set; }
-	public string? Search {  get; set; }
+	public string? Search { get; set; }
 	public override Expression<Func<FollowPetCfShop, bool>> GetExpressions()
 	{
 		if (ShopType is not null)

@@ -56,6 +56,6 @@ public class GetMomentByIdHandler : IRequestHandler<GetMomentByIdQuery, MomentRe
 		{
 			throw new ApiException(ResponseCode.MomentNotExisted);
 		}
-		 return _mapper.Map<MomentResponse>(Moments);
+		return _mapper.Map<MomentResponse>(Moments);
 	}
 }

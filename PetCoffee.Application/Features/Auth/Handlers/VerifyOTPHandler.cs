@@ -31,12 +31,12 @@ public class VerifyOTPHandler : IRequestHandler<VerifyAccountCommand, bool>
 			throw new ApiException(ResponseCode.AccountIsActived);
 		}
 
-		if (currentAccount.IsOTPExpired) 
+		if (currentAccount.IsOTPExpired)
 		{
 			throw new ApiException(ResponseCode.OptExpired);
 		}
 
-		if(!currentAccount.OTP.Equals(request.OTP)) 
+		if (!currentAccount.OTP.Equals(request.OTP))
 		{
 			return false;
 		}

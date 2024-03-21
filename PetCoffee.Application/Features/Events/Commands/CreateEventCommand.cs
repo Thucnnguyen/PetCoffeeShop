@@ -2,15 +2,14 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using PetCoffee.Application.Features.Events.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetCoffee.Application.Features.Events.Commands;
 
 public class CreateEventValidation : AbstractValidator<CreateEventCommand>
 {
-    public CreateEventValidation()
-    {
-        RuleFor(model => model.StartDate)
+	public CreateEventValidation()
+	{
+		RuleFor(model => model.StartDate)
 			.Must((command, StartDate) => StartDate >= DateTime.UtcNow)
 			.WithMessage("Thời gian bắt đầu không được ở trong quá khứ");
 
@@ -33,7 +32,7 @@ public class CreateEventCommand : IRequest<EventResponse>
 	public string StartTime { get; set; }
 	public string EndTime { get; set; }
 	public string? Location { get; set; }
-	
+
 }
 
 

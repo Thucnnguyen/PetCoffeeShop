@@ -9,8 +9,8 @@ namespace PetCoffee.Application.Features.PetCfShop.Commands;
 
 public class CreatePetcfShopValidation : AbstractValidator<CreatePetCfShopCommand>
 {
-    public CreatePetcfShopValidation()
-    {
+	public CreatePetcfShopValidation()
+	{
 		RuleFor(model => model.Email).NotEmpty();
 		RuleFor(model => model.TaxCode)
 			.MinimumLength(10)
@@ -39,5 +39,7 @@ public class CreatePetCfShopCommand : IRequest<PetCoffeeShopResponse>
 	public string TaxCode { get; set; }
 	public double Latitude { get; set; }
 	public double Longitude { get; set; }
+	public string? StartTime { get; set; }
+	public string? EndTime { get; set; }
 	public ShopType Type { get; set; }
 }

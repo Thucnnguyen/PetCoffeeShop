@@ -11,9 +11,9 @@ public class Area : BaseAuditableEntity
 	public long Id { get; set; }
 	public string? Description { get; set; }
 	public string? Image { get; set; }
-    public int Order {  get; set; } 
-    public long PetcoffeeShopId { get; set; }
-    public PetCoffeeShop PetCoffeeShop { get; set; }
+	public int Order { get; set; }
+	public long PetcoffeeShopId { get; set; }
+	public PetCoffeeShop PetCoffeeShop { get; set; }
 
 
 	[Projectable]
@@ -28,7 +28,7 @@ public class Area : BaseAuditableEntity
 	public int TotalSeat { get; set; }
 
 
-    [InverseProperty(nameof(Reservation.Area))]
-    public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
+	[InverseProperty(nameof(Reservation.Area))]
+	public IList<Reservation> Reservations { get; set; } = new List<Reservation>();
 
 }

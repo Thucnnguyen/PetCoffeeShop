@@ -51,7 +51,7 @@ public class UpdateCoffeeShopHandler : IRequestHandler<UpdateCoffeeShopCommand, 
 
 		//assign data
 		Assign.Partial(request, updateShop);
-		if(request.InstagramUrl == null)
+		if (request.InstagramUrl == null)
 		{
 			updateShop.InstagramUrl = "";
 		}

@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using PetCoffee.Application.Common.Enums;
+using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Payments.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using Microsoft.EntityFrameworkCore;
-using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Common.Enums;
-using Microsoft.Extensions.Logging;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 
@@ -47,7 +47,7 @@ public class ProcessVnpayPaymentIpnHandler : IRequestHandler<ProcessVnpayPayment
 		}
 
 		transaction.TransactionStatus = TransactionStatus.Done;
-		await _unitOfWork.TransactionRepository.UpdateAsync(transaction);	
+		await _unitOfWork.TransactionRepository.UpdateAsync(transaction);
 		var wallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == transaction.CreatedById).FirstOrDefaultAsync();
 		if (wallet == null)
 		{

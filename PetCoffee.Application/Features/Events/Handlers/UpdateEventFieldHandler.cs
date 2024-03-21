@@ -38,7 +38,7 @@ public class UpdateEventFieldHandler : IRequestHandler<UpdateEventFieldCommand, 
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		if (currentAccount.IsCustomer )
+		if (currentAccount.IsCustomer)
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		};

@@ -48,7 +48,7 @@ public class GetRandomRatePetHandler : IRequestHandler<GetRandomRatePetQuery, Ra
 					).ToListAsync();
 
 		var petRateResponse = petRate[new Random().Next(petRate.Count)];
-							 
+
 		return _mapper.Map<RatePetResponse>(petRateResponse);
 	}
 }

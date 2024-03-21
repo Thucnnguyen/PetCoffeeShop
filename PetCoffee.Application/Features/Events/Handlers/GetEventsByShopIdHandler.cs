@@ -12,7 +12,7 @@ using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Events.Handlers;
 
-public class GetEventsByShopIdHandler : IRequestHandler<GetEventsByShopIdQuery, PaginationResponse<Event,EventForCardResponse>>
+public class GetEventsByShopIdHandler : IRequestHandler<GetEventsByShopIdQuery, PaginationResponse<Event, EventForCardResponse>>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;

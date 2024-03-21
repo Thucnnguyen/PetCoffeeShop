@@ -62,7 +62,7 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 		var managerAccount = await _unitOfWork.AccountRepository
 			.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == newFollowShopData.ShopId))
 			.FirstOrDefaultAsync();
-		if (managerAccount != null) 
+		if (managerAccount != null)
 		{
 			var notification = new Notification(
 					account: managerAccount,
@@ -72,7 +72,7 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 				);
 			await _notifier.NotifyAsync(notification, true);
 		}
-		
+
 		return true;
 	}
 }

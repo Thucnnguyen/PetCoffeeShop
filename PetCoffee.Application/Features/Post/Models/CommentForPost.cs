@@ -1,7 +1,4 @@
-﻿
-using PetCoffee.Domain.Entities;
-
-namespace PetCoffee.Application.Features.Post.Models;
+﻿namespace PetCoffee.Application.Features.Post.Models;
 
 public class CommentForPost
 {

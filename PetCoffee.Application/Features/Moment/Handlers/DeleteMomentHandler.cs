@@ -7,7 +7,6 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Moment.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using TmsApi.Common;
 
 namespace PetCoffee.Application.Features.Moment.Handlers;
 

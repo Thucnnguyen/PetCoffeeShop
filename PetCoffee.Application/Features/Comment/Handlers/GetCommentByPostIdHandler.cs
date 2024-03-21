@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OpenAI_API.Images;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -14,48 +13,48 @@ namespace PetCoffee.Application.Features.Comment.Handlers;
 
 public class GetCommentByPostIdHandler : IRequestHandler<GetCommentByPostIdQuery, PaginationResponse<Domain.Entities.Comment, CommentResponse>>
 {
-    private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly ICurrentAccountService _currentAccountService;
+	private readonly IMapper _mapper;
+	private readonly IUnitOfWork _unitOfWork;
+	private readonly ICurrentAccountService _currentAccountService;
 
-    public GetCommentByPostIdHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
-    {
-        _mapper = mapper;
-        _unitOfWork = unitOfWork;
-        _currentAccountService = currentAccountService;
-    }
+	public GetCommentByPostIdHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
+	{
+		_mapper = mapper;
+		_unitOfWork = unitOfWork;
+		_currentAccountService = currentAccountService;
+	}
 
-    public async Task<PaginationResponse<Domain.Entities.Comment, CommentResponse>> Handle(GetCommentByPostIdQuery request, CancellationToken cancellationToken)
-    {
-        var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
-        if (currentAccount == null)
-        {
-            throw new ApiException(ResponseCode.AccountNotExist);
-        }
-        if (currentAccount.IsVerify)
-        {
-            throw new ApiException(ResponseCode.AccountNotActived);
-        }
-        var Comments =  _unitOfWork.CommentRepository.Get(c => c.PostId == request.PostId,disableTracking:true)
-                                                    .Include(c => c.CreatedBy)        
-                                                    .Include(c => c.PetCoffeeShop)
+	public async Task<PaginationResponse<Domain.Entities.Comment, CommentResponse>> Handle(GetCommentByPostIdQuery request, CancellationToken cancellationToken)
+	{
+		var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
+		if (currentAccount == null)
+		{
+			throw new ApiException(ResponseCode.AccountNotExist);
+		}
+		if (currentAccount.IsVerify)
+		{
+			throw new ApiException(ResponseCode.AccountNotActived);
+		}
+		var Comments = _unitOfWork.CommentRepository.Get(c => c.PostId == request.PostId, disableTracking: true)
+													.Include(c => c.CreatedBy)
+													.Include(c => c.PetCoffeeShop)
 		.ToList();
 
-        var ShowComments = Comments.Where(c => c.ParentCommentId != null)
+		var ShowComments = Comments.Where(c => c.ParentCommentId != null)
 							.Skip((request.PageNumber - 1) * request.PageSize)
-				            .Take(request.PageSize);
+							.Take(request.PageSize);
 
-        var response = new List<CommentResponse>();
-        foreach (var comment in Comments)
-        {
-            var commentResponse = _mapper.Map<CommentResponse>(comment);
-            commentResponse.TotalSubComments = Comments.Count(c => c.ParentCommentId == comment.Id);
-            response.Add(commentResponse);
-        }
-        return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(
-        response,
+		var response = new List<CommentResponse>();
+		foreach (var comment in Comments)
+		{
+			var commentResponse = _mapper.Map<CommentResponse>(comment);
+			commentResponse.TotalSubComments = Comments.Count(c => c.ParentCommentId == comment.Id);
+			response.Add(commentResponse);
+		}
+		return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(
+		response,
 		Comments.Count(),
-        request.PageNumber,
-        request.PageSize);
-    }
+		request.PageNumber,
+		request.PageSize);
+	}
 }

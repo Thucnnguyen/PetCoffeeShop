@@ -13,6 +13,6 @@ public class EventForCardResponse
 	public string StartTime { get; set; }
 	public string EndTime { get; set; }
 	public string? Location { get; set; }
-	public bool IsJoin {  get; set; }
+	public bool IsJoin { get; set; }
 	public long TotalJoinEvent { get; set; } = 0;
 }

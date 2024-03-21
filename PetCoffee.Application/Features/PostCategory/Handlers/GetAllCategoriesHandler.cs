@@ -3,8 +3,6 @@ using MediatR;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.PostCategory.Queries;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Domain.Entities;
-using System.ComponentModel.DataAnnotations;
 
 namespace PetCoffee.Application.Features.PostCategory.Handlers;
 

@@ -39,16 +39,17 @@ public class GetFollowShopForCurrentUserHandler : IRequestHandler<GetFollowShopF
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		var Expression = request.GetExpressions().And(f => f.CreatedById == CurrentUser.Id); 
+		var Expression = request.GetExpressions().And(f => f.CreatedById == CurrentUser.Id);
 		var follows = await _unitOfWork.FollowPetCfShopRepository.Get(Expression)
 									.Include(f => f.Shop)
 									.ToListAsync();
 
 		var response = new List<PetCoffeeShopForCardResponse>();
-		if(request.Longitude != 0 && request.Latitude != 0) {
+		if (request.Longitude != 0 && request.Latitude != 0)
+		{
 			foreach (var f in follows)
 			{
-				if(f.Shop == null) continue;
+				if (f.Shop == null) continue;
 				var shopResponse = _mapper.Map<PetCoffeeShopForCardResponse>(f.Shop);
 				shopResponse.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, f.Shop.Latitude, f.Shop.Longitude);
 				response.Add(shopResponse);

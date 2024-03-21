@@ -2,7 +2,6 @@
 
 using MediatR;
 using PetCoffee.Application.Features.Areas.Models;
-using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Areas.Queries;
 

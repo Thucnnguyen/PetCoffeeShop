@@ -8,7 +8,6 @@ using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
-using System.Security.Policy;
 using TmsApi.Common;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
@@ -35,14 +34,14 @@ public class UpdateAccountHandler : IRequestHandler<UpdateAccountCommand, Accoun
 		{
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
-		if (CurrentAccount.IsVerify) 
+		if (CurrentAccount.IsVerify)
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		Assign.Partial<UpdateAccountCommand, Account>(request,CurrentAccount);
+		Assign.Partial<UpdateAccountCommand, Account>(request, CurrentAccount);
 
-		if(request.AvatarFile != null) 
+		if (request.AvatarFile != null)
 		{
 			await _azureService.CreateBlob(request.AvatarFile.FileName, request.AvatarFile);
 			CurrentAccount.Avatar = await _azureService.GetBlob(request.AvatarFile.FileName);

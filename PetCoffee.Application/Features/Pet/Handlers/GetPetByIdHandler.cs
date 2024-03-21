@@ -9,7 +9,6 @@ using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Pet.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
 

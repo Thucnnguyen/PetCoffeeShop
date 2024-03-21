@@ -44,7 +44,7 @@ public class GetSubCommentByCommentIdHandler : IRequestHandler<GetSubCommentByCo
 					c =>c.PetCoffeeShop
 				});
 
-		  
+
 
 
 		return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(

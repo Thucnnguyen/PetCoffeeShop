@@ -78,21 +78,26 @@ public enum ResponseCode
 	//wallet
 	[Description("Trong ví không đủ tiền để thực hiện, vui lòng nạp thêm")] NotEnoughBalance,
 	[Description("Quà tặng trong ví của bạn không đủ vui lòng kiểm trả lại")] ItemInWalletNotEnough,
-    [Description("Ví Không tồn tại")] WalletNotAvailable,
+	[Description("Ví Không tồn tại")] WalletNotAvailable,
 
-    //Report
-    [Description("Báo cáo không tồn tại")] ReportNotExisted,
+	//Report
+	[Description("Báo cáo không tồn tại")] ReportNotExisted,
 
 
 
 
 	//Reservation
 
-	[Description("Reservation không tồn tại")] ReservationNotExist,
+	[Description("Đơn hàng không tồn tại")] ReservationNotExist,
 
 
-    //Table
+	//Table
 
-    [Description("Table không tồn tại")] TableNotExist,
+	[Description("Table không tồn tại")] TableNotExist,
+
+	//PackagePromotion
+
+	[Description("Gói không tồn tại")] PackageNotExist,
+
 
 }

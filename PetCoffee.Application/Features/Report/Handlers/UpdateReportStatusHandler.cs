@@ -1,11 +1,8 @@
-﻿
-using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
 using System.Data.Entity;
 
@@ -49,9 +46,9 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 
 				// change status for post has same postId
 				var ReportByPostId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.PostID == report.PostID && !rp.Deleted);
-				if(ReportByPostId.Any())
+				if (ReportByPostId.Any())
 				{
-					foreach(var r in ReportByPostId)
+					foreach (var r in ReportByPostId)
 					{
 						r.Status = ReportStatus.Accept;
 						await _unitOfWork.ReportRepository.UpdateAsync(r);

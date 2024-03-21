@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace PetCoffee.Domain.Entities;
 
 [Table("Account")]
-public class Account 
+public class Account
 {
 	[Key]
 	public long Id { get; set; }
@@ -20,10 +20,10 @@ public class Account
 	public string? Background { get; set; }
 	public string? Description { get; set; }
 	public string? Address { get; set; }
-    public LoginMethod LoginMethod { get; set; }
-    public GenderAccount Gender { get; set; }
+	public LoginMethod LoginMethod { get; set; }
+	public GenderAccount Gender { get; set; }
 
-    public Role Role { get; set; }
+	public Role Role { get; set; }
 	public AccountStatus Status { get; set; } = AccountStatus.Verifying;
 	public string? OTP { get; set; }
 	public DateTime? OTPExpired { get; set; }
@@ -45,7 +45,7 @@ public class Account
 	[InverseProperty(nameof(Notification.Account))]
 	public IList<Notification> Notifications { get; set; } = new List<Notification>();
 	[InverseProperty(nameof(Like.CreatedBy))]
-	public IList<Like> Likes { get; set; } = new List<Like>();	
+	public IList<Like> Likes { get; set; } = new List<Like>();
 	[InverseProperty(nameof(SubmittingEvent.CreatedBy))]
 	public IList<SubmittingEvent> SubmittingEvents { get; set; } = new List<SubmittingEvent>();
 	[InverseProperty(nameof(JoinEvent.CreatedBy))]

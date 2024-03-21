@@ -25,14 +25,14 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 
 	public async Task<bool> Handle(ChangePetCoffeeShopRequestStatusCommand request, CancellationToken cancellationToken)
 	{
-		var PetCoffShopChangeStatus =await _unitOfWork.PetCoffeeShopRepository.Get(shop => shop.Id == request.ShopId && shop.Status == ShopStatus.Processing)
+		var PetCoffShopChangeStatus = await _unitOfWork.PetCoffeeShopRepository.Get(shop => shop.Id == request.ShopId && shop.Status == ShopStatus.Processing)
 																			 .FirstOrDefaultAsync();
-		if(PetCoffShopChangeStatus == null)
+		if (PetCoffShopChangeStatus == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
-		
-		if(request.Status == ShopStatus.Active)
+
+		if (request.Status == ShopStatus.Active)
 		{
 			PetCoffShopChangeStatus.Status = ShopStatus.Active;
 			PetCoffShopChangeStatus.EndTimePackage = DateTime.UtcNow.AddMonths(3);
@@ -44,13 +44,13 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 				await _unitOfWork.AccountRepository.UpdateAsync(createdBy);
 			}
 			await _unitOfWork.SaveChangesAsync();
-			
+
 			var EmailContent = string.Format(EmailConstant.AcceptShop, createdBy.FullName);
 			await _azureService.SendEmail(createdBy.Email, EmailContent, EmailConstant.EmailSubject);
 			return true;
 		}
 
-		if(request.Status == ShopStatus.Cancel)
+		if (request.Status == ShopStatus.Cancel)
 		{
 			PetCoffShopChangeStatus.Status = request.Status;
 

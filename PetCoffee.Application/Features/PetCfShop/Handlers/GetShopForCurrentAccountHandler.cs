@@ -1,7 +1,6 @@
 ﻿
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.PetCfShop.Models;

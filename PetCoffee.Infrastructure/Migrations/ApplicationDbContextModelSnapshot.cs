@@ -697,8 +697,8 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("BackgroundUrl")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("ClosedTime")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("ClosedTime")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -716,7 +716,7 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("EndTimePackage")
+                    b.Property<DateTimeOffset?>("EndTimePackage")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("FbUrl")
@@ -739,8 +739,8 @@ namespace PetCoffee.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("OpeningTime")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("OpeningTime")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("ParkingType")
                         .HasColumnType("int");

@@ -1,7 +1,4 @@
-﻿
-using System.Security.Claims;
-
-namespace PetCoffee.Application.Service;
+﻿namespace PetCoffee.Application.Service;
 
 public interface ICurrentPrincipalService
 {

@@ -7,13 +7,13 @@ public enum PaymentType
 {
 	[Description("Thanh toán đơn hàng")]
 	Checkout = 0,
-    
-    [Description("Đặt chỗ đơn hàng")]
+
+	[Description("Đặt chỗ đơn hàng")]
 	Reserve = 1,
-    
-    [Description("Nạp tiền vào ví")]
+
+	[Description("Nạp tiền vào ví")]
 	Deposit = 2,
-    
-    [Description("Tặng quà cho thú cưng")]
+
+	[Description("Tặng quà cho thú cưng")]
 	Refund = 3,
 }

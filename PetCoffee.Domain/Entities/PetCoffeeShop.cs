@@ -17,7 +17,7 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public string? AvatarUrl { get; set; }
 	public string? BackgroundUrl { get; set; }
 
-	public string Phone {  get; set; }
+	public string Phone { get; set; }
 	public string Email { get; set; }
 	public string TaxCode { get; set; }
 	public string Location { get; set; }
@@ -26,9 +26,9 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public ShopStatus Status { get; set; } = ShopStatus.Processing;
 	public ParkingType ParkingType { get; set; } = ParkingType.street;
 	public ShopType Type { get; set; }
-	public DateTime? OpeningTime { get; set; }
-	public DateTime? ClosedTime { get;set; }
-	public DateTime? EndTimePackage { get; set; }
+	public string? OpeningTime { get; set; }
+	public string? ClosedTime { get; set; }
+	public DateTimeOffset? EndTimePackage { get; set; }
 	[InverseProperty(nameof(AccountShop.PetCoffeeShop))]
 	public IList<AccountShop> AccountShops { get; set; } = new List<AccountShop>();
 	[InverseProperty(nameof(PostPetCoffeeShop.Shop))]
@@ -47,12 +47,12 @@ public class PetCoffeeShop : BaseAuditableEntity
 	[InverseProperty(nameof(Comment.PetCoffeeShop))]
 	public IList<Comment> Comments { get; set; } = new List<Comment>();
 	[Projectable]
-	public bool IsBuyPackage =>  DateTime.UtcNow <= EndTimePackage;
+	public bool IsBuyPackage => DateTimeOffset.UtcNow <= EndTimePackage;
 
 
 
 
 
-    [InverseProperty(nameof(Product.PetCoffeeShop))]
-    public IList<Product> Products { get; set; } = new List<Product>();
+	[InverseProperty(nameof(Product.PetCoffeeShop))]
+	public IList<Product> Products { get; set; } = new List<Product>();
 }

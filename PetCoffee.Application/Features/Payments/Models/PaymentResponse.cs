@@ -1,6 +1,4 @@
-﻿
-using PetCoffee.Application.Features.Auth.Models;
-using PetCoffee.Domain.Enums;
+﻿using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Payments.Models;
 

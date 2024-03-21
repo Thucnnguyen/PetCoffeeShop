@@ -58,9 +58,9 @@ public class UpdateMomentHandler : IRequestHandler<UpdateMomentCommand, MomentRe
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
 
-		Assign.Partial<UpdateMomentCommand,Domain.Entities.Moment>(request, UpdateMoment);
+		Assign.Partial<UpdateMomentCommand, Domain.Entities.Moment>(request, UpdateMoment);
 
-		if(request.NewImages != null)
+		if (request.NewImages != null)
 		{
 			UpdateMoment.Image = await _azureService.UpdateloadImages(request.NewImages);
 		}

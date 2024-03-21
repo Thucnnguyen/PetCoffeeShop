@@ -8,9 +8,7 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 

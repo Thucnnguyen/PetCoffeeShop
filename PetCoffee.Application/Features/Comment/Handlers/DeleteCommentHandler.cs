@@ -38,7 +38,7 @@ public class DeleteCommentHandler : IRequestHandler<DeleteCommentCommand, bool>
 			return false;
 		}
 
-		if(comment.CreatedById != currentAccount.Id)
+		if (comment.CreatedById != currentAccount.Id)
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}

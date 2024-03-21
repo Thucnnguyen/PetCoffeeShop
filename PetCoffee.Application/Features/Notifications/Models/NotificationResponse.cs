@@ -1,7 +1,6 @@
 ﻿
 
 using PetCoffee.Application.Features.Post.Models;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Notifications.Models;

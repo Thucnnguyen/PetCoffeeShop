@@ -4,9 +4,9 @@ namespace PetCoffee.Domain.Enums;
 
 public enum OrderStatus
 {
-    Success,
-    Processing,
-    Reject,
-    Returned,
-    Overtime,
+	Success,
+	Processing,
+	Reject,
+	Returned,
+	Overtime,
 }

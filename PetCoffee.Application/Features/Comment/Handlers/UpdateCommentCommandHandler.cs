@@ -1,13 +1,12 @@
-﻿using MediatR;
-using PetCoffee.Application.Features.Comment.Models;
-using AutoMapper;
-using PetCoffee.Application.Persistence.Repository;
-using PetCoffee.Application.Service;
+﻿using AutoMapper;
+using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Comment.Commands;
+using PetCoffee.Application.Features.Comment.Models;
+using PetCoffee.Application.Persistence.Repository;
+using PetCoffee.Application.Service;
 using System.Linq.Expressions;
-using PetCoffee.Application.Features.Post.Models;
 
 namespace PetCoffee.Application.Features.Comment.Handlers;
 
@@ -43,19 +42,19 @@ public class UpdateCommentCommandHandler : IRequestHandler<UpdateCommentCommand,
 			predicate: c => c.Id == request.Id,
 			includes: new List<Expression<Func<Domain.Entities.Comment, object>>>()
 			{
-				c => c.CreatedBy, 
+				c => c.CreatedBy,
 			})).First();
-		if(comment == null)
+		if (comment == null)
 		{
 			throw new ApiException(ResponseCode.CommentNotExisted);
 		}
-		if(comment.CreatedById != currentAccount.Id)
+		if (comment.CreatedById != currentAccount.Id)
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
 
 		comment.Content = request.Content;
-		if(request.NewImage !=  null)
+		if (request.NewImage != null)
 		{
 			await _azureService.CreateBlob(request.NewImage.FileName, request.NewImage);
 			comment.Image = await _azureService.GetBlob(request.NewImage.FileName);

@@ -12,7 +12,7 @@ public class Pet : BaseAuditableEntity
 	public int? BirthYear { get; set; }
 	public double? Weight { get; set; }
 	public PetGender? Gender { get; set; }
-	public string? Avatar {  get; set; }
+	public string? Avatar { get; set; }
 	public string? Backgound { get; set; }
 	public string? Description { get; set; }
 	public PetType PetType { get; set; }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MediatR;
-using OpenAI_API.Images;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.PetCfShop.Queries;
@@ -14,18 +13,18 @@ public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequ
 {
 
 	private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
-    public GetAllPetCfShopRequestHandler(
-    IUnitOfWork unitOfWork,
-        IMapper mapper)
-    {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
+	private readonly IUnitOfWork _unitOfWork;
+	public GetAllPetCfShopRequestHandler(
+	IUnitOfWork unitOfWork,
+		IMapper mapper)
+	{
+		_unitOfWork = unitOfWork;
+		_mapper = mapper;
+	}
 
-    public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetAllPetCfShopRequestQuery request,
-        CancellationToken cancellationToken)
-    {
+	public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetAllPetCfShopRequestQuery request,
+		CancellationToken cancellationToken)
+	{
 
 		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
 			predicate: request.GetExpressions(),
@@ -75,5 +74,5 @@ public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequ
 			request.PageSize);
 	}
 
-    
+
 }

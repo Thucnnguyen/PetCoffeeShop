@@ -1,37 +1,28 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Comment.Commands;
-using PetCoffee.Application.Features.Comment.Models;
-using PetCoffee.Application.Features.Pet.Models;
-using PetCoffee.Application.Features.Pet.Queries;
-using PetCoffee.Application.Features.Product.Commands;
-using PetCoffee.Application.Features.Product.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace PetCoffee.API.Controllers
 {
-    [Route("api/v1")]
-    [ApiController]
-    public class ProductController : ApiControllerBase
-    {
+	[Route("api/v1")]
+	[ApiController]
+	public class ProductController : ApiControllerBase
+	{
 
-        //[HttpPost("product")]
-        //[Authorize]
-        //public async Task<ActionResult<ProductResponse>> CreateProduct([FromForm] CreateProductCommand request)
-        //{
-        //    var response = await Mediator.Send(request);
-        //    return response;
-        //}
+		//[HttpPost("product")]
+		//[Authorize]
+		//public async Task<ActionResult<ProductResponse>> CreateProduct([FromForm] CreateProductCommand request)
+		//{
+		//    var response = await Mediator.Send(request);
+		//    return response;
+		//}
 
-        //// 
-        //[HttpGet("petCoffeeShops/products")]
-        //[Authorize]
-        //public async Task<ActionResult<PaginationResponse<Domain.Entities.Product, ProductResponse>>> GetProductsByShopId([FromQuery] GetProductsByShopIdQuery request)
-        //{
-        //    var response = await Mediator.Send(request);
-        //    return Ok(response);
-        //}
+		//// 
+		//[HttpGet("petCoffeeShops/products")]
+		//[Authorize]
+		//public async Task<ActionResult<PaginationResponse<Domain.Entities.Product, ProductResponse>>> GetProductsByShopId([FromQuery] GetProductsByShopIdQuery request)
+		//{
+		//    var response = await Mediator.Send(request);
+		//    return Ok(response);
+		//}
 
-    }
+	}
 }

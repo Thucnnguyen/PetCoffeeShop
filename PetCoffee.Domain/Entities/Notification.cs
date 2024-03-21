@@ -22,9 +22,9 @@ public class Notification : BaseAuditableEntity
 	public Account Account { get; set; }
 	[Projectable]
 	public bool IsRead => ReadAt != null || Deleted;
-    public Notification()
-    {
-    }
+	public Notification()
+	{
+	}
 	public Notification(Account account, NotificationType type, EntityType entityType, object? data = null, bool? saved = true)
 	{
 		Type = type;

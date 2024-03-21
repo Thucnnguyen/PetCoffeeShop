@@ -5,7 +5,6 @@ using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Features.Events.Queries;
-using PetCoffee.Application.Features.SubmitttingEvents.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 

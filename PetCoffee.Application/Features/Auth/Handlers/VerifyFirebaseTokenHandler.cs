@@ -29,7 +29,7 @@ public class VerifyFirebaseTokenHandler : IRequestHandler<VerifyFirebaseTokenCom
 	{
 		var userRecord = await _firebaseService.VerifyFirebaseToken(request.FirebaseToken);
 
-		if(userRecord == null)
+		if (userRecord == null)
 		{
 			throw new ApiException(ResponseCode.FirebaseTokenNotValid);
 		}
@@ -38,29 +38,29 @@ public class VerifyFirebaseTokenHandler : IRequestHandler<VerifyFirebaseTokenCom
 			.Get(a => a.Email == userRecord.Email && a.LoginMethod == LoginMethod.FirebaseEmail)
 			.FirstOrDefaultAsync();
 
-			if(ExistedAccount != null)
-			{
-				var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(ExistedAccount));
-				return resp;
-			}
+		if (ExistedAccount != null)
+		{
+			var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(ExistedAccount));
+			return resp;
+		}
 
-			var NewAccount = new Account() 
-			{
-				FullName = userRecord.DisplayName, 
-				Email = userRecord.Email, 
-				PhoneNumber = string.IsNullOrEmpty(userRecord.PhoneNumber) ? "" : userRecord.PhoneNumber,
-				Avatar = userRecord.PhotoUrl,
-				Password = "",
-				Role = Role.Customer,
-				LoginMethod = LoginMethod.FirebaseEmail,
-				Status = AccountStatus.Active
-			};
+		var NewAccount = new Account()
+		{
+			FullName = userRecord.DisplayName,
+			Email = userRecord.Email,
+			PhoneNumber = string.IsNullOrEmpty(userRecord.PhoneNumber) ? "" : userRecord.PhoneNumber,
+			Avatar = userRecord.PhotoUrl,
+			Password = "",
+			Role = Role.Customer,
+			LoginMethod = LoginMethod.FirebaseEmail,
+			Status = AccountStatus.Active
+		};
 
-			await _unitOfWork.AccountRepository.AddAsync(NewAccount);
-			await _unitOfWork.SaveChangesAsync();
+		await _unitOfWork.AccountRepository.AddAsync(NewAccount);
+		await _unitOfWork.SaveChangesAsync();
 
-			var response = new AccessTokenResponse(_jwtService.GenerateJwtToken(NewAccount));
-			return response;
+		var response = new AccessTokenResponse(_jwtService.GenerateJwtToken(NewAccount));
+		return response;
 
 	}
 }

@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace PetCoffee.Application;
 
-public static class ConfigureService 
+public static class ConfigureService
 {
 	public static IServiceCollection ConfigureApplicationServices(this IServiceCollection services,
 	IConfiguration configuration)

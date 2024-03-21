@@ -20,9 +20,9 @@ public class GetEventsForCustomerQuery : PaginationRequest<Event>, IRequest<Pagi
 
 	public override Expression<Func<Event, bool>> GetExpressions()
 	{
-		if(Search is not null)
+		if (Search is not null)
 		{
-			Expression = Expression.And(e => e.Title.ToLower().Contains(Search) || e.Description.ToLower().Contains(Search) );
+			Expression = Expression.And(e => e.Title.ToLower().Contains(Search) || e.Description.ToLower().Contains(Search));
 		}
 		return Expression;
 	}

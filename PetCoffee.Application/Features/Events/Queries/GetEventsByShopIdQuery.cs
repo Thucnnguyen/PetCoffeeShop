@@ -16,7 +16,7 @@ public class GetEventsByShopIdQuery : PaginationRequest<Event>, IRequest<Paginat
 	{
 
 		Expression = Expression.And(e => e.PetCoffeeShopId == ShopId && !e.Deleted);
-		
+
 		return Expression;
 	}
 }

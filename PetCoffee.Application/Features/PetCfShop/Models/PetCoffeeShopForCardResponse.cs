@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace PetCoffee.Application.Features.PetCfShop.Models;
 
-public class PetCoffeeShopForCardResponse 
+public class PetCoffeeShopForCardResponse
 {
 	public long Id { get; set; }
 	public string Name { get; set; }

@@ -2,7 +2,7 @@
 
 namespace PetCoffee.Application.Features.Pet.Models;
 
-public class DonationAccount 
+public class DonationAccount
 {
 	public long Id { get; set; }
 	public string? Name { get; set; }

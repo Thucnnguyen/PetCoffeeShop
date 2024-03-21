@@ -44,7 +44,7 @@ public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Paymen
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var wallet = await _unitOfWork.WalletRepsitory.Get( w => w.CreatedById == currentAccount.Id )
+		var wallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == currentAccount.Id)
 												.FirstOrDefaultAsync();
 		long walletId = 0;
 		if (wallet == null)

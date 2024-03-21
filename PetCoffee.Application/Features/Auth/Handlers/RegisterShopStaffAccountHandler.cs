@@ -43,13 +43,13 @@ public class RegisterShopStaffAccountHandler : IRequestHandler<RegisterShopStaff
 		};
 
 		var checkEmail = await _unitOfWork.AccountRepository.GetAsync(a => a.Email == request.Email && !a.Deleted);
-		if (checkEmail.Any()) 
+		if (checkEmail.Any())
 		{
 			throw new ApiException(ResponseCode.AccountIsExisted);
 		}
 
 		var shop = await _unitOfWork.PetCoffeeShopRepository.GetByIdAsync(request.ShopId);
-		if(shop == null)
+		if (shop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
@@ -70,7 +70,7 @@ public class RegisterShopStaffAccountHandler : IRequestHandler<RegisterShopStaff
 		{
 			AccountId = newStaffAccount.Id,
 			ShopId = shop.Id,
-			
+
 		};
 		await _unitOfWork.AccountShopRespository.AddAsync(newAccountShop);
 		await _unitOfWork.SaveChangesAsync();

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
 
-public class SubmittingEvent :BaseAuditableEntity
+public class SubmittingEvent : BaseAuditableEntity
 {
 	public long Id { get; set; }
 	public long EventId { get; set; }

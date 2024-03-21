@@ -15,7 +15,7 @@ public class UpdatePetCommand : IRequest<PetResponse>
 	public PetType PetType { get; set; }
 	public TypeSpecies TypeSpecies { get; set; }
 	public PetGender Gender { get; set; }
-	public PetStatus PetStatus { get; set; } 
+	public PetStatus PetStatus { get; set; }
 	public IFormFile? NewAvatar { get; set; }
 	public IList<IFormFile>? NewBackgrounds { get; set; }
 }

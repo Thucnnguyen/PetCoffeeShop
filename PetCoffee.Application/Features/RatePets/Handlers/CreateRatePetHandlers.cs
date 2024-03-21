@@ -43,7 +43,7 @@ public class CreateRatePetHandlers : IRequestHandler<CreatePetRateCommand, RateP
 						.Get(p => p.Id == request.PetId && !p.Deleted)
 						.FirstOrDefaultAsync();
 
-		if (pet == null) 
+		if (pet == null)
 		{
 			throw new ApiException(ResponseCode.PetNotExisted);
 		}
@@ -57,7 +57,7 @@ public class CreateRatePetHandlers : IRequestHandler<CreatePetRateCommand, RateP
 		{
 			existedRatePet.Comment = request.Comment;
 			existedRatePet.Rate = request.Rate;
-			await _unitOfWork.RatePetRespository .UpdateAsync(existedRatePet);
+			await _unitOfWork.RatePetRespository.UpdateAsync(existedRatePet);
 			await _unitOfWork.SaveChangesAsync();
 			return _mapper.Map<RatePetResponse>(existedRatePet);
 		}
