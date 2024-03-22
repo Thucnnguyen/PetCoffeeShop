@@ -13,9 +13,9 @@ namespace PetCoffee.Application.Features.Payments.Queries;
 
 public class GetAllTransactionQuery : PaginationRequest<Domain.Entities.Transaction>, IRequest<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
-	public DateTime? From { get; set; }
+	public DateTimeOffset? From { get; set; }
 
-	public DateTime? To { get; set; }
+	public DateTimeOffset? To { get; set; }
 
 	public TransactionStatus? Status { get; set; }
 

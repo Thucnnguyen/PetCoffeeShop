@@ -12,6 +12,8 @@ using PetCoffee.Application.Features.Items.Models;
 using PetCoffee.Application.Features.Memory.Commands;
 using PetCoffee.Application.Features.Memory.Models;
 using PetCoffee.Application.Features.Notifications.Models;
+using PetCoffee.Application.Features.Packages.Commands;
+using PetCoffee.Application.Features.Packages.Models;
 using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Features.Pet.Models;
@@ -264,6 +266,10 @@ public class MappingProfile : Profile
 		//product
 		CreateMap<Product, ProductResponse>().ReverseMap();
 		CreateMap<CreateProductCommand, Product>().ReverseMap();
+
+		//Package
+		CreateMap<PackagePromotion, PackageResponse>().ReverseMap();
+		CreateMap<PackagePromotion, CreatePackageCommand>().ReverseMap();
 
 	}
 }

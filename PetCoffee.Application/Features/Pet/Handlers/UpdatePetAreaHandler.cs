@@ -84,7 +84,7 @@ public class UpdatePetAreaHandler : IRequestHandler<UpdatePetAreaCommand, bool>
 			await _unitOfWork.PetAreaRespository.AddAsync(new PetArea()
 			{
 				AreaId = request.AreaId,
-				StartTime = DateTime.UtcNow,
+				StartTime = DateTimeOffset.UtcNow,
 				PetId = petId
 			});
 		}

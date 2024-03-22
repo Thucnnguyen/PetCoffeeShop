@@ -10,7 +10,7 @@ public class CreateEventValidation : AbstractValidator<CreateEventCommand>
 	public CreateEventValidation()
 	{
 		RuleFor(model => model.StartDate)
-			.Must((command, StartDate) => StartDate >= DateTime.UtcNow)
+			.Must((command, StartDate) => StartDate >= DateTimeOffset.UtcNow)
 			.WithMessage("Thời gian bắt đầu không được ở trong quá khứ");
 
 		RuleFor(model => model.StartDate)
@@ -27,8 +27,8 @@ public class CreateEventCommand : IRequest<EventResponse>
 	public string Title { get; set; }
 	public IFormFile? ImageFile { get; set; }
 	public string? Description { get; set; }
-	public DateTime StartDate { get; set; }
-	public DateTime EndDate { get; set; }
+	public DateTimeOffset StartDate { get; set; }
+	public DateTimeOffset EndDate { get; set; }
 	public string StartTime { get; set; }
 	public string EndTime { get; set; }
 	public string? Location { get; set; }

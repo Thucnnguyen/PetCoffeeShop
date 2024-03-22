@@ -22,9 +22,9 @@ namespace PetCoffee.Application.Features.Vaccination.Commands
 	{
 
 		//[SwaggerSchema(Format = "date-time")]
-		public DateTime VaccinationDate { get; set; }
+		public DateTimeOffset VaccinationDate { get; set; }
 		//[SwaggerSchema(Format = "date-time")]
-		public DateTime ExpireTime { get; set; }
+		public DateTimeOffset ExpireTime { get; set; }
 		public VaccinationType VaccinationType { get; set; }
 		public IFormFile? PhotoEvidence { get; set; }
 		public long PetId { get; set; }

@@ -15,7 +15,7 @@ public class PetCoffeeShopForCardResponse
 	[JsonConverter(typeof(JsonStringEnumConverter))]
 	public ShopType Type { get; set; }
 	public ShopStatus Status { get; set; }
-	public DateTime CreatedAt { get; set; }
+	public DateTimeOffset CreatedAt { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
 }

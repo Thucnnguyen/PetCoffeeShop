@@ -10,8 +10,8 @@ public class SubmittingEventResponse : BaseAuditableEntityResponse
 	public string? Title { get; set; }
 	public string? Image { get; set; }
 	public string? Description { get; set; }
-	public DateTime StartTime { get; set; }
-	public DateTime EndTime { get; set; }
+	public DateTimeOffset StartTime { get; set; }
+	public DateTimeOffset EndTime { get; set; }
 	public string? Location { get; set; }
 	public long PetCoffeeShopId { get; set; }
 	public bool IsJoin { get; set; } = true;

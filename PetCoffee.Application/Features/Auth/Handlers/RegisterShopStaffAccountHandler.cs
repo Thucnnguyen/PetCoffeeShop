@@ -63,8 +63,7 @@ public class RegisterShopStaffAccountHandler : IRequestHandler<RegisterShopStaff
 		newStaffAccount.Background = shop.BackgroundUrl;
 		newStaffAccount.PhoneNumber = shop.Phone;
 
-		await _unitOfWork.AccountRepository.AddAsync(newStaffAccount);
-		await _unitOfWork.SaveChangesAsync();
+		
 
 		var newAccountShop = new AccountShop()
 		{
@@ -72,8 +71,12 @@ public class RegisterShopStaffAccountHandler : IRequestHandler<RegisterShopStaff
 			ShopId = shop.Id,
 
 		};
-		await _unitOfWork.AccountShopRespository.AddAsync(newAccountShop);
+
+		newStaffAccount.AccountShops.Add(newAccountShop);
+
+		await _unitOfWork.AccountRepository.AddAsync(newStaffAccount);
 		await _unitOfWork.SaveChangesAsync();
+
 		return true;
 	}
 }

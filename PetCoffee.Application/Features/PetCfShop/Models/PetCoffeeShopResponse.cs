@@ -26,8 +26,8 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
 		public ShopStatus Status { get; set; } = ShopStatus.Active;
 		[JsonConverter(typeof(JsonStringEnumConverter))]
 		public ShopType Type { get; set; }
-		public DateTime? StartTime { get; set; }
-		public DateTime? EndTime { get; set; }
+		public DateTimeOffset? StartTime { get; set; }
+		public DateTimeOffset? EndTime { get; set; }
 
 		public double? Distance { get; set; } = 0;
 		public double? TotalFollow { get; set; } = 0;
