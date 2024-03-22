@@ -3,6 +3,7 @@ using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Pet.Models;
 using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Product.Queries;
 using PetCoffee.Application.Persistence.Repository;
@@ -26,34 +27,33 @@ namespace PetCoffee.Application.Features.Product.Handlers
 		}
 		public async Task<PaginationResponse<Domain.Entities.Product, ProductResponse>> Handle(GetProductsByShopIdQuery request, CancellationToken cancellationToken)
 		{
-			var currentAccount = await _currentAccountService.GetCurrentAccount();
-			if (currentAccount == null)
-			{
-				throw new ApiException(ResponseCode.AccountNotExist);
-			}
-			if (currentAccount.IsVerify)
-			{
-				throw new ApiException(ResponseCode.AccountNotActived);
-			}
-			var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.ShopId);
-			if (!PetCoffeeShop.Any())
-			{
-				throw new ApiException(ResponseCode.ShopNotExisted);
-			}
-			//var Products = await _unitOfWork.ProductRepository
-			//            .GetAsync(
-			//                    predicate: p => p.pe == request.ShopId && !p.Deleted,
-			//                    includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Product, object>>>
-			//                    {
-			//                    p => p.Area
-			//                    });
-			//return new PaginationResponse<Domain.Entities.Product, ProductResponse>(
-			//        Products,
-			//        request.PageNumber,
-			//        request.PageSize,
-			//        pet => _mapper.Map<ProductResponse>(pet));
-			return null;
-		}
+            var currentAccount = await _currentAccountService.GetCurrentAccount();
+            if (currentAccount == null)
+            {
+                throw new ApiException(ResponseCode.AccountNotExist);
+            }
+            if (currentAccount.IsVerify)
+            {
+                throw new ApiException(ResponseCode.AccountNotActived);
+            }
+            var PetCoffeeShop = await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Id == request.ShopId);
+            if (!PetCoffeeShop.Any())
+            {
+                throw new ApiException(ResponseCode.ShopNotExisted);
+            }
+            var Products = _unitOfWork.ProductRepository
+                        .Get(predicate: request.GetExpressions())
+                        //.Include(p => p.PetAreas.Where(pa => pa.EndTime == null))
+                        //.ThenInclude(pa => pa.Area)
+                        //.Include(p => p.PetRattings)
+                        .AsQueryable();
+
+            return new PaginationResponse<Domain.Entities.Product, ProductResponse>(
+                    Products,
+                    request.PageNumber,
+                    request.PageSize,
+                    product => _mapper.Map<ProductResponse>(product));
+        }
 	}
 
 }

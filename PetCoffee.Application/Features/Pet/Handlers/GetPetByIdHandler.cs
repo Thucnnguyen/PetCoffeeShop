@@ -12,7 +12,7 @@ using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
 
-internal class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
+public class GetPetByIdHandler : IRequestHandler<GetPetByIdQuery, PetResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;

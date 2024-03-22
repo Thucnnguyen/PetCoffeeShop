@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using LinqKit;
+using MediatR;
 using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Product.Models;
@@ -12,9 +13,25 @@ namespace PetCoffee.Application.Features.Product.Queries
 	{
 		public long ShopId { get; set; }
 
-		public override Expression<Func<Domain.Entities.Product, bool>> GetExpressions()
+        private string? _search;
+        public string? Search
+        {
+            get => _search;
+            set => _search = value?.Trim().ToLower();
+        }
+
+        public override Expression<Func<Domain.Entities.Product, bool>> GetExpressions()
 		{
-			throw new NotImplementedException();
-		}
-	}
+            if (Search is not null)
+            {
+                Expression = Expression.And(p => (p.Name != null && p.Name.ToLower().Contains(Search)));
+
+            }
+
+            Expression = Expression.And(p => p.PetCoffeeShopId == ShopId && !p.Deleted);
+
+            return Expression;
+
+        }
+    }
 }
