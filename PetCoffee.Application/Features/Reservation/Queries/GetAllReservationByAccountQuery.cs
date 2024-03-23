@@ -4,11 +4,17 @@ using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Domain.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Reservation.Queries
 {
-    public class GetAllReservationQuery : PaginationRequest<Domain.Entities.Reservation>, IRequest<PaginationResponse<PetCoffee.Domain.Entities.Reservation, ReservationResponse>>
+
+    public class GetAllReservationByAccountQuery : PaginationRequest<Domain.Entities.Reservation>, IRequest<PaginationResponse<PetCoffee.Domain.Entities.Reservation, ReservationResponse>>
     {
         private string? _search;
 
@@ -22,13 +28,8 @@ namespace PetCoffee.Application.Features.Reservation.Queries
 
         public DateTimeOffset? To { get; set; }
 
-       
-        public long ShopId { get; set; }
-
-
         public override Expression<Func<Domain.Entities.Reservation, bool>> GetExpressions()
         {
-          
             if (Status is not null)
             {
                 Expression = Expression.And(order => Status == null || order.Status == Status);
@@ -42,17 +43,9 @@ namespace PetCoffee.Application.Features.Reservation.Queries
                 Expression = Expression.And(order => To == null || order.CreatedAt.Date <= To);
 
             }
-            if (Search is not null)
-            {
-                Expression = Expression
-                    .And(reservation => (reservation.CreatedBy.FullName != null && reservation.CreatedBy.FullName.ToLower().Contains(Search))
-                    || (reservation.CreatedBy.PhoneNumber != null && reservation.CreatedBy.PhoneNumber.Trim() == Search)
-                    || (reservation.Code != null && reservation.Code == Search)
-                    );
-            }
 
-            Expression = Expression.And(reservation => (reservation.Area.PetcoffeeShopId == ShopId));
-            
+          
+
             return Expression;
         }
     }

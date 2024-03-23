@@ -98,16 +98,6 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				BookingSeat = request.TotalSeat
 			};
 
-
-			//add value to invoice table
-			var invoice = new Invoice
-			{
-				ReservationId = order.Id,
-				CreatedAt = DateTimeOffset.UtcNow,
-				TotalAmount = totalPrice
-			};
-
-			order.Invoices.Add(invoice);
 			//Get ManagerAccount
 			var managerAccount = await _unitOfWork.AccountRepository
 			.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == area.PetcoffeeShopId))
@@ -136,7 +126,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				Content = "Đặt chỗ đơn hàng",
 				RemitterId = managaerWallet.Id,
 				TransactionStatus = TransactionStatus.Done,
-				ReferenceTransactionId = Guid.NewGuid().ToString(),
+				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 				TransactionType = TransactionType.Reserve,
 			};
 
@@ -171,7 +161,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
 			var existingReservations = _unitOfWork.ReservationRepository
-				 .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
+				 .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success)
 				 && (r.StartTime <= endTime || r.EndTime >= startTime) && r.StartTime == startTime.Date);
 
 

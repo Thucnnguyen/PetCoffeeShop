@@ -50,7 +50,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             foreach (var area in availableAreas)
             {
                 var existingReservations = await _unitOfWork.ReservationRepository
-                    .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
+                    .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success)
                     && (r.StartTime <= request.EndTime || r.EndTime >= request.StartTime) && r.StartTime.Date == request.StartTime.Date);
 
                 var test = await _unitOfWork.ReservationRepository

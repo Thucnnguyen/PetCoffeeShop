@@ -11,8 +11,8 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240322081023_removeDepostit")]
-    partial class removeDepostit
+    [Migration("20240323065805_initDb")]
+    partial class initDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -340,57 +340,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("FollowPetCfShops");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.Invoice", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("CreatedById")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<long?>("ReservationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<DateTimeOffset>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
-
-                    b.HasIndex("ReservationId");
-
-                    b.ToTable("Invoie");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.InvoiceProduct", b =>
-                {
-                    b.Property<long>("ProductId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("InvoiceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("TotalProduct")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "InvoiceId");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("InvoiceProduct");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Item", b =>
@@ -1052,6 +1001,33 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.ToTable("Order");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.ReservationProduct", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("ProductPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<long>("ReservationId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("TotalProduct")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("ReservationProducts");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.SubmittingEvent", b =>
                 {
                     b.Property<long>("Id")
@@ -1405,40 +1381,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("Shop");
                 });
 
-            modelBuilder.Entity("PetCoffee.Domain.Entities.Invoice", b =>
-                {
-                    b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById");
-
-                    b.HasOne("PetCoffee.Domain.Entities.Reservation", "Reservation")
-                        .WithMany("Invoices")
-                        .HasForeignKey("ReservationId");
-
-                    b.Navigation("CreatedBy");
-
-                    b.Navigation("Reservation");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.InvoiceProduct", b =>
-                {
-                    b.HasOne("PetCoffee.Domain.Entities.Invoice", "Invoice")
-                        .WithMany("Products")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PetCoffee.Domain.Entities.Product", "Product")
-                        .WithMany("Invoices")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Invoice");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("PetCoffee.Domain.Entities.Item", b =>
                 {
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
@@ -1702,6 +1644,25 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("CreatedBy");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.ReservationProduct", b =>
+                {
+                    b.HasOne("PetCoffee.Domain.Entities.Product", "Product")
+                        .WithMany("Invoices")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetCoffee.Domain.Entities.Reservation", "Reservation")
+                        .WithMany("ReservationProducts")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Reservation");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.SubmittingEvent", b =>
                 {
                     b.HasOne("PetCoffee.Domain.Entities.Account", "CreatedBy")
@@ -1873,11 +1834,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("SubmittingEvents");
                 });
 
-            modelBuilder.Entity("PetCoffee.Domain.Entities.Invoice", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("PetCoffee.Domain.Entities.Item", b =>
                 {
                     b.Navigation("Transactions");
@@ -1937,7 +1893,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Reservation", b =>
                 {
-                    b.Navigation("Invoices");
+                    b.Navigation("ReservationProducts");
 
                     b.Navigation("Transactions");
                 });

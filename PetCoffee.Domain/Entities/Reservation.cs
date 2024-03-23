@@ -24,9 +24,13 @@ public class Reservation : BaseAuditableEntity
 	public long? AreaId { get; set; }
 	public Area? Area { get; set; }
 
+	public bool IsTotallyRefund { get; set; } = false;
+
+    [InverseProperty(nameof(Transaction.Reservation))]
 	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 
-	public ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    [InverseProperty(nameof(ReservationProduct.Reservation))]
+	public IList<ReservationProduct> ReservationProducts { get; set; } = new List<ReservationProduct>();
 
 
 

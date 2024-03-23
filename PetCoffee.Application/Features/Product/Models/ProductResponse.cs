@@ -9,9 +9,10 @@ namespace PetCoffee.Application.Features.Product.Models
 		public long Id { get; set; }
 		public decimal Price { get; set; }
 		public string Name { get; set; }
-		//public ProductStatus ProductStatus { get; set; }
+        //public ProductStatus ProductStatus { get; set; }
+        public string Image { get; set; }
 
 
 
-	}
+    }
 }

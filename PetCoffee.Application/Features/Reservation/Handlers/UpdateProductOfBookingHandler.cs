@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Reservation.Commands;
@@ -10,93 +11,145 @@ using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
-	public class UpdateProductOfBookingHandler : IRequestHandler<UpdateProductOfBookingCommand, bool>
-	{
-		private readonly IUnitOfWork _unitOfWork;
+    public class UpdateProductOfBookingHandler : IRequestHandler<UpdateProductOfBookingCommand, bool>
+    {
+        private readonly IUnitOfWork _unitOfWork;
 
-		private readonly IMapper _mapper;
-		private readonly ICurrentAccountService _currentAccountService;
+        private readonly IMapper _mapper;
+        private readonly ICurrentAccountService _currentAccountService;
 
-		public UpdateProductOfBookingHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
-		{
-			_mapper = mapper;
-			_unitOfWork = unitOfWork;
-			_currentAccountService = currentAccountService;
-		}
-		public async Task<bool> Handle(UpdateProductOfBookingCommand request, CancellationToken cancellationToken)
-		{
-			var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
-			if (currentAccount == null)
-			{
-				throw new ApiException(ResponseCode.AccountNotExist);
-			}
-			if (currentAccount.IsVerify)
-			{
-				throw new ApiException(ResponseCode.AccountNotActived);
-			}
+        public UpdateProductOfBookingHandler(IMapper mapper, IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
+        {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _currentAccountService = currentAccountService;
+        }
+        public async Task<bool> Handle(UpdateProductOfBookingCommand request, CancellationToken cancellationToken)
+        {
+            var currentAccount = await _currentAccountService.GetRequiredCurrentAccount();
+            if (currentAccount == null)
+            {
+                throw new ApiException(ResponseCode.AccountNotExist);
+            }
+            if (currentAccount.IsVerify)
+            {
+                throw new ApiException(ResponseCode.AccountNotActived);
+            }
 
-			var reservation = _unitOfWork.ReservationRepository.Get(p => p.Id == request.OrderId && p.CreatedById == currentAccount.Id && !p.Status.Equals(OrderStatus.Reject) && p.StartTime >= DateTime.Now).FirstOrDefault();
-			if (reservation == null)
-			{
-				throw new ApiException(ResponseCode.ReservationNotExist);
-			}
+            var reservation = _unitOfWork.ReservationRepository.Get(
+                predicate: p => p.Id == request.OrderId && p.CreatedById == currentAccount.Id && p.Status.Equals(OrderStatus.Success) && p.StartTime > DateTimeOffset.UtcNow,
+                includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
+                {
+                    p => p.ReservationProducts
+                }
+                ).FirstOrDefault();
+            if (reservation == null)
+            {
+                throw new ApiException(ResponseCode.ReservationNotExist);
+            }
+            decimal totalPrice = 0;
+            Dictionary<long, Domain.Entities.Product> products = new();
+            foreach (var pro in request.Products)
+            {
 
+                var p = (await _unitOfWork.ProductRepository.GetAsync(pro => pro.Id == pro.Id && !pro.Deleted)).FirstOrDefault();
+                if (p == null)
+                {
+                    throw new ApiException(ResponseCode.ProductNotExist);
+                }
+                products.Add(p.Id, p);
+                totalPrice += (decimal)p.Price * pro.Quantity;
 
-			var product = await _unitOfWork.ProductRepository.GetByIdAsync(request.ProductId);
-			if (product == null)
-			{
-				throw new ApiException(ResponseCode.ReservationNotExist);
-			}
+            }
 
-			//
-
-			var existingInvoiceProduct = reservation.Invoices
-		.SelectMany(i => i.Products)
-		.FirstOrDefault(ip => ip.ProductId == request.ProductId);
-			if (existingInvoiceProduct != null)
-			{
-
-				existingInvoiceProduct.TotalProduct += request.Quantity;
-			}
-			else
-			{
-
-				var newInvoiceProduct = new InvoiceProduct
-				{
-					InvoiceId = reservation.Id,
-					ProductId = request.ProductId,
-					TotalProduct = request.Quantity
-				};
-
-
-				var firstInvoice = reservation.Invoices.FirstOrDefault();
-				//if (firstInvoice != null)
-				//{
-				//    firstInvoice.Products.Add(newInvoiceProduct);
-				//}
-				//else
-				//{
-
-				var newInvoice = new Invoice
-				{
-					ReservationId = reservation.Id,
-					TotalAmount = product.Price * request.Quantity,
-					Products = new List<InvoiceProduct>()
-				};
-				newInvoice.Products.Add(newInvoiceProduct);
+            //
+            var wallet = await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id);
+            if (!wallet.Any())
+            {
+                throw new ApiException(ResponseCode.NotEnoughBalance);
+            }
+            if (wallet.First().Balance < totalPrice)
+            {
+                throw new ApiException(ResponseCode.NotEnoughBalance);
+            }
 
 
-				reservation.Invoices.Add(newInvoice);
-				//}
-			}
-			//
 
-			await _unitOfWork.SaveChangesAsync();
+            //
 
-			return true;
+            foreach (var pro in request.Products)
+            {
+                var existingProduct = reservation.ReservationProducts
+                  .FirstOrDefault(rp => rp.ProductId == pro.ProductId &&  rp.ProductPrice == products[pro.ProductId].Price);
+
+                //
+                if (existingProduct != null)
+                {
+
+                    existingProduct.TotalProduct += pro.Quantity;
 
 
-		}
-	}
+                    
+                }
+                else
+                {
+
+                    var newReservationProduct = new ReservationProduct
+                    {
+                        ProductId = pro.ProductId,
+                        TotalProduct = pro.Quantity,
+                        ProductPrice = products[pro.ProductId].Price,
+                    };
+
+                    reservation.ReservationProducts.Add(newReservationProduct);
+
+                    _unitOfWork.ReservationRepository.UpdateAsync(reservation);
+                 
+                    
+                }
+
+            }
+
+
+            wallet.First().Balance -= totalPrice;
+            await _unitOfWork.WalletRepsitory.UpdateAsync(wallet.First());
+
+
+            //get manager account 
+            var managerAccount = await _unitOfWork.AccountRepository
+                .Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == products.First().Value.PetCoffeeShopId))
+                .FirstOrDefaultAsync();
+
+            var managaerWallet = await _unitOfWork.WalletRepsitory
+                .Get(w => w.CreatedById == managerAccount.Id)
+                .FirstOrDefaultAsync();
+            //
+            
+            if(managaerWallet == null)
+            {
+                
+                var newWallet = new Wallet((decimal)totalPrice);
+                await _unitOfWork.WalletRepsitory.AddAsync(newWallet);
+                await _unitOfWork.SaveChangesAsync();
+                newWallet.CreatedById = managerAccount.Id;
+                await _unitOfWork.WalletRepsitory.UpdateAsync(newWallet);
+                await _unitOfWork.SaveChangesAsync();
+            }
+            else
+            {
+                managaerWallet.Balance += totalPrice;
+                await _unitOfWork.WalletRepsitory.UpdateAsync(managaerWallet);
+            }
+
+            reservation.TotalPrice += totalPrice;
+            await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+
+
+        }
+    }
 
 }

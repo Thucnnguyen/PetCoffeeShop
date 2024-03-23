@@ -44,6 +44,7 @@ public interface IUnitOfWork
 	IPetAreaRespository PetAreaRespository { get; }
 	IProductRepository ProductRepository { get; }
 	//IPetCoffeeShopProductRepository PetCoffeeShopProductRepository { get; }
-	IInvoiceRepository InvoiceRepository { get; }
+
 	IPackagePromotionRespository PackagePromotionRespository { get; }
+    IReservationProductRepository ReservationProductRepository { get; }
 }

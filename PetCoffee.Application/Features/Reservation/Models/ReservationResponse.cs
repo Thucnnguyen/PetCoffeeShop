@@ -1,4 +1,5 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Reservation.Models
@@ -18,5 +19,7 @@ namespace PetCoffee.Application.Features.Reservation.Models
 
 		public long? AreaId { get; set; }
 		//public Area? Area { get; set; }
+
+		public IList<ProductForReservationResponse> Products { get; set; }	
 	}
 }

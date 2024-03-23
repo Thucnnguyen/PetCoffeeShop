@@ -18,4 +18,7 @@ public enum TransactionType
 	Donate = 3,
 	[Description("Mua Quà Tặng")]
 	BuyItem = 4,
+
+    [Description("Hoàn tiền đặt chỗ")]
+    Refund = 5,
 }

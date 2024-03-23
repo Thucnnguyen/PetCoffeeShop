@@ -29,11 +29,13 @@ namespace PetCoffee.API.Controllers
 
 
 
-		[HttpGet("{id:long}")]
+
+
+		[HttpGet("order/{id:long}")]
 		[Authorize]
 		public async Task<ActionResult<ReservationDetailResponse>> GetOrder([FromRoute] long id)
 		{
-			var getOrderRequest = new GetReservationQuery
+			var getOrderRequest = new GetReservationByIdQuery
 			{
 				Id = id
 			};
@@ -43,7 +45,7 @@ namespace PetCoffee.API.Controllers
 
 
 
-		[HttpPut("{id:long}")]
+		[HttpPut("order/{id:long}")]
 		[Authorize]
 		public async Task<ActionResult<ReservationResponse>> UpdateOrder([FromRoute] long id, [FromBody] UpdateReservationCommand request)
 		{
@@ -69,7 +71,7 @@ namespace PetCoffee.API.Controllers
 
 
 
-		[HttpPut("{id:long}/return")]
+		[HttpPut("order/{id:long}/return")]
 		[Authorize]
 		public async Task<ActionResult<ReservationResponse>> ReturnOrder([FromRoute] long id)
 		{
@@ -90,5 +92,21 @@ namespace PetCoffee.API.Controllers
 			return await Mediator.Send(command);
 		}
 
-	}
+
+        [HttpGet("accounts/orders")]
+        [Authorize]
+        public async Task<ActionResult<PaginationResponse<Reservation, ReservationResponse>>> GetOrdersByCurrentAccount(
+  [FromQuery] GetAllReservationByAccountQuery request)
+        {
+            if (string.IsNullOrWhiteSpace(request.SortColumn))
+            {
+                request.SortColumn = "CreatedAt";
+                request.SortDir = SortDirection.Desc;
+            }
+            return await Mediator.Send(request);
+        }
+
+
+
+    }
 }

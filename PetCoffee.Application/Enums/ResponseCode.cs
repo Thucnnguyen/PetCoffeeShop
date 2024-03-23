@@ -89,11 +89,11 @@ public enum ResponseCode
 	//Reservation
 
 	[Description("Đơn hàng không tồn tại")] ReservationNotExist,
+    [Description("Đơn hàng không tồn tại hoặc đã huỷ")] ReservationNotExistOrIsRefunded,
 
+    //Table
 
-	//Table
-
-	[Description("Table không tồn tại")] TableNotExist,
+    [Description("Table không tồn tại")] TableNotExist,
 
 	//PackagePromotion
 
@@ -103,6 +103,8 @@ public enum ResponseCode
     //Product
 
     [Description("Sản phẩm không tồn tại")] ProductNotExist,
+
+    [Description("Đơn hàng đã quá hạn")] ExpiredReservation,
 
 
 }

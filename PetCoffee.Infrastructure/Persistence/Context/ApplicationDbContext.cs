@@ -40,8 +40,7 @@ public class ApplicationDbContext : DbContext
 			.HasKey(e => new { e.WalletId, e.ItemId });
 		modelBuilder.Entity<RatePet>()
 			.HasKey(e => new { e.PetId, e.CreatedById });
-		modelBuilder.Entity<InvoiceProduct>()
-			.HasKey(e => new { e.ProductId, e.InvoiceId });
+		
 
 
 	}
@@ -72,4 +71,6 @@ public class ApplicationDbContext : DbContext
 	public DbSet<PostPetCoffeeShop> PostPetCoffeeShops => Set<PostPetCoffeeShop>();
 	public DbSet<FollowPetCfShop> FollowPetCfShops => Set<FollowPetCfShop>();
 	public DbSet<PackagePromotion> PackagePromotions => Set<PackagePromotion>();
+
+    public DbSet<ReservationProduct> ReservationProducts => Set<ReservationProduct>();
 }
