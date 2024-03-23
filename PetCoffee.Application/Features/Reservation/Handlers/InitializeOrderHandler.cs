@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Reservation.Commands;
@@ -74,26 +75,12 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			if (customerWallet == null)
 			{
-				var newWalet = new Wallet();
-				await _unitOfWork.WalletRepsitory.AddAsync(newWalet);
-				customerWallet = newWalet;
+				throw new ApiException(ResponseCode.NotEnoughBalance);
 			}
 			//check balance
-			var isEnoughMoney = customerWallet.Balance >= totalPrice;
+			//var isEnoughMoney = customerWallet.Balance >= totalPrice;
 			if (customerWallet.Balance < totalPrice)
 			{
-				var processingOrder = new Domain.Entities.Reservation
-				{
-					Status = OrderStatus.Processing,
-					StartTime = request.StartTime,
-					EndTime = request.EndTime,
-					Note = request.Note,
-					AreaId = request.AreaId,
-					TotalPrice = totalPrice,
-					Discount = 0,
-					Code = TokenUltils.GenerateOTPCode(6),
-					BookingSeat = request.TotalSeat
-				};
 				throw new ApiException(ResponseCode.NotEnoughBalance);
 			}
 
@@ -121,46 +108,53 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			};
 
 			order.Invoices.Add(invoice);
+			//Get ManagerAccount
+			var managerAccount = await _unitOfWork.AccountRepository
+			.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == area.PetcoffeeShopId))
+			.FirstOrDefaultAsync();
 
-
-			//await _unitOfWork.InvoiceRepository.AddAsync(invoice);
-			//await _unitOfWork.SaveChangesAsync();
-
+			var managaerWallet = await _unitOfWork.WalletRepsitory
+			.Get(w => w.CreatedById == managerAccount.Id)
+			.FirstOrDefaultAsync();
+			if (managaerWallet == null)
+			{
+				//add new Wallet
+				var newManagerWallet = new Wallet();
+				await _unitOfWork.WalletRepsitory.AddAsync(newManagerWallet);
+				await _unitOfWork.SaveChangesAsync();
+				newManagerWallet.CreatedById = managerAccount.Id;
+				await _unitOfWork.WalletRepsitory.UpdateAsync(newManagerWallet);
+				await _unitOfWork.SaveChangesAsync();
+				managaerWallet = newManagerWallet;
+			}
 			//add value to transaction table 
 
 			var newTransaction = new Domain.Entities.Transaction()
 			{
-				WalletId = currentAccount.Id,
+				WalletId = customerWallet.Id,
 				Amount = (decimal)totalPrice,
 				Content = "Đặt chỗ đơn hàng",
-				RemitterId = customerWallet.Id,
+				RemitterId = managaerWallet.Id,
 				TransactionStatus = TransactionStatus.Done,
 				ReferenceTransactionId = Guid.NewGuid().ToString(),
 				TransactionType = TransactionType.Reserve,
-				ReservationId = order.Id,
 			};
 
 			order.Transactions.Add(newTransaction);
-			//await _unitOfWork.TransactionRepository.AddAsync(newTransaction);
-			//await _unitOfWork.SaveChangesAsync();
-
 
 			// minus money in wallet for booking
 
 			customerWallet.Balance -= (decimal)totalPrice;
+			managaerWallet.Balance += (decimal)totalPrice;
 			await _unitOfWork.WalletRepsitory.UpdateAsync(customerWallet);
+			await _unitOfWork.WalletRepsitory.UpdateAsync(managaerWallet);
 
 
 			await _unitOfWork.ReservationRepository.AddAsync(order);
 			await _unitOfWork.SaveChangesAsync();
 
 			return _mapper.Map<ReservationResponse>(order);
-
-
-
-
 		}
-
 
 
 		public bool IsAreaAvailable(long areaId, DateTimeOffset startTime, DateTimeOffset endTime, int requestedSeats, Area area)
@@ -183,17 +177,13 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			var totalSeatsBooked = existingReservations.Sum(r => r.BookingSeat);
 
-
-
 			bool res = requestedSeats <= area.TotalSeat - totalSeatsBooked;
 			if (!res)
 			{
 				return false;
-
 			}
 
 			return true;
-
 		}
 	}
 }

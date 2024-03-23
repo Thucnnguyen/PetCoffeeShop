@@ -47,6 +47,7 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 			throw new ApiException(ResponseCode.HasShopRequest);
 		}
 		var NewPetCoffeeShop = _mapper.Map<PetCoffeeShop>(request);
+		NewPetCoffeeShop.Status = ShopStatus.Processing;
 		//check TaxCode 
 		var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
 
