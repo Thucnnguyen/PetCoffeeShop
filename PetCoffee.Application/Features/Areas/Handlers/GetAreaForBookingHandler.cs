@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -50,7 +51,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             {
                 var existingReservations = await _unitOfWork.ReservationRepository
                     .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)
-                    && (r.StartTime <= request.EndTime || r.EndTime >= request.StartTime));
+                    && (r.StartTime <= request.EndTime || r.EndTime >= request.StartTime) && r.StartTime.Date == request.StartTime.Date);
 
                 var test = await _unitOfWork.ReservationRepository
                     .GetAsync(r => r.AreaId == area.Id);
@@ -62,7 +63,14 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 
                 var areaResponse = _mapper.Map<AreaResponse>(area);
                 areaResponse.AvailableSeat = availableSeat;
-                response.Add(areaResponse);
+				var pets = await _unitOfWork.PetRepository
+					.Get(p => p.PetAreas.Any(pa => pa.AreaId == area.Id && pa.EndTime == null) && !p.Deleted)
+					.Include(p => p.PetAreas)
+					.ThenInclude(pa => pa.Area)
+					.Select(p => _mapper.Map<PetResponseForArea>(p))
+					.ToListAsync();
+                areaResponse.Pets = pets;
+				response.Add(areaResponse);
             }
 
             return new PaginationResponse<Domain.Entities.Area, AreaResponse>(

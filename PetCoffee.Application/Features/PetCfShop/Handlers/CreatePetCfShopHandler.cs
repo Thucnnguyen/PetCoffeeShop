@@ -47,6 +47,7 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 			throw new ApiException(ResponseCode.HasShopRequest);
 		}
 		var NewPetCoffeeShop = _mapper.Map<PetCoffeeShop>(request);
+		NewPetCoffeeShop.Status = ShopStatus.Processing;
 		//check TaxCode 
 		var TaxCodeResponse = await _vietQrService.CheckQrCode(request.TaxCode);
 
@@ -67,17 +68,17 @@ public class CreatePetCfShopHandler : IRequestHandler<CreatePetCfShopCommand, Pe
 			await _azureService.CreateBlob(request.Background.FileName, request.Background);
 			NewPetCoffeeShop.BackgroundUrl = await _azureService.GetBlob(request.Background.FileName);
 		}
-		await _unitOfWork.PetCoffeeShopRepository.AddAsync(NewPetCoffeeShop);
-		await _unitOfWork.SaveChangesAsync();
+
 
 		var NewAccountShop = new AccountShop()
 		{
 			AccountId = CurrentUser.Id,
 			ShopId = NewPetCoffeeShop.Id
 		};
-
-		await _unitOfWork.AccountShopRespository.AddAsync(NewAccountShop);
+		NewPetCoffeeShop.AccountShops.Add(NewAccountShop);
+		await _unitOfWork.PetCoffeeShopRepository.AddAsync(NewPetCoffeeShop);
 		await _unitOfWork.SaveChangesAsync();
+
 
 		var response = _mapper.Map<PetCoffeeShopResponse>(NewPetCoffeeShop);
 		response.CreatedById = CurrentUser.Id;

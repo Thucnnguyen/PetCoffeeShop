@@ -26,14 +26,14 @@ public class Account
 	public Role Role { get; set; }
 	public AccountStatus Status { get; set; } = AccountStatus.Verifying;
 	public string? OTP { get; set; }
-	public DateTime? OTPExpired { get; set; }
-	public DateTime? LastLogin { get; set; }
-	public DateTime? EndTimeBlockPost { get; set; }
-	public DateTime? EndTimeBlockComment { get; set; }
+	public DateTimeOffset? OTPExpired { get; set; }
+	public DateTimeOffset? LastLogin { get; set; }
+	public DateTimeOffset? EndTimeBlockPost { get; set; }
+	public DateTimeOffset? EndTimeBlockComment { get; set; }
 
-	public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+	public DateTimeOffset CreatedAt { get; set; } = DateTime.UtcNow;
 
-	public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+	public DateTimeOffset UpdatedAt { get; set; } = DateTime.UtcNow;
 
 	public DateTime? DeletedAt { get; set; }
 

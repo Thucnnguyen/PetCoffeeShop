@@ -18,9 +18,9 @@ namespace PetCoffee.Application.Features.Reservation.Queries
 			set => _search = value?.Trim().ToLower();
 		}
 		public OrderStatus? Status { get; set; }
-		public DateTime? From { get; set; }
+		public DateTimeOffset? From { get; set; }
 
-		public DateTime? To { get; set; }
+		public DateTimeOffset? To { get; set; }
 
 		public long? CustomerId { get; set; }
 

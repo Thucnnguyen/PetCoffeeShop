@@ -19,7 +19,7 @@ public class SchdulerService : ISchedulerService
 		_schedulerFactory = schedulerFactory;
 	}
 
-	public async Task DeleteAccountNotVerify(long accountId, DateTime time)
+	public async Task DeleteAccountNotVerify(long accountId, DateTimeOffset time)
 	{
 		try
 		{

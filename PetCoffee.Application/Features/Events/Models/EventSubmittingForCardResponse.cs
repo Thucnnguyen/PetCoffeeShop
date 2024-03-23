@@ -11,8 +11,8 @@ public class EventSubmittingForCardResponse
 	public string? Title { get; set; }
 	public string? Image { get; set; }
 	public string? Description { get; set; }
-	public DateTime StartDate { get; set; }
-	public DateTime EndDate { get; set; }
+	public DateTimeOffset StartDate { get; set; }
+	public DateTimeOffset EndDate { get; set; }
 	public TimeSpan StartTime { get; set; }
 	public TimeSpan EndTime { get; set; }
 	public string? Location { get; set; }

@@ -37,7 +37,7 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 						.FirstOrDefaultAsync();
 				if (post != null)
 				{
-					post.DeletedAt = DateTime.UtcNow;
+					post.DeletedAt = DateTimeOffset.UtcNow;
 					await _unitOfWork.PostRepository.UpdateAsync(post);
 				}
 				report.Status = ReportStatus.Accept;
