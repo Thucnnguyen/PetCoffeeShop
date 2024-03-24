@@ -51,7 +51,13 @@ public class MappingProfile : Profile
         //Account
         CreateMap<CustomerRegisterCommand, Account>().ReverseMap();
         CreateMap<AccountResponse, Account>().ReverseMap();
-        CreateMap<AccountForPostModel, Account>().ReverseMap();
+
+		CreateMap<AccountShop, ShopResponseForAccount>()
+	.ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PetCoffeeShop.Phone));
+
+
+		//
+		CreateMap<AccountForPostModel, Account>().ReverseMap();
         CreateMap<RegisterShopStaffAccountCommand, Account>().ReverseMap();
         CreateMap<AccountForReservation, Account>().ReverseMap();
 

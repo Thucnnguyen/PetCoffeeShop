@@ -43,6 +43,8 @@ public class GetCurrentAccountHandler : IRequestHandler<GetCurrentAccountInfomat
 		if (listPetCoffeeShop != null)
 		{
 			response.ShopResponses = listPetCoffeeShop.Select(shop => _mapper.Map<ShopResponseForAccount>(shop.PetCoffeeShop)).ToList();
+
+
 		}
 
 		response.TotalIsFollowing = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.CreatedById == currentAccount.Id); ;
