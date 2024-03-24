@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
+using PetCoffee.Application.Features.Areas.Models;
+using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Persistence.Repository;
@@ -143,9 +145,26 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			await _unitOfWork.ReservationRepository.AddAsync(order);
 			await _unitOfWork.SaveChangesAsync();
 
+			// get order just inserted
+			var reservations = await _unitOfWork.ReservationRepository.Get(
+					 predicate: o => o.Id == order.Id,
+					 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
+					 {
+								 p => p.CreatedBy,
+								 o => o.Area,
+		o => o.Area.PetCoffeeShop
+					 },
+					 disableTracking: true)
+				.FirstOrDefaultAsync();
+			//
 
-			
-			return _mapper.Map<ReservationResponse>(order);
+
+			var response = _mapper.Map<ReservationResponse>(reservations);
+			var petCoffeeShopResponse = _mapper.Map<PetCoffeeShopResponse>(reservations.Area.PetCoffeeShop);
+			response.AreaResponse = _mapper.Map<AreaResponse>(area);
+			response.AccountForReservation = _mapper.Map<AccountForReservation>(reservations.CreatedBy);
+			response.PetCoffeeShopResponse = petCoffeeShopResponse;
+			return response;
 		}
 
 
