@@ -25,12 +25,15 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 		{
 
 
-			var orderQuery = await _unitOfWork.ReservationRepository.GetAsync(
-		 predicate: order => order.Id == request.Id,
-		 disableTracking: true);
-			var order = await orderQuery
-
-				.Include(order => order.Transactions).FirstOrDefaultAsync(cancellationToken);
+			var order = await _unitOfWork.ReservationRepository.Get(
+							 predicate: order => order.Id == request.Id,
+							 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
+							 {
+								 p => p.CreatedBy,
+							 },
+							 disableTracking: true)
+							.FirstOrDefaultAsync();
+			
 
 			if (order == null)
 			{
@@ -42,6 +45,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				.Include(rp => rp.Product).ToListAsync();
 				
 			var response = _mapper.Map<ReservationDetailResponse>(order);
+			response.AccountForReservation = _mapper.Map<AccountForReservation>(order.CreatedBy);
 			response.Products = products.Select(p => _mapper.Map<ProductForReservationResponse>(p)).ToList();
 			return response;
 		}

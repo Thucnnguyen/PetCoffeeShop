@@ -37,7 +37,6 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			}
 			var response = Posts.Select(post => _mapper.Map<ReservationResponse>(post)).ToList();
 
-
 			return response;
 		}
 	}

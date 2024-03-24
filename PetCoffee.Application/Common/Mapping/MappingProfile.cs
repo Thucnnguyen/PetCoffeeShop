@@ -53,6 +53,7 @@ public class MappingProfile : Profile
         CreateMap<AccountResponse, Account>().ReverseMap();
         CreateMap<AccountForPostModel, Account>().ReverseMap();
         CreateMap<RegisterShopStaffAccountCommand, Account>().ReverseMap();
+        CreateMap<AccountForReservation, Account>().ReverseMap();
 
         //Area
         CreateMap<AreaResponse, Area>().ReverseMap();

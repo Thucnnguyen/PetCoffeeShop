@@ -162,7 +162,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			var existingReservations = _unitOfWork.ReservationRepository
 				 .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success)
-				 && (r.StartTime <= endTime || r.EndTime >= startTime) && r.StartTime == startTime.Date);
+				 && (r.StartTime <= endTime || r.EndTime >= startTime) && r.StartTime.Date == startTime.Date);
 
 
 			var totalSeatsBooked = existingReservations.Sum(r => r.BookingSeat);
