@@ -51,7 +51,29 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
+		// get maxSeat of shop
+		var areasWithMaxSeat = await _unitOfWork.AreaRepsitory
+		.GetAsync(
+			predicate: a => a.PetcoffeeShopId == CurrentShop.Id, // Filter by shop ID
+			orderBy: q => q.OrderByDescending(a => a.TotalSeat), // Order by TotalSeat in descending order
+			disableTracking: true
+		);
+
+		var seat = areasWithMaxSeat.FirstOrDefault();
+
+		int areasWithMaxSeatOfShop = 0;
+		if (seat == null)
+		{
+			areasWithMaxSeatOfShop = 0;
+		}
+		else
+		{
+
+			areasWithMaxSeatOfShop = areasWithMaxSeat.First().TotalSeat;
+		}
 		var response = _mapper.Map<PetCoffeeShopResponse>(CurrentShop);
+
+
 		if (request.Longitude != 0 && request.Latitude != 0)
 		{
 			response.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, CurrentShop.Latitude, CurrentShop.Longitude);
@@ -59,6 +81,7 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		response.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == request.Id);
 		response.IsFollow = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(s => s.CreatedById == CurrentUser.Id && s.ShopId == CurrentShop.Id)).Any();
 		response.CreatedBy = _mapper.Map<AccountForPostModel>(CurrentShop.CreatedBy);
+		response.MaxSeat = areasWithMaxSeatOfShop;
 		return response;
 	}
 }
