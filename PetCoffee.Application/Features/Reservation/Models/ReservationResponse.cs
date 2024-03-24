@@ -1,5 +1,8 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Areas.Models;
+using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Product.Models;
+using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Reservation.Models;
@@ -18,10 +21,13 @@ public class ReservationResponse : BaseAuditableEntityResponse
 	public string? Comment { get; set; }
 
 	public long? AreaId { get; set; }
-	//public Area? Area { get; set; }
+	public AreaResponse AreaResponse { get; set; }
 
+	public int BookingSeat { get; set; }
 	public IList<ProductForReservationResponse> Products { get; set; }
 	public AccountForReservation? AccountForReservation { get; set; }
+
+	public PetCoffeeShopResponse PetCoffeeShopResponse { get; set; }
 }
 
 public class AccountForReservation

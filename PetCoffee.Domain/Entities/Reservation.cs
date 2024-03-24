@@ -21,8 +21,8 @@ public class Reservation : BaseAuditableEntity
 
 	public int BookingSeat { get; set; }
 
-	public long? AreaId { get; set; }
-	public Area? Area { get; set; }
+	public long AreaId { get; set; }
+	public Area Area { get; set; }
 
 	public bool IsTotallyRefund { get; set; } = false;
 
