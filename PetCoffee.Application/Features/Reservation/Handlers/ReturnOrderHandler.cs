@@ -56,7 +56,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 throw new ApiException(ResponseCode.ExpiredReservation);
             }
 
-			if(reservation.IsTotallyRefund)
+
+			decimal amountRefund = 0;
+
+			if (reservation.IsTotallyRefund)
 			{
 				var transaction = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.Reserve);
 				if(transaction == null)
@@ -79,6 +82,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 };
 
                 reservation.Transactions.Add(newRefundTransaction);
+				amountRefund = newRefundTransaction.Amount;
 
 			}
 			else
@@ -98,14 +102,20 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 };
 
                 reservation.Transactions.Add(newRefundTransaction);
-            }
+				amountRefund = newRefundTransaction.Amount;
+			}
 
 			reservation.Status = OrderStatus.Returned;
+
+			var response = _mapper.Map<ReservationResponse>(reservation);
+			response.AmountRefund = amountRefund;
+
+
 
 			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
 			await _unitOfWork.SaveChangesAsync();
 
-			return _mapper.Map<ReservationResponse>(reservation);
+			return response;
 		}
 	}
 }

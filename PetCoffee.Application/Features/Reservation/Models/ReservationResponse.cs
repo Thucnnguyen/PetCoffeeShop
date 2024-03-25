@@ -28,6 +28,7 @@ public class ReservationResponse : BaseAuditableEntityResponse
 	public AccountForReservation? AccountForReservation { get; set; }
 
 	public PetCoffeeShopResponse PetCoffeeShopResponse { get; set; }
+	public decimal AmountRefund { get; set; }
 }
 
 public class AccountForReservation
