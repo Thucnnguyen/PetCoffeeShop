@@ -44,7 +44,7 @@ public class GetStaffAccountByShopIdHandler : IRequestHandler<GetStaffAccountByS
 		};
 		var staffs = await _unitOfWork.AccountRepository
 						.GetAsync(
-							predicate: a => a.IsStaff && a.FullName.Contains(request.Search) && !a.Deleted && a.AccountShops.Any(acs => acs.ShopId == request.ShopId),
+							predicate: a => a.IsStaff && (request.Search == null || a.FullName.Contains(request.Search)) && !a.Deleted && a.AccountShops.Any(acs => acs.ShopId == request.ShopId),
 							includes: new List<System.Linq.Expressions.Expression<Func<Account, object>>>
 							{
 								a => a.AccountShops
