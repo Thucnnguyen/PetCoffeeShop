@@ -51,7 +51,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			}
 
 			// check time 
-			if(reservation.StartTime < DateTimeOffset.UtcNow) 
+			if(reservation.StartTime.UtcDateTime < DateTimeOffset.UtcNow) 
 			{
                 throw new ApiException(ResponseCode.ExpiredReservation);
             }
@@ -68,13 +68,13 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				}
 
 
-				transaction.Wallet.Balance += transaction.Amount;
-                transaction.Remitter.Balance -= transaction.Amount;
+				transaction.Wallet.Balance += reservation.TotalPrice;
+                transaction.Remitter.Balance -= reservation.TotalPrice;
 
                 var newRefundTransaction = new Transaction()
                 {
                     WalletId = transaction.Wallet.Id,
-                    Amount = (decimal)transaction.Amount,
+                    Amount = (decimal)reservation.TotalPrice,
                     Content = "Hoàn tiền đặt chỗ",
                     TransactionStatus = TransactionStatus.Done,
                     ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
@@ -88,13 +88,13 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			else
 			{
                 var transaction = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.Reserve);
-                transaction.Wallet.Balance +=  (transaction.Amount * 60)/100;
-                transaction.Remitter.Balance -= (transaction.Amount * 60) / 100;
+                transaction.Wallet.Balance +=  (reservation.TotalPrice * 60)/100;
+                transaction.Remitter.Balance -= (reservation.TotalPrice * 60) / 100;
 
                 var newRefundTransaction = new Transaction()
                 {
                     WalletId = transaction.Wallet.Id,
-                    Amount = (decimal)(transaction.Amount * 60) / 100,
+                    Amount = (decimal)(reservation.TotalPrice * 60) / 100,
                     Content = "Hoàn tiền đặt chỗ",
                     TransactionStatus = TransactionStatus.Done,
                     ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
