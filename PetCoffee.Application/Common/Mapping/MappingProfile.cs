@@ -91,8 +91,7 @@ public class MappingProfile : Profile
                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.PostCategories.Select(pc => pc.Category)))
                .ForMember(dest => dest.PetCoffeeShops, opt => opt.MapFrom(src => src.PostPetCoffeeShops.Select(ppc => ppc.Shop)))
                .ForMember(dest => dest.NamePoster, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.Name : src.CreatedBy.FullName))
-               .ForMember(dest => dest.PosterAvatar, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar))
-               .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.CreatedBy.Id));
+               .ForMember(dest => dest.PosterAvatar, opt => opt.MapFrom(src => src.ShopId != null ? src.PetCoffeeShop.AvatarUrl : src.CreatedBy.Avatar));
         //pets
         CreateMap<Pet, PetResponse>()
                 .ForMember(dest => dest.Backgrounds, opt => opt.MapFrom(src => src.Backgound))

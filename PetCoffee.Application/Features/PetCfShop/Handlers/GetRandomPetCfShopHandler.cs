@@ -31,7 +31,7 @@ public class GetRandomPetCfShopHandler : IRequestHandler<GetRandomPetCfShopQuery
 			TotalShop = await _unitOfWork.PetCoffeeShopRepository.CountAsync();
 		}
 		var response = new List<PetCoffeeShopForCardResponse>();
-		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync()).ToList();
+		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(s => s.Status == ShopStatus.Active)).ToList();
 
 		if (TotalShop < request.Size)
 		{
