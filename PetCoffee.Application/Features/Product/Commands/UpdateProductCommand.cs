@@ -22,7 +22,7 @@ namespace PetCoffee.Application.Features.Product.Commands
         public string Name { get; set; }
         public decimal Price { get; set; }
         public ProductStatus ProductStatus { get; set; }
-        public IList<IFormFile>? Image { get; set; }
+        public IList<IFormFile>? Images { get; set; }
     }
 
   

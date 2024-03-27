@@ -87,6 +87,18 @@ namespace PetCoffee.API.Controllers
 			return await Mediator.Send(request);
 		}
 
+		[HttpGet("accounts")]
+		[Authorize(Roles = "Admin,PlatforStaff")]
+		public async Task<ActionResult<PaginationResponse<Account, AccountForRecord>>> GetAllAccount([FromQuery] GetAllAccountsQuery request)
+		{
+			return await Mediator.Send(request);
+		}
+		[HttpPut("accounts/status")]
+		[Authorize(Roles = "Admin,PlatforStaff,Manager")]
+		public async Task<ActionResult<bool>> updateAccountStatus([FromBody] UpdateAccountStatusCommand request)
+		{
+			return await Mediator.Send(request);
+		}
 		// POST api/<ValuesController>
 		[HttpPost("register")]
 		public async Task<ActionResult<AccessTokenResponse>> ResgisterCustommer([FromForm] CustomerRegisterCommand request)
@@ -94,7 +106,12 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
-
+		[HttpPost("register/platformstaffs")]
+		public async Task<ActionResult<bool>> ResgisterPlatFormStaff ([FromBody] CreateAccountStaffPlaformCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 		[HttpPost("verify/otp")]
 		[Authorize]
 		public async Task<ActionResult<bool>> VerifyCustommer([FromBody] VerifyAccountCommand request)

@@ -8,6 +8,7 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
+using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -52,7 +53,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             foreach (var pro in request.Products)
             {
 
-                var p = (await _unitOfWork.ProductRepository.GetAsync(pro => pro.Id == pro.Id && !pro.Deleted)).FirstOrDefault();
+                var p = (await _unitOfWork.ProductRepository.GetAsync(pr => pr.Id == pro.ProductId && !pr.Deleted)).FirstOrDefault();
                 if (p == null)
                 {
                     throw new ApiException(ResponseCode.ProductNotExist);
@@ -142,9 +143,21 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             }
 
             reservation.TotalPrice += totalPrice;
-            await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
 
-            await _unitOfWork.SaveChangesAsync();
+			var newTransaction = new Domain.Entities.Transaction()
+			{
+				WalletId = wallet.First().Id,
+				Amount = (decimal)totalPrice,
+				Content = "Đặt đồ uống",
+				RemitterId = managaerWallet.Id,
+				TransactionStatus = TransactionStatus.Done,
+				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
+				TransactionType = TransactionType.AddProducts,
+			};
+            reservation.Transactions.Add(newTransaction);
+			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
+
+			await _unitOfWork.SaveChangesAsync();
 
             return true;
 

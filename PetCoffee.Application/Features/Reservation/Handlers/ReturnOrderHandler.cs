@@ -42,67 +42,94 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			var reservation = _unitOfWork.ReservationRepository.Get(p => p.Id == request.OrderId && p.CreatedById == currentAccount.Id && p.Status.Equals(OrderStatus.Success))
 				.Include(r => r.Transactions)
 				.ThenInclude(t => t.Wallet)
-                .Include(r => r.Transactions)
-                .ThenInclude(t => t.Remitter)
-                .FirstOrDefault();
+				.Include(r => r.Transactions)
+				.ThenInclude(t => t.Remitter)
+				.FirstOrDefault();
 			if (reservation == null)
 			{
 				throw new ApiException(ResponseCode.ReservationNotExistOrIsRefunded);
 			}
-
 			// check time 
-			if(reservation.StartTime.UtcDateTime < DateTimeOffset.UtcNow) 
+			if (reservation.StartTime.UtcDateTime < DateTimeOffset.UtcNow)
 			{
-                throw new ApiException(ResponseCode.ExpiredReservation);
-            }
+				throw new ApiException(ResponseCode.ExpiredReservation);
+			}
 
 
 			decimal amountRefund = 0;
-
-			if (reservation.IsTotallyRefund)
+			if (reservation.StartTime.UtcDateTime.AddDays(-1) > DateTime.UtcNow)
 			{
 				var transaction = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.Reserve);
-				if(transaction == null)
+				if (transaction == null)
 				{
 					throw new ApiException(ResponseCode.TransactionNotFound);
 				}
 
 
 				transaction.Wallet.Balance += reservation.TotalPrice;
-                transaction.Remitter.Balance -= reservation.TotalPrice;
+				transaction.Remitter.Balance -= reservation.TotalPrice;
 
-                var newRefundTransaction = new Transaction()
-                {
-                    WalletId = transaction.Wallet.Id,
-                    Amount = (decimal)reservation.TotalPrice,
-                    Content = "Hoàn tiền đặt chỗ",
-                    TransactionStatus = TransactionStatus.Done,
-                    ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
-                    TransactionType = TransactionType.Refund,
-                };
+				var newRefundTransaction = new Transaction()
+				{
+					WalletId = transaction.Wallet.Id,
+					Amount = (decimal)reservation.TotalPrice,
+					Content = "Hoàn tiền đặt chỗ",
+					TransactionStatus = TransactionStatus.Done,
+					ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
+					TransactionType = TransactionType.Refund,
+				};
 
-                reservation.Transactions.Add(newRefundTransaction);
+				reservation.Transactions.Add(newRefundTransaction);
 				amountRefund = newRefundTransaction.Amount;
 
 			}
 			else
 			{
-                var transaction = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.Reserve);
-                transaction.Wallet.Balance +=  (reservation.TotalPrice * 60)/100;
-                transaction.Remitter.Balance -= (reservation.TotalPrice * 60) / 100;
+				if (reservation.IsTotallyRefund)
+				{
+					var transaction = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.Reserve);
+					if (transaction == null)
+					{
+						throw new ApiException(ResponseCode.TransactionNotFound);
+					}
 
-                var newRefundTransaction = new Transaction()
-                {
-                    WalletId = transaction.Wallet.Id,
-                    Amount = (decimal)(reservation.TotalPrice * 60) / 100,
-                    Content = "Hoàn tiền đặt chỗ",
-                    TransactionStatus = TransactionStatus.Done,
-                    ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
-                    TransactionType = TransactionType.Refund,
-                };
 
-                reservation.Transactions.Add(newRefundTransaction);
-				amountRefund = newRefundTransaction.Amount;
+					transaction.Wallet.Balance += reservation.TotalPrice;
+					transaction.Remitter.Balance -= reservation.TotalPrice;
+
+					var newRefundTransaction = new Transaction()
+					{
+						WalletId = transaction.Wallet.Id,
+						Amount = (decimal)reservation.TotalPrice,
+						Content = "Hoàn tiền đặt chỗ",
+						TransactionStatus = TransactionStatus.Done,
+						ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
+						TransactionType = TransactionType.Refund,
+					};
+
+					reservation.Transactions.Add(newRefundTransaction);
+					//amountRefund = newRefundTransaction.Amount;
+				}
+				else
+				{
+					var transaction = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.Reserve);
+					transaction.Wallet.Balance += (reservation.TotalPrice * 60) / 100;
+					transaction.Remitter.Balance -= (reservation.TotalPrice * 60) / 100;
+
+					var newRefundTransaction = new Transaction()
+					{
+						WalletId = transaction.Wallet.Id,
+						Amount = (decimal)(reservation.TotalPrice * 60) / 100,
+						Content = "Hoàn tiền đặt chỗ",
+						TransactionStatus = TransactionStatus.Done,
+						ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
+						TransactionType = TransactionType.Refund,
+					};
+
+					reservation.Transactions.Add(newRefundTransaction);
+					amountRefund = newRefundTransaction.Amount;
+				}
+
 			}
 
 			reservation.Status = OrderStatus.Returned;

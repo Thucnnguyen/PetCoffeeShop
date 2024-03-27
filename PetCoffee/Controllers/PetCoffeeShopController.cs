@@ -47,7 +47,7 @@ namespace PetCoffee.API.Controllers
 		}
 
 		[HttpPost("petcoffeeshops")]
-		[Authorize(Roles = "Manager")]
+		[Authorize(Roles = "Customer,Manager")]
 		public async Task<ActionResult<PetCoffeeShopResponse>> AddPetCfShop(
 		[FromForm] CreatePetCfShopCommand request)
 		{

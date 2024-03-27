@@ -51,11 +51,12 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 							 predicate: order => order.CreatedById == currentAccount.Id,
 							 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
 							 {
-								 p => p.CreatedBy,
+								 o => o.CreatedBy,
 								 o => o.Area,
-		o => o.Area.PetCoffeeShop
+		                         o => o.Area.PetCoffeeShop
 							 },
 							 disableTracking: true)
+                            .OrderByDescending(o => o.CreatedAt)
 							.ToListAsync();
 
 			//

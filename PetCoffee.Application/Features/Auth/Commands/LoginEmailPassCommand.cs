@@ -9,7 +9,7 @@ public class LoginUserNamePassValidation : AbstractValidator<LoginEmailPassComma
 {
 	public LoginUserNamePassValidation()
 	{
-		RuleFor(model => model.Username).NotEmpty();
+		RuleFor(model => model.Email).NotEmpty();
 		RuleFor(model => model.Password).NotEmpty();
 
 	}
@@ -17,6 +17,6 @@ public class LoginUserNamePassValidation : AbstractValidator<LoginEmailPassComma
 
 public class LoginEmailPassCommand : IRequest<AccessTokenResponse>
 {
-	public string Username { get; set; }
+	public string Email { get; set; }
 	public string Password { get; set; }
 }

@@ -51,9 +51,11 @@ public class MappingProfile : Profile
         //Account
         CreateMap<CustomerRegisterCommand, Account>().ReverseMap();
         CreateMap<AccountResponse, Account>().ReverseMap();
+        CreateMap<AccountForRecord, Account>().ReverseMap();
+        CreateMap<CreateAccountStaffPlaformCommand, Account>().ReverseMap();
 
 		CreateMap<AccountShop, ShopResponseForAccount>()
-	.ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PetCoffeeShop.Phone));
+	        .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.PetCoffeeShop.Phone));
 
 
 		//
@@ -194,7 +196,7 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Event.Description))
             .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Event.StartTime))
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Event.StartDate))
-            .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count))
+            .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.Event.FollowEvents.Count()))
             .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Event.EndTime))
             .ForMember(dest => dest.StartDate, opt => opt.MapFrom(src => src.Event.StartDate))
             .ForMember(dest => dest.IsJoin, opt => opt.MapFrom(src => src.Event.SubmittingEvents.Any()))

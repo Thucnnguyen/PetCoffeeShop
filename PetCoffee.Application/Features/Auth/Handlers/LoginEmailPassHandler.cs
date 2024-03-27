@@ -26,7 +26,7 @@ public class LoginEmailPassHandler : IRequestHandler<LoginEmailPassCommand, Acce
 
 	public async Task<AccessTokenResponse> Handle(LoginEmailPassCommand request, CancellationToken cancellationToken)
 	{
-		var isExisted = await _unitOfWork.AccountRepository.GetUserByUserNameAndPassword(request.Username, request.Password);
+		var isExisted = await _unitOfWork.AccountRepository.GetUserByUserNameAndPassword(request.Email, request.Password);
 		if (isExisted == null)
 		{
 			throw new ApiException(ResponseCode.LoginFailed);

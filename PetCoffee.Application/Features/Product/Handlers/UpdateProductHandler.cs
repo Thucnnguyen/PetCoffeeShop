@@ -64,9 +64,9 @@ namespace PetCoffee.Application.Features.Product.Handlers
             Assign.Partial<UpdateProductCommand, Domain.Entities.Product>(request, product);
 
             //upload Image
-            if (request.Image != null)
+            if (request.Images != null)
             {
-                product.Image = await _azureService.UpdateloadImages(request.Image);
+                product.Image = await _azureService.UpdateloadImages(request.Images);
             }
 
             await _unitOfWork.ProductRepository.UpdateAsync(product);
