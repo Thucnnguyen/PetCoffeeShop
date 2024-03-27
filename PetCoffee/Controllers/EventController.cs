@@ -115,5 +115,13 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
+
+		[HttpGet("/events/{EventId}/event-fields")]
+		[Authorize]
+		public async Task<ActionResult<EventResponse>> GetSubmittingEventByIdForShop([FromRoute] GetAllSubmittingEventByEventIdForShopQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 	}
 }

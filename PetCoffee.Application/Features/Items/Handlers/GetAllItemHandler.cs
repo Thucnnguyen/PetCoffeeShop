@@ -37,7 +37,7 @@ namespace PetCoffee.Application.Features.Items.Handlers
 			{
 				throw new ApiException(ResponseCode.AccountNotActived);
 			}
-			var items = await _unitOfWork.ItemRepository.GetAsync();
+			var items = await _unitOfWork.ItemRepository.GetAsync(i => !i.Deleted);
 			//var Expression = request.GetExpressions();
 			//var items = await _unitOfWork.ItemRepository.Get(Expression).ToListAsync();
 			var response = new List<ItemResponse>();

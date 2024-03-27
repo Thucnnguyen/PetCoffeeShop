@@ -25,7 +25,7 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 
 	public async Task<bool> Handle(ChangePetCoffeeShopRequestStatusCommand request, CancellationToken cancellationToken)
 	{
-		var PetCoffShopChangeStatus = await _unitOfWork.PetCoffeeShopRepository.Get(shop => shop.Id == request.ShopId && shop.Status == ShopStatus.Processing)
+		var PetCoffShopChangeStatus = await _unitOfWork.PetCoffeeShopRepository.Get(shop => shop.Id == request.ShopId)
 																			 .FirstOrDefaultAsync();
 		if (PetCoffShopChangeStatus == null)
 		{
@@ -35,7 +35,6 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 		if (request.Status == ShopStatus.Active)
 		{
 			PetCoffShopChangeStatus.Status = ShopStatus.Active;
-			PetCoffShopChangeStatus.EndTimePackage = DateTime.UtcNow.AddMonths(3);
 			await _unitOfWork.PetCoffeeShopRepository.UpdateAsync(PetCoffShopChangeStatus);
 			var createdBy = await _unitOfWork.AccountRepository.GetByIdAsync(PetCoffShopChangeStatus.CreatedById);
 			if (createdBy.IsCustomer)

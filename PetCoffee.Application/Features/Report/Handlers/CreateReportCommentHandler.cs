@@ -34,13 +34,13 @@ namespace PetCoffee.Application.Features.Report.Handlers
 				throw new ApiException(ResponseCode.AccountNotActived);
 			}
 
-			var comment = await _unitOfWork.CommentRepository.GetAsync(p => p.Id == request.Id);
+			var comment = await _unitOfWork.CommentRepository.GetAsync(p => p.Id == request.CommentID);
 			if (!comment.Any())
 			{
 				throw new ApiException(ResponseCode.CommentNotExist);
 			}
 			// check already report
-			var reportComment = await _unitOfWork.ReportRepository.GetAsync(l => l.CommentId == request.Id && l.CreatedById == curAccount.Id);
+			var reportComment = await _unitOfWork.ReportRepository.GetAsync(l => l.CommentId == request.CommentID && l.CreatedById == curAccount.Id);
 			if (reportComment.Any())
 			{
 				return false;

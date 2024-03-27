@@ -71,6 +71,8 @@ public class Account
 	public bool IsVerify => Equals(AccountStatus.Verifying, Status);
 	[Projectable]
 	public bool IsAdmin => Equals(Role, Role.Admin);
+	[Projectable]
+	public bool IsPlatformStaff => Equals(Role, Role.PlatformStaff);
 
 	[Projectable]
 	public bool IsManager => Equals(Role, Role.Manager);

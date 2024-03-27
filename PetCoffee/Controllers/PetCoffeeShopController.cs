@@ -63,7 +63,7 @@ namespace PetCoffee.API.Controllers
 		}
 
 		[HttpPut("petcoffeeshops/status")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,PlatformStaff,Manager")]
 		public async Task<ActionResult<bool>> UpdatePetCfShopStatus(
 		[FromForm] ChangePetCoffeeShopRequestStatusCommand request)
 		{
@@ -71,7 +71,7 @@ namespace PetCoffee.API.Controllers
 		}
 
 		[HttpGet("petcoffeeshops/processing")]
-		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin,PlatformStaff")]
 		public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetListOfProcessingShop(
 			[FromRoute] GetAllPetCfShopRequestQuery request)
 		{

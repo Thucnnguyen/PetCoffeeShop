@@ -35,7 +35,7 @@ public class CreateAccountStaffPlaformHandler : IRequestHandler<CreateAccountSta
 
 		var newStaffPlatformAccount = _mapper.Map<Account>(request);
 		newStaffPlatformAccount.Password = HashHelper.HashPassword(request.Password);
-		newStaffPlatformAccount.Role = Role.PlatforStaff;
+		newStaffPlatformAccount.Role = Role.PlatformStaff;
 		newStaffPlatformAccount.LoginMethod = LoginMethod.UserNamePass;
 		newStaffPlatformAccount.Status = AccountStatus.Active;
 		newStaffPlatformAccount.PhoneNumber = "";

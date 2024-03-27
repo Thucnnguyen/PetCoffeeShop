@@ -56,6 +56,21 @@ namespace PetCoffee.API.Controllers
 			return Ok(response);
 		}
 
+		[HttpGet("item")]
+		[Authorize]
+		public async Task<ActionResult<bool>> UpdateItem([FromForm] UpdateItemCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return Ok(response);
+		}
+
+		[HttpDelete("item/{Id}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> DeleteItem([FromRoute] DeleteItemCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return Ok(response);
+		}
 	}
 
 }

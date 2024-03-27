@@ -136,7 +136,8 @@ public class MappingProfile : Profile
         //Event
         CreateMap<CreateEventCommand, Event>().ReverseMap();
         CreateMap<Event, EventForCardResponse>()
-                .ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
+			    .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()))
+				.ForMember(dest => dest.EventId, opt => opt.MapFrom(src => src.Id));
         CreateMap<EventResponse, Event>();
         CreateMap<Event, EventResponse>()
                 .ForMember(dest => dest.TotalJoinEvent, opt => opt.MapFrom(src => src.SubmittingEvents.Count()))

@@ -12,9 +12,16 @@ namespace PetCoffee.API.Controllers
 	[ApiController]
 	public class CommentController : ApiControllerBase
 	{
-		[HttpGet("comments/{PostId}")]
+		[HttpGet("posts/{PostId}/comments")]
 		[Authorize]
 		public async Task<ActionResult<PaginationResponse<Comment, CommentResponse>>> GetCommentById([FromRoute] GetCommentByPostIdQuery request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+		[HttpGet("comments/{Id}")]
+		[Authorize]
+		public async Task<ActionResult<CommentResponse>> GetCommentById([FromRoute] GetCommentByIdQuery request)
 		{
 			var response = await Mediator.Send(request);
 			return response;

@@ -17,5 +17,5 @@ public enum Role
 	Customer = 3,
 
 	[Description("nhân viên platform")]
-	PlatforStaff = 4
+	PlatformStaff = 4
 }

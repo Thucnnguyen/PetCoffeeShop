@@ -1,10 +1,10 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Domain.Enums;
-using System.Data.Entity;
 
 namespace PetCoffee.Application.Features.Report.Handlers;
 
