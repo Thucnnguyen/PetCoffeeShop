@@ -54,7 +54,7 @@ namespace PetCoffee.API.Controllers
 		public async Task<ActionResult<bool>> CreateReportCommentByCurrentAccount(
 	[FromRoute] long Id, [FromBody] CreateReportCommentCommand request)
 		{
-			request.Id = Id;
+			request.CommentID = Id;
 			var response = await Mediator.Send(request);
 			return response;
 		}

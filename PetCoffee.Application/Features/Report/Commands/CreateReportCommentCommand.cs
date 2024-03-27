@@ -17,7 +17,7 @@ namespace PetCoffee.Application.Features.Report.Commands
 	public class CreateReportCommentCommand : IRequest<bool>
 	{
 		[JsonIgnore]
-		public long Id { get; set; }
+		public long CommentID { get; set; }
 
 		public ReportCategory ReportCategory { get; set; }
 	}
