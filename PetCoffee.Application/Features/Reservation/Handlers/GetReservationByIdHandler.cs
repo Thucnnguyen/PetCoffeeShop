@@ -46,7 +46,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			var products = await _unitOfWork.ReservationProductRepository
 				.Get(rp => rp.ReservationId == request.Id)
-				.Include(rp => rp.Product).ToListAsync();
+				.ToListAsync();
 
 			//var petCoffeeShop = await _unitOfWork.AreaRepsitory.GetAsync(p => p.PetcoffeeShopId == order.Area.PetcoffeeShopId);
 			var petCoffeeShopResponse = _mapper.Map<PetCoffeeShopResponse>(order.Area.PetCoffeeShop);

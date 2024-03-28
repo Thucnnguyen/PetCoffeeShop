@@ -6,6 +6,7 @@ using PetCoffee.Application.Features.Reservation.Commands;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;
 using PetCoffee.Domain.Entities;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace PetCoffee.API.Controllers
 {
@@ -93,20 +94,32 @@ namespace PetCoffee.API.Controllers
 		}
 
 
-        [HttpGet("accounts/orders")]
-        [Authorize]
-        public async Task<ActionResult<PaginationResponse<Reservation, ReservationResponse>>> GetOrdersByCurrentAccount(
+
+
+		[HttpGet("accounts/orders")]
+		[Authorize]
+		public async Task<ActionResult<PaginationResponse<Reservation, ReservationResponse>>> GetOrdersByCurrentAccount(
   [FromQuery] GetAllReservationByAccountQuery request)
-        {
-            if (string.IsNullOrWhiteSpace(request.SortColumn))
-            {
-                request.SortColumn = "CreatedAt";
-                request.SortDir = SortDirection.Desc;
-            }
-            return await Mediator.Send(request);
-        }
+		{
+			if (string.IsNullOrWhiteSpace(request.SortColumn))
+			{
+				request.SortColumn = "CreatedAt";
+				request.SortDir = SortDirection.Desc;
+			}
+			return await Mediator.Send(request);
+		}
 
 
+		[HttpDelete("orders/{ReservationId:long}/reservation-product/{ProductId:long}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> RemoveProductInReservation(
+	 [FromRoute] RemoveProductInReservationCommand command)
+		{
 
-    }
+			return await Mediator.Send(command);
+
+		}
+
+
+	}
 }

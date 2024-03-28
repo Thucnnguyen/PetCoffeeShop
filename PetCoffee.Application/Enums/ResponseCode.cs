@@ -107,4 +107,8 @@ public enum ResponseCode
     [Description("Đơn hàng đã quá hạn")] ExpiredReservation,
 
 
+	[Description("Sản phẩm không tồn tại trong đơn hàng")] ProductNotExistInReservation,
+
+
+
 }

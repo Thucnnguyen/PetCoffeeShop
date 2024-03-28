@@ -25,4 +25,6 @@ public enum TransactionType
 	AddProducts = 6,
 	[Description("Mua gói")]
 	Package = 7,
+	[Description("Hủy đặt đồ uống")]
+	RemoveProducts = 8,
 }
