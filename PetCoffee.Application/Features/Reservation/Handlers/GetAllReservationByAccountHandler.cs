@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OpenAI_API.Images;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -12,12 +11,6 @@ using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -43,26 +36,40 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             {
                 throw new ApiException(ResponseCode.AccountNotActived);
             }
-            //var reservations = _unitOfWork.ReservationRepository.Get(rs => rs.CreatedById == currentAccount.Id).OrderByDescending(rs => rs.CreatedAt).ToList();
-
-
-			// update 
-			var reservations = await _unitOfWork.ReservationRepository.Get(
+            var reservations = new List<Domain.Entities.Reservation>();
+            if(currentAccount.IsCustomer)
+            {
+				 reservations = await _unitOfWork.ReservationRepository.Get(
 							 predicate: order => order.CreatedById == currentAccount.Id,
 							 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
 							 {
 								 o => o.CreatedBy,
 								 o => o.Area,
-		                         o => o.Area.PetCoffeeShop
+								 o => o.Area.PetCoffeeShop
 							 },
 							 disableTracking: true)
-                            .OrderByDescending(o => o.CreatedAt)
+							.OrderByDescending(o => o.CreatedAt)
+							.Skip((request.PageNumber - 1) * request.PageSize)
+							.Take(request.PageSize)
 							.ToListAsync();
-
-			//
-		
-
-			//
+			}
+            if(currentAccount.IsStaff || currentAccount.IsManager)
+            {
+				reservations = await _unitOfWork.ReservationRepository.Get(
+							 predicate: order => currentAccount.AccountShops.Select(acs => acs.ShopId).Contains(order.Area.PetcoffeeShopId),
+							 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
+							 {
+								 o => o.CreatedBy,
+								 o => o.Area,
+								 o => o.Area.PetCoffeeShop
+							 },
+							 disableTracking: true)
+							.OrderByDescending(o => o.CreatedAt)
+							.Skip((request.PageNumber - 1) * request.PageSize)
+				            .Take(request.PageSize)
+							.ToListAsync();
+			}
+			
 
 			if (reservations == null)
             {
@@ -70,20 +77,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 throw new ApiException(ResponseCode.ReservationNotExist);
             }
 
-
-
-            var reservationResponse = reservations.
-                Skip((request.PageNumber - 1) * request.PageSize)
-                .Take(request.PageSize)
-                .ToList();
-
-
-
-
-
+            
 
             var response = new List<ReservationResponse>();
-            foreach (var reservation in reservationResponse)
+            foreach (var reservation in reservations)
             {
               
 				var petCoffeeShopResponse = _mapper.Map<PetCoffeeShopResponse>(reservation.Area.PetCoffeeShop);

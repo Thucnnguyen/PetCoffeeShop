@@ -22,8 +22,14 @@ public class Transaction : BaseAuditableEntity
 	public string? ReferenceTransactionId { get; set; }
 	public string? Url { get; set; }
 	public long? ReservationId { get; set; }
-
 	public Reservation? Reservation { get; set; }
+
+	public long? PetCoffeeShopId { get; set; }
+	public PetCoffeeShop? PetCoffeeShop { get; set; }
+
+	public long? PackagePromotionId { get; set; }
+	public PackagePromotion? PackagePromotion { get; set; }
+
 	public string? Content { get; set; }
 
 	// for donate

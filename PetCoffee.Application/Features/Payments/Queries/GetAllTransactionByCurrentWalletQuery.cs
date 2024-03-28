@@ -1,17 +1,14 @@
-﻿
-
-using LinqKit;
+﻿using LinqKit;
 using MediatR;
 using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Payments.Models;
-using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.Payments.Queries;
 
-public class GetAllTransactionQuery : PaginationRequest<Domain.Entities.Transaction>, IRequest<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
+public class GetAllTransactionByCurrentWalletQuery : PaginationRequest<Domain.Entities.Transaction>, IRequest<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
 	public DateTimeOffset? From { get; set; }
 
@@ -20,9 +17,14 @@ public class GetAllTransactionQuery : PaginationRequest<Domain.Entities.Transact
 	public TransactionStatus? Status { get; set; }
 
 	public TransactionType? Type { get; set; }
-	public long? CustomerId { get; set; }
-	public long? ShopId { get; set; }
 
+	private string? _search;
+
+	public string? Search
+	{
+		get => _search;
+		set => _search = value?.Trim().ToLower();
+	}
 	public override Expression<Func<Domain.Entities.Transaction, bool>> GetExpressions()
 	{
 
@@ -41,17 +43,12 @@ public class GetAllTransactionQuery : PaginationRequest<Domain.Entities.Transact
 			Expression = Expression.And(Transaction => Transaction.TransactionStatus == Status);
 		}
 
-		if (ShopId != null)
+		if (Search != null)
 		{
 			Expression = Expression
-				.And(Transaction => (Transaction.Pet != null && Transaction.Pet.PetCoffeeShopId == ShopId)
-									|| (Transaction.Reservation != null && Transaction.Reservation.Area != null && Transaction.Reservation.Area.PetcoffeeShopId == ShopId));
+				.And(transaction => transaction.CreatedBy.PhoneNumber == Search || transaction.ReferenceTransactionId == Search || transaction.CreatedBy.FullName.ToLower().Contains(Search.ToLower()));
 		}
 
-		if (CustomerId != null)
-		{
-			Expression = Expression.And(Transaction => Transaction.CreatedById == CustomerId || Transaction.RemitterId == CustomerId);
-		}
 		return Expression;
 	}
 }

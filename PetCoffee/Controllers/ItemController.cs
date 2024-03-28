@@ -56,7 +56,7 @@ namespace PetCoffee.API.Controllers
 			return Ok(response);
 		}
 
-		[HttpGet("item")]
+		[HttpPut("items")]
 		[Authorize]
 		public async Task<ActionResult<bool>> UpdateItem([FromForm] UpdateItemCommand request)
 		{

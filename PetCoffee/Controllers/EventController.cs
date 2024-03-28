@@ -116,7 +116,7 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
-		[HttpGet("/events/{EventId}/event-fields")]
+		[HttpGet("events/{EventId}/event-fields")]
 		[Authorize]
 		public async Task<ActionResult<EventResponse>> GetSubmittingEventByIdForShop([FromRoute] GetAllSubmittingEventByEventIdForShopQuery request)
 		{

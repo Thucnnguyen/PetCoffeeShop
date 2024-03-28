@@ -54,7 +54,7 @@ public class GetAllSubmittingEventByEventIdForShopHandler : IRequestHandler<GetA
 			}
 		}
 
-		var answerResponse = answer.Values.Select(a => _mapper.Map<FieldEventResponseForEventResponse>(a)).ToList();
+		var answerResponse = answer.Values.Select(a => _mapper.Map<FieldEventResponseForEventResponse>(a)).OrderBy(a => a.Id).ToList();
 
 		var response = _mapper.Map<EventResponse>(submittingEvents.FirstOrDefault());
 		response.Fields = answerResponse;

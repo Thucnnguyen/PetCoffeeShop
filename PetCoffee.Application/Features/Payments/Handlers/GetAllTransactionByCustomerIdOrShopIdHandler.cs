@@ -11,7 +11,7 @@ using PetCoffee.Application.Service;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 
-public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
+public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionByCustomerIdOrShopIdQuery, PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IUnitOfWork _unitOfWork;
@@ -24,7 +24,7 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, 
 		_mapper = mapper;
 	}
 
-	public async Task<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>> Handle(GetAllTransactionQuery request, CancellationToken cancellationToken)
+	public async Task<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>> Handle(GetAllTransactionByCustomerIdOrShopIdQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -52,6 +52,8 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, 
 							.Include(t => t.Reservation)
 							.ThenInclude(r => r.Area)
 							.ThenInclude(a => a.PetCoffeeShop)
+							.Include(t => t.PackagePromotion)
+							.Include(t => t.PetCoffeeShop)
 							.AsQueryable();
 
 		return new PaginationResponse<Domain.Entities.Transaction, PaymentResponse>(

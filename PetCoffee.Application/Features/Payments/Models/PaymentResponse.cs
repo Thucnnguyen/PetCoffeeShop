@@ -1,4 +1,6 @@
 ﻿using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Auth.Models;
+using PetCoffee.Application.Features.Packages.Models;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Payments.Models;
@@ -13,7 +15,8 @@ public class PaymentResponse : BaseAuditableEntityResponse
 	public long? ReservationId { get; set; }
 	public long? PetId { get; set; }
 	public string? PetName { get; set; }
-	public string? ShopName { get; set; }
 	public List<TransactionItemResponse> TransactionItems { get; set; }
 	public TransactionType TransactionType { get; set; }
+	public ShopResponseForAccount? Shop { get; set; }
+	public PackageResponse? Package { get; set; }
 }

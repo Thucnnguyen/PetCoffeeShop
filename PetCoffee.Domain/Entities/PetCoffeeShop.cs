@@ -46,6 +46,8 @@ public class PetCoffeeShop : BaseAuditableEntity
 	public IList<Post> Posts { get; set; } = new List<Post>();
 	[InverseProperty(nameof(Comment.PetCoffeeShop))]
 	public IList<Comment> Comments { get; set; } = new List<Comment>();
+	[InverseProperty(nameof(Transaction.PetCoffeeShop))]
+	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 	[Projectable]
 	public bool IsBuyPackage => DateTimeOffset.UtcNow <= EndTimePackage;
 

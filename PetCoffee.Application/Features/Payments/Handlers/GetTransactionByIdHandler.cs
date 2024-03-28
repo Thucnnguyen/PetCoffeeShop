@@ -25,24 +25,19 @@ public class GetTransactionByIdHandler : IRequestHandler<GetTransactionByIdQuery
 
 	public async Task<PaymentResponse> Handle(GetTransactionByIdQuery request, CancellationToken cancellationToken)
 	{
-		//var currentAccount = await _currentAccountService.GetCurrentAccount();
-		//if (currentAccount == null)
-		//{
-		//	throw new ApiException(ResponseCode.AccountNotExist);
-		//}
-		//if (currentAccount.IsVerify)
-		//{
-		//	throw new ApiException(ResponseCode.AccountNotActived);
-		//}
+
 
 		var transaction = await _unitOfWork.TransactionRepository
 							.Get(t => t.Id == request.TransactionId)
 							.Include(t => t.Items)
-							 .ThenInclude(ti => ti.Item)
+								.ThenInclude(ti => ti.Item)
 							.Include(t => t.Pet)
 							.Include(t => t.Reservation)
 							.ThenInclude(r => r.Area)
 							.ThenInclude(a => a.PetCoffeeShop)
+							.Include(t => t.PackagePromotion)
+							.Include(t => t.PetCoffeeShop)
+							.Include(t => t.CreatedBy)
 							.FirstOrDefaultAsync();
 
 		if (transaction == null)

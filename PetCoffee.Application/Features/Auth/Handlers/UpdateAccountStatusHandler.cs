@@ -8,7 +8,6 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System.Security.Cryptography.X509Certificates;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
 
@@ -43,7 +42,8 @@ public class UpdateAccountStatusHandler : IRequestHandler<UpdateAccountStatusCom
 			{
 				throw new ApiException(ResponseCode.AccountNotExist);
 			}
-			if (!currentAccount.IsStaff || !currentAccount.AccountShops.Any(acs => acs.ShopId == existedStaffAccount.AccountShops.First().ShopId))
+
+			if (!currentAccount.IsManager || !currentAccount.AccountShops.Any(acs => acs.ShopId == existedStaffAccount.AccountShops.First().ShopId))
 			{
 				throw new ApiException(ResponseCode.PermissionDenied);
 

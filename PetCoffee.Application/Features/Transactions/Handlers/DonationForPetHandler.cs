@@ -10,6 +10,7 @@ using PetCoffee.Application.Service;
 using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
+using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.Transactions.Handlers;
 
@@ -116,12 +117,12 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
             Amount = (decimal)totalMoney,
             Content = "Tặng quà cho thú cưng",
             PetId = pet.Id,
+            PetCoffeeShopId= pet.PetCoffeeShopId,
             RemitterId = managaerWallet != null ? managaerWallet.Id : newWallet.Id,
             TransactionStatus = TransactionStatus.Done,
-            ReferenceTransactionId = Guid.NewGuid().ToString(),
+            ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
             Items = newTransactionItem,
             TransactionType = TransactionType.Donate,
-
         };
         await _unitOfWork.TransactionRepository.AddAsync(newTransaction);
         await _unitOfWork.SaveChangesAsync();

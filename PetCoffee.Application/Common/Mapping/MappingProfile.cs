@@ -243,10 +243,12 @@ public class MappingProfile : Profile
         CreateMap<Transaction, PaymentResponse>()
             .ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet != null ? src.Pet.Name : null))
             .ForMember(dest => dest.TransactionItems, opt => opt.MapFrom(src => src.Items))
-            .ForMember(dest => dest.ShopName, opt => opt.MapFrom(src => src.Reservation != null ? src.Reservation.Area.PetCoffeeShop.Name : null));
+            .ForMember(dest => dest.Package, opt => opt.MapFrom(src => src.PackagePromotion))
+            .ForMember(dest => dest.Shop, opt => opt.MapFrom(src => src.PetCoffeeShop ));
 
         CreateMap<TransactionItem, TransactionItemResponse>()
-            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name));
+            .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name))
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
         CreateMap<PaymentResponse, Transaction>();
         //wallet
         CreateMap<WalletItem, ItemWalletResponse>()
@@ -267,9 +269,13 @@ public class MappingProfile : Profile
 
 
         // transaction
-        CreateMap<Transaction, TransactionResponse>().ReverseMap();
-        //RatePet
-        CreateMap<RatePet, RatePetResponse>()
+        CreateMap<Transaction, TransactionResponse>()
+            .ForMember(dest => dest.Shop, opt => opt.MapFrom(src => src.PetCoffeeShop))
+            .ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.CreatedBy))
+            .ForMember(dest => dest.Package, opt => opt.MapFrom(src => src.PackagePromotion));
+
+		//RatePet
+		CreateMap<RatePet, RatePetResponse>()
             .ForMember(dest => dest.Account, opt => opt.MapFrom(src => src.CreatedBy));
 
         //product
