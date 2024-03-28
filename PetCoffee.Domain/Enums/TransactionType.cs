@@ -23,4 +23,6 @@ public enum TransactionType
     Refund = 5,
 	[Description("Thêm đồ ăn thức uống")]
 	AddProducts = 6,
+	[Description("Xoá đồ ăn thức uống")]
+	RemoveProducts = 6,
 }
