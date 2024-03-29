@@ -18,6 +18,15 @@ public class PackageController : ApiControllerBase
 		return response;
 	}
 
+	[HttpGet("packages/{Id}")]
+	[Authorize]
+	public async Task<ActionResult<PackageResponse>> GetPackagesById([FromRoute] GetPackageByIdQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return response;
+	}
+
+
 	[HttpPost("packages")]
 	[Authorize]
 	public async Task<ActionResult<PackageResponse>> CreatePackage([FromBody] CreatePackageCommand request)

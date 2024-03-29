@@ -23,8 +23,9 @@ public class DeletePackageHandler : IRequestHandler<DeletePackageCommand, bool>
 		{
 			throw new ApiException(ResponseCode.PackageNotExist);
 		}
+		deletedPackage.DeletedAt = DateTimeOffset.UtcNow;
 
-		await _unitOfWork.PackagePromotionRespository.DeleteAsync(deletedPackage);
+		await _unitOfWork.PackagePromotionRespository.UpdateAsync(deletedPackage);
 		await _unitOfWork.SaveChangesAsync();
 		return true;
 	}

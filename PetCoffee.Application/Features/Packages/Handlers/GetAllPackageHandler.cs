@@ -36,7 +36,7 @@ public class GetAllPackageHandler : IRequestHandler<GetAllPackageQuery, List<Pac
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var allPackage = await _unitOfWork.PackagePromotionRespository.GetAsync();
+		var allPackage = await _unitOfWork.PackagePromotionRespository.GetAsync(pp => !pp.Deleted);
 
 		return allPackage.Select(p => _mapper.Map<PackageResponse>(p)).ToList();
 	}
