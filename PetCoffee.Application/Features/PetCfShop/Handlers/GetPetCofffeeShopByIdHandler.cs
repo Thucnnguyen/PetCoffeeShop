@@ -10,6 +10,7 @@ using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Shared.Ultils;
+using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
@@ -82,6 +83,120 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		response.IsFollow = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(s => s.CreatedById == CurrentUser.Id && s.ShopId == CurrentShop.Id)).Any();
 		response.CreatedBy = _mapper.Map<AccountForPostModel>(CurrentShop.CreatedBy);
 		response.MaxSeat = areasWithMaxSeatOfShop;
+
+		// get set price 
+		// max price  product 
+
+		// get maxSeat of shop
+		var productWithMaxPrice = await _unitOfWork.ProductRepository
+		.GetAsync(
+			predicate: a => a.PetCoffeeShopId == CurrentShop.Id && a.ProductStatus == Domain.Enums.ProductStatus.Active, // Filter by shop ID
+			orderBy: q => q.OrderByDescending(a => a.Price), // Order by TotalSeat in descending order
+			disableTracking: true
+		);
+
+		var proMaxPrice = productWithMaxPrice.FirstOrDefault();
+
+		decimal productWithMaxPriceOfShops = 0;
+		if (proMaxPrice == null)
+		{
+			productWithMaxPriceOfShops = 0;
+		}
+		else
+		{
+
+			productWithMaxPriceOfShops = productWithMaxPrice.First().Price;
+		}
+
+		response.MaxPriceProduct = productWithMaxPriceOfShops;
+
+		// min price  product 
+
+		var productWithMinPrice = await _unitOfWork.ProductRepository
+		.GetAsync(
+			predicate: a => a.PetCoffeeShopId == CurrentShop.Id && a.ProductStatus == Domain.Enums.ProductStatus.Active, // Filter by shop ID
+			orderBy: q => q.OrderBy(a => a.Price), // Order by TotalSeat in descending order
+			disableTracking: true
+		);
+
+		var proMinPrice = productWithMinPrice.FirstOrDefault();
+
+		decimal productWithMinPriceOfShops = 0;
+		if (proMinPrice == null)
+		{
+			productWithMinPriceOfShops = 0;
+		}
+		else
+		{
+
+			productWithMinPriceOfShops = productWithMinPrice.First().Price;
+		}
+
+		response.MinPriceProduct = productWithMinPriceOfShops;
+
+
+		// get maxArea price of shop
+		var areaWithMaxPrice = await _unitOfWork.AreaRepsitory
+		.GetAsync(
+			predicate: a => a.PetcoffeeShopId == CurrentShop.Id && !a.Deleted, // Filter by shop ID
+			orderBy: q => q.OrderByDescending(a => a.PricePerHour), // Order by TotalSeat in descending order
+			disableTracking: true
+		);
+
+		var areaMaxPrice = areaWithMaxPrice.FirstOrDefault();
+
+		decimal areaWithMaxPriceOfShops = 0;
+		if (areaMaxPrice == null)
+		{
+			areaWithMaxPriceOfShops = 0;
+		}
+		else
+		{
+
+			areaWithMaxPriceOfShops = areaWithMaxPrice.First().PricePerHour;
+		}
+
+		response.MaxPriceArea = areaWithMaxPriceOfShops;
+
+		// get minArea price of shop
+		var areaWithMinPrice = await _unitOfWork.AreaRepsitory
+		.GetAsync(
+			predicate: a => a.PetcoffeeShopId == CurrentShop.Id && !a.Deleted, // Filter by shop ID
+			orderBy: q => q.OrderBy(a => a.PricePerHour), // Order by TotalSeat in descending order
+			disableTracking: true
+		);
+
+		var areaMinPrice = areaWithMinPrice.FirstOrDefault();
+
+		decimal areaWithMinPriceOfShops = 0;
+		if (areaMinPrice == null)
+		{
+			areaWithMinPriceOfShops = 0;
+		}
+		else
+		{
+
+			areaWithMinPriceOfShops = areaWithMinPrice.First().PricePerHour;
+		}
+
+		response.MinPriceArea = areaWithMinPriceOfShops;
+
+
+		response.StartTime = DateTimeOffset.TryParse(CurrentShop.OpeningTime, out DateTimeOffset startTime) ? startTime : null;
+
+
+
+
+
+		response.EndTime = DateTimeOffset.TryParse(CurrentShop.ClosedTime, out DateTimeOffset closeTime) ? closeTime : null;
+
+
+
+
+
+
+
+
 		return response;
 	}
 }
