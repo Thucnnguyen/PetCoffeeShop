@@ -7,6 +7,7 @@ using PetCoffee.Application.Features.Auth.Commands;
 using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
 
 namespace PetCoffee.Application.Features.Auth.Handlers;
@@ -34,6 +35,10 @@ public class LoginEmailPassHandler : IRequestHandler<LoginEmailPassCommand, Acce
 		if (!HashHelper.CheckHashPwd(request.Password, isExisted.Password))
 		{
 			throw new ApiException(ResponseCode.LoginFailed);
+		}
+		if(isExisted.Status == AccountStatus.Inactive)
+		{
+			throw new ApiException(ResponseCode.AccountIsInactive);
 		}
 		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(isExisted));
 		return resp;

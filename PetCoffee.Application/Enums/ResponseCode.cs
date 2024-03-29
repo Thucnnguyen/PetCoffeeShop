@@ -31,6 +31,7 @@ public enum ResponseCode
 
 	[Description("Email đã tồn tại")] AccountIsExisted,
 	[Description("Tài Khoản hoặc mật khẩu sai")] LoginFailed,
+	[Description("Tài Khoản bị vô hiệu hóa")] AccountIsInactive,
 	[Description("Mật khẩu hiện tại bạn nhập sai vui lòng kiểm tra lại")] PassNotValid,
 	//PostCategory
 	[Description("Tên đã tồn tại")] PostCategoryIsExisted,
