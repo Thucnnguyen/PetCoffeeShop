@@ -41,7 +41,7 @@ public class BuyPackagehandler : IRequestHandler<BuyPackageCommand, bool>
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
 		// check package
-		var package = await _unitOfWork.PackagePromotionRespository.GetByIdAsync(request.PackageId);
+		var package = await _unitOfWork.PackagePromotionRespository.Get(pp => pp.Id == request.PackageId && !pp.Deleted).FirstOrDefaultAsync();
 		if (package == null)
 		{
 			throw new ApiException(ResponseCode.PackageNotExist);

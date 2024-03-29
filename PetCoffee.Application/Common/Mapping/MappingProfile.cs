@@ -244,12 +244,12 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.PetName, opt => opt.MapFrom(src => src.Pet != null ? src.Pet.Name : null))
             .ForMember(dest => dest.TransactionItems, opt => opt.MapFrom(src => src.Items))
             .ForMember(dest => dest.Package, opt => opt.MapFrom(src => src.PackagePromotion))
-            .ForMember(dest => dest.Shop, opt => opt.MapFrom(src => src.PetCoffeeShop ));
+			.ForMember(dest => dest.Creator, opt => opt.MapFrom(src => src.CreatedBy))
+			.ForMember(dest => dest.Shop, opt => opt.MapFrom(src => src.PetCoffeeShop));
 
         CreateMap<TransactionItem, TransactionItemResponse>()
             .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name))
             .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
-        CreateMap<PaymentResponse, Transaction>();
         //wallet
         CreateMap<WalletItem, ItemWalletResponse>()
             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Item.Name))
