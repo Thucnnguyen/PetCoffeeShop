@@ -35,6 +35,14 @@ namespace PetCoffee.Application.Features.PetCfShop.Models
 		public AccountForPostModel? CreatedBy { get; set; }
 		public int MaxSeat { get; set; }
 
+		public string TaxCode { get; set; }
+
+		public decimal? MaxPriceProduct { get; set; }
+		public decimal? MinPriceProduct { get; set; }
+
+		public decimal? MaxPriceArea { get; set; }
+		public decimal? MinPriceArea { get; set; }
+
 
 	}
 }
