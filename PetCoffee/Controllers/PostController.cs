@@ -90,5 +90,17 @@ namespace PetCoffee.API.Controllers
 
 			return await Mediator.Send(request);
 		}
+
+
+		[HttpGet("posts/tagged/{ShopId:long}")]
+		[Authorize]
+		public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetPostOFShopBeTagged([FromRoute] GetPostOFShopBeTaggedQuery request)
+		{
+
+			return await Mediator.Send(request);
+		}
+
+
+
 	}
 }
