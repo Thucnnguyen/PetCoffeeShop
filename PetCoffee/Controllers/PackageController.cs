@@ -51,9 +51,9 @@ public class PackageController : ApiControllerBase
 		return response;
 	}
 
-	[HttpDelete("packages")]
+	[HttpDelete("packages/{Id}")]
 	[Authorize]
-	public async Task<ActionResult<PackageResponse>> UpdatePackage([FromBody] UpdatePackageCommand request)
+	public async Task<ActionResult<bool>> UpdatePackage([FromRoute] DeletePackageCommand request)
 	{
 		var response = await Mediator.Send(request);
 		return response;

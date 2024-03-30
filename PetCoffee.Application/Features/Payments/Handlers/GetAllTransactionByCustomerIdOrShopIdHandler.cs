@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Areas.Models;
 using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Payments.Queries;
+using PetCoffee.Application.Features.Product.Models;
+using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 
@@ -41,7 +44,7 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionByCusto
 			request.CustomerId = currentAccount.Id;
 		}
 
-		var payments = _unitOfWork.TransactionRepository
+		var payments = await _unitOfWork.TransactionRepository
 		   .Get(
 			   predicate: request.GetExpressions(),
 			   orderBy: request.GetOrder(),
@@ -54,12 +57,36 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionByCusto
 							.ThenInclude(a => a.PetCoffeeShop)
 							.Include(t => t.PackagePromotion)
 							.Include(t => t.PetCoffeeShop)
-							.AsQueryable();
+							.Include(t => t.CreatedBy)
+							.Include(r => r.Reservation)
+								.ThenInclude(r => r.Area)
+							.ToListAsync();
+		var paymentsResponse = payments
+							.Skip((request.PageNumber - 1) * request.PageSize)
+							.Take(request.PageSize);
+		var response = new List<PaymentResponse>();
+		foreach ( var item in payments )
+		{
+			var payment = _mapper.Map<PaymentResponse>(item);
+			if (item.Reservation != null)
+			{
+				payment.Reservation = _mapper.Map<ReservationResponse>(item.Reservation);
+				payment.Reservation.AreaResponse = _mapper.Map<AreaResponse>(item.Reservation.Area);
+
+				var products = await _unitOfWork.ReservationProductRepository
+					.Get(rp => rp.ReservationId == payment.ReservationId)
+					.Include(rp => rp.Product).ToListAsync();
+				payment.Reservation.Products = products.Select(p => _mapper.Map<ProductForReservationResponse>(p)).ToList();
+
+			}
+			response.Add(payment);
+
+		}
 
 		return new PaginationResponse<Domain.Entities.Transaction, PaymentResponse>(
-			payments,
+			response,
+			payments.Count(),
 			request.PageNumber,
-			request.PageSize,
-			payment => _mapper.Map<PaymentResponse>(payment));
+			request.PageSize);
 	}
 }

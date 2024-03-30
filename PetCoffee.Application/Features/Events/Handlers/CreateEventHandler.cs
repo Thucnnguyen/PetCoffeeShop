@@ -47,6 +47,11 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, EventRespo
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
+		var shop = await _unitOfWork.PetCoffeeShopRepository.Get(s => s.Id == request.PetCoffeeShopId && !s.Deleted).FirstOrDefaultAsync();
+		if(shop == null)
+		{
+			throw new ApiException(ResponseCode.ShopNotExisted);
+		}
 
 		var NewEvent = _mapper.Map<Event>(request);
 		if (request.ImageFile != null)
@@ -60,6 +65,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, EventRespo
 
 		var response = _mapper.Map<EventResponse>(NewEvent);
 		NewEvent.CreatedBy = currentAccount;
+		NewEvent.PetCoffeeShop = shop;
 
 		var follows = await _unitOfWork.FollowPetCfShopRepository.Get(a => a.ShopId == NewEvent.PetCoffeeShopId)
 																	.Include(a => a.CreatedBy)

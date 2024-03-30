@@ -150,6 +150,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				Amount = (decimal)totalPrice,
 				Content = "Đặt đồ uống",
 				RemitterId = managaerWallet.Id,
+                PetCoffeeShopId = products.FirstOrDefault().Value.PetCoffeeShopId,
 				TransactionStatus = TransactionStatus.Done,
 				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 				TransactionType = TransactionType.AddProducts,

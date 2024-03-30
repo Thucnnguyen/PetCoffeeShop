@@ -107,7 +107,7 @@ public class Notification : BaseAuditableEntity
 					var newEvent = (Event)data;
 
 					Title = $"Sự kiện mới của quán bạn theo dõi";
-					//Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
+					Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
 					Level = NotificationLevel.Information;
 					ReferenceId = newEvent.Id.ToString();
 

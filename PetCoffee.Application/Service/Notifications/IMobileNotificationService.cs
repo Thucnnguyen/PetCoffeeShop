@@ -2,6 +2,6 @@
 
 namespace PetCoffee.Application.Service.Notifications;
 
-public interface IMobileNotificationService
+public interface IMobileNotificationService : INotificationService
 {
 }

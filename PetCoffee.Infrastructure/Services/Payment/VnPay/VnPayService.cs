@@ -38,7 +38,7 @@ public class VnPayService : IVnPayService
 		}
 
 		var pay = new VnPayLibrary();
-		var urlCallBack = $"{_vnPaySettings.CallbackUrl}/{payment.PaymentReferenceId}";
+		var urlCallBack = $"{_vnPaySettings.CallbackUrl}+{payment.PaymentReferenceId}";
 
 		pay.AddRequestData("vnp_Version", _vnPaySettings.Version);
 		pay.AddRequestData("vnp_Command", PayCommand);

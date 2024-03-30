@@ -3,6 +3,7 @@ using PetCoffee.Application.Features.Auth.Models;
 using PetCoffee.Application.Features.Packages.Models;
 using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Post.Models;
+using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Transactions.Models
@@ -25,5 +26,6 @@ namespace PetCoffee.Application.Features.Transactions.Models
 		public TransactionType TransactionType { get; set; }
 		public ShopResponseForAccount? Shop { get; set; }
 		public PackageResponse? Package { get; set; }
+		public ReservationResponse? Reservation { get; set; }
 	}
 }
