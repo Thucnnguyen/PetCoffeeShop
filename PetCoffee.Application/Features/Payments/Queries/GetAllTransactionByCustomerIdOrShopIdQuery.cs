@@ -44,8 +44,7 @@ public class GetAllTransactionByCustomerIdOrShopIdQuery : PaginationRequest<Doma
 		if (ShopId != null)
 		{
 			Expression = Expression
-				.And(Transaction => (Transaction.Pet != null && Transaction.Pet.PetCoffeeShopId == ShopId)
-									|| (Transaction.Reservation != null && Transaction.Reservation.Area != null && Transaction.Reservation.Area.PetcoffeeShopId == ShopId));
+				.And(Transaction => (Transaction.PetCoffeeShopId == ShopId));
 		}
 
 		if (CustomerId != null)

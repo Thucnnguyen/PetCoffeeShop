@@ -249,6 +249,7 @@ public class MappingProfile : Profile
 
         CreateMap<TransactionItem, TransactionItemResponse>()
             .ForMember(dest => dest.ItemName, opt => opt.MapFrom(src => src.Item.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.TotalItem * src.Item.Price))
             .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Item.Icon));
         //wallet
         CreateMap<WalletItem, ItemWalletResponse>()
