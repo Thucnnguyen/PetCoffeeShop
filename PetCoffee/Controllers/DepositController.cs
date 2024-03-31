@@ -9,21 +9,21 @@ namespace PetCoffee.API.Controllers
 	[ApiController]
 	public class DepositController : ApiControllerBase
 	{
-		//[HttpPost("recharges")]
-		//[Authorize]
-		//public async Task<ActionResult<PaymentResponse>> CreateDepositTransaction([FromBody] CreatePaymentCommand request)
-		//{
-		//	var response = await Mediator.Send(request);
-		//	return response;
-		//}
+		[HttpPost("recharges")]
+		[Authorize]
+		public async Task<ActionResult<PaymentResponse>> CreateDepositTransaction([FromBody] CreatePaymentCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 
 
-		//[HttpPut("payments/callback/vnpay/{referenceId}")]
-		//public async Task<ActionResult<PaymentResponse>> CallbackVNPay([FromRoute] string referenceId, [FromQuery] ProcessVnpayPaymentIpnCommand request)
-		//{
-		//	request.ReferenceId = referenceId;
-		//	await Mediator.Send(request);
-		//	return Ok();
-		//}
+		[HttpPut("payments/callback/vnpay/{referenceId}")]
+		public async Task<ActionResult<PaymentResponse>> CallbackVNPay([FromRoute] string referenceId, [FromQuery] ProcessVnpayPaymentIpnCommand request)
+		{
+			request.ReferenceId = referenceId;
+			await Mediator.Send(request);
+			return Ok();
+		}
 	}
 }
