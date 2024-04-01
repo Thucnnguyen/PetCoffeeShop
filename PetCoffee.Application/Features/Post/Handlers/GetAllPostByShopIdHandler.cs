@@ -40,7 +40,7 @@ public class GetAllPostByShopIdHandler : IRequestHandler<GetAllPostByShopIdQuery
 
 		var reportedPostIds = (await _unitOfWork.ReportRepository.GetAsync(r => r.CreatedById == currentAccount.Id && r.PostID != null)).Select(r => r.PostID).ToList();
 
-		var postsQuery = _unitOfWork.PostRepository.Get(
+		var postsQuery = await _unitOfWork.PostRepository.Get(
 			  predicate: request.GetExpressions(),
 			  disableTracking: true
 			)
@@ -48,15 +48,15 @@ public class GetAllPostByShopIdHandler : IRequestHandler<GetAllPostByShopIdQuery
 			.Include(p => p.PetCoffeeShop)
 			.Include(p => p.Comments)
 			.Include(p => p.PostCategories)
-			.ThenInclude(c => c.Category)
+				.ThenInclude(c => c.Category)
 			.Include(p => p.PostPetCoffeeShops)
-			.ThenInclude(shop => shop.Shop)
+				.ThenInclude(shop => shop.Shop)
 			.Include(p => p.CreatedBy)
 			.Where(p => !reportedPostIds.Contains(p.Id))
-			.AsQueryable()
-			.OrderByDescending(post => post.PostPetCoffeeShops)
-			.ThenByDescending(post => post.CreatedAt)
-			.ThenByDescending(post => post.Likes.Count);
+			.OrderByDescending(post => post.CreatedAt)
+			//.ThenByDescending(post => post.PostPetCoffeeShops)
+			.ThenByDescending(post => post.Likes.Count)
+			.ToListAsync();
 
 		var response = new List<PostResponse>();
 

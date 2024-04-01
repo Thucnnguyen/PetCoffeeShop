@@ -10,7 +10,6 @@ using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 

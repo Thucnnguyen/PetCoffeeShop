@@ -73,11 +73,11 @@ public class BuyPackagehandler : IRequestHandler<BuyPackageCommand, bool>
 		wallet.Balance -= totalPrice.Value;
 		if(shop.EndTimePackage.HasValue)
 		{
-			shop.EndTimePackage.Value.AddMonths(package.Duration);
+			shop.EndTimePackage = shop.EndTimePackage.Value.AddMonths(package.Duration);
 		}
 		else
 		{
-			shop.EndTimePackage = DateTimeOffset.UtcNow.AddMonths(package.Duration);
+			shop.EndTimePackage = shop.EndTimePackage = DateTimeOffset.UtcNow.AddMonths(package.Duration);
 		}
 
 		await _unitOfWork.PetCoffeeShopRepository.UpdateAsync(shop);

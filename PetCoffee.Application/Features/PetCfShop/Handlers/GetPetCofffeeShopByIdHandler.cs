@@ -182,20 +182,9 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		response.MinPriceArea = areaWithMinPriceOfShops;
 
 
-		response.StartTime = DateTimeOffset.TryParse(CurrentShop.OpeningTime, out DateTimeOffset startTime) ? startTime : null;
+		response.StartTime = CurrentShop.OpeningTime;
 
-
-
-
-
-		response.EndTime = DateTimeOffset.TryParse(CurrentShop.ClosedTime, out DateTimeOffset closeTime) ? closeTime : null;
-
-
-
-
-
-
-
+		response.EndTime = CurrentShop.ClosedTime;
 
 		return response;
 	}

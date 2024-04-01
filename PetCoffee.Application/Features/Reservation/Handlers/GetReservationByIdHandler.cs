@@ -9,6 +9,8 @@ using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Reservation.Models;
 using PetCoffee.Application.Features.Reservation.Queries;
 using PetCoffee.Application.Persistence.Repository;
+using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -33,7 +35,8 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 							 {
 								 p => p.CreatedBy,
 								 o => o.Area,
-		o => o.Area.PetCoffeeShop
+								 o => o.Area.PetCoffeeShop,
+								 o => o.Transactions
 							 },
 							 disableTracking: true)
 							.FirstOrDefaultAsync();
@@ -58,6 +61,15 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			response.Products = products.Select(p => _mapper.Map<ProductForReservationResponse>(p)).ToList();
 			response.PetCoffeeShopResponse = petCoffeeShopResponse;
 			response.AreaResponse = areaResponse;
+			if (order.Status == OrderStatus.Returned)
+			{
+				var returnTransaction = order.Transactions.FirstOrDefault(t => t.TransactionType == TransactionType.Refund);
+				if (returnTransaction != null)
+				{
+					response.AmountRefund = returnTransaction.Amount;
+
+				}
+			}
 			return response;
 		}
 	}
