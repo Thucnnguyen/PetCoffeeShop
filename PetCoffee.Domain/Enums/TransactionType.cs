@@ -19,10 +19,16 @@ public enum TransactionType
 	[Description("Mua Quà Tặng")]
 	BuyItem = 4,
 
-    [Description("Hoàn tiền đặt chỗ")]
-    Refund = 5,
+	[Description("Hoàn tiền đặt chỗ")]
+	Refund = 5,
 	[Description("Thêm đồ ăn thức uống")]
 	AddProducts = 6,
-	[Description("Xoá đồ ăn thức uống")]
-	RemoveProducts = 6,
+	[Description("Mua gói")]
+	Package = 7,
+	[Description("Hủy đặt đồ uống")]
+	RemoveProducts = 8,
+
+	[Description("Giảm đồ ăn thức uống")]
+	MinusProducts = 6,
 }
+
