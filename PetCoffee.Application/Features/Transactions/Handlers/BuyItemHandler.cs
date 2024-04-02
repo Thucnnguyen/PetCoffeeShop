@@ -92,25 +92,27 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 			await _unitOfWork.SaveChangesAsync();
 
 		}
-		var adminAccount = await _unitOfWork.AccountRepository.Get(a => a.IsAdmin).FirstOrDefaultAsync();
-		var adminWallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == adminAccount.Id).FirstOrDefaultAsync();
-		if (adminWallet == null)
-		{
-			var newWallet = new Wallet((decimal)totalMoney);
-			await _unitOfWork.WalletRepsitory.AddAsync(newWallet);
-			await _unitOfWork.SaveChangesAsync();
-			adminWallet = newWallet;
-		}
-		else
-		{
-			adminWallet.Balance += (decimal)totalMoney;
-			await _unitOfWork.WalletRepsitory.UpdateAsync(adminWallet);
-		}
+		//var adminAccount = await _unitOfWork.AccountRepository.Get(a => a.IsAdmin).FirstOrDefaultAsync();
+		//var adminWallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == adminAccount.Id).FirstOrDefaultAsync();
+		//if (adminWallet == null)
+		//{
+		//	var newWallet = new Wallet((decimal)totalMoney);
+		//	await _unitOfWork.WalletRepsitory.AddAsync(newWallet);
+		//	await _unitOfWork.SaveChangesAsync();
+		//	newWallet.CreatedById = adminAccount.Id;
+		//	await _unitOfWork.WalletRepsitory.UpdateAsync(newWallet);
+		//	adminWallet = newWallet;
+		//}
+		//else
+		//{
+		//	adminWallet.Balance += (decimal)totalMoney;
+		//	await _unitOfWork.WalletRepsitory.UpdateAsync(adminWallet);
+		//}
 		var donateTransaction = new Transaction()
 		{
 			Amount = (decimal)totalMoney,
 			Content = "Mua quà Tặng",
-			RemitterId = adminWallet.Id,
+			//RemitterId = adminWallet.Id,
 			TransactionType = TransactionType.BuyItem,
 			TransactionStatus = TransactionStatus.Done,
 			ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),

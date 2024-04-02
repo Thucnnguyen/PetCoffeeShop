@@ -105,11 +105,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				reservationRes.AreaResponse = areaResponse;
 				if (reservation.Status == OrderStatus.Returned)
 				{
-					var returnTransaction = reservation.Transactions.FirstOrDefault(t => t.TransactionType == TransactionType.Refund);
+					var returnTransaction = reservation.Transactions.Where(t => t.TransactionType == TransactionType.Refund);
 					if (returnTransaction != null)
 					{
-						reservationRes.AmountRefund = returnTransaction.Amount;
-
+						reservationRes.AmountRefund = returnTransaction.Sum(rt => rt.Amount);
 					}
 				}
 

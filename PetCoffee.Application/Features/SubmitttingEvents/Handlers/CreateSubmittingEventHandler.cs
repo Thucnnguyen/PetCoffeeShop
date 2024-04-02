@@ -8,6 +8,7 @@ using PetCoffee.Application.Features.SubmitttingEvents.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.SubmitttingEvents.Handlers;
 
@@ -36,8 +37,11 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var CheckEvent = await _unitOfWork.EventRepository.Get(e => e.Id == request.EventId)
-															.Include(e => e.SubmittingEvents).FirstOrDefaultAsync();
+		var CheckEvent = await _unitOfWork.EventRepository
+								.Get(e => e.Id == request.EventId)
+								.Include(e => e.SubmittingEvents)
+								.FirstOrDefaultAsync();
+
 		if (CheckEvent == null)
 		{
 			throw new ApiException(ResponseCode.EventNotExisted);
@@ -47,6 +51,18 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 			throw new ApiException(ResponseCode.SubmittingEventIsExist);
 		}
 
+		if(CheckEvent.Status == EventStatus.Closed)
+		{
+			throw new ApiException(ResponseCode.EventIsClosed);
+		}	
+
+		// check is max participation
+		if (CheckEvent.MaxParticipants == CheckEvent.SubmittingEvents.Count())
+		{
+			throw new ApiException(ResponseCode.SubmittingEventIsExist);
+		}
+
+		//check valid eventifield
 		if (request.Answers != null)
 		{
 			foreach (var anwser in request.Answers)

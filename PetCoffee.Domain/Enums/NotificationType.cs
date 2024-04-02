@@ -22,5 +22,9 @@ public enum NotificationType
 	Donation = 6,
 	[Description("Người Follow Mới")]
 	NewFollower = 7,
+	[Description("Đơn hàng bị hủy do quán bị vô hiệu hóa")]
+	ReturnOrder = 8,
+	[Description("Sự kiện bạn tham gia bị hủy do không đủ số lượng")]
+	CancelOrder = 9,
 
 }

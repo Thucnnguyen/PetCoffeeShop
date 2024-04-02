@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Events.Commands;
@@ -39,20 +40,29 @@ public class DeleteEventHandler : IRequestHandler<DeleteEventCommand, bool>
 			throw new ApiException(ResponseCode.PermissionDenied);
 		};
 
-		var GetEvent = (await _unitOfWork.EventRepository.GetAsync(s => s.Id == request.EventId && !s.Deleted))
-			.FirstOrDefault();
+		var GetEvent = await _unitOfWork.EventRepository
+			.Get(s => s.Id == request.EventId && !s.Deleted)
+			.Include(e => e.SubmittingEvents)
+			.FirstOrDefaultAsync();
 
+		
 		if (GetEvent == null)
 		{
 			throw new ApiException(ResponseCode.EventNotExisted);
 		}
+		//check permission
 		if (!currentAccount.AccountShops.Any(a => a.ShopId == GetEvent.PetCoffeeShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
+		//check is event has participation
+		if(GetEvent.SubmittingEvents.Any())
+		{
+			throw new ApiException(ResponseCode.EventCannotDeleted);
+		}
 
-		GetEvent.DeletedAt = DateTime.UtcNow;
-		await _unitOfWork.EventRepository.UpdateAsync(GetEvent);
+		//GetEvent.DeletedAt = DateTime.UtcNow;
+		await _unitOfWork.EventRepository.DeleteAsync(GetEvent);
 		await _unitOfWork.SaveChangesAsync();
 		return true;
 	}

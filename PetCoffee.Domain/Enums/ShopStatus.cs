@@ -7,5 +7,4 @@ public enum ShopStatus
 	InActive = 1,
 	Processing = 2,
 	Cancel = 3,
-
 }

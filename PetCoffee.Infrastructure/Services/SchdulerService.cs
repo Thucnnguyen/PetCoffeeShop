@@ -28,8 +28,8 @@ public class SchdulerService : ISchedulerService
 			var scheduler = await _schedulerFactory.GetScheduler();
 			await scheduler.Start();
 
-			var job = JobBuilder.Create<CancleTransactionJob>()
-					.UsingJobData(CancleTransactionJob.TransactionIdKey, transactionId)
+			var job = JobBuilder.Create<CancelTransactionJob>()
+					.UsingJobData(Scheduler.CancelTransactionJob.TransactionIdKey, transactionId)
 					.Build();
 
 			var trigger = TriggerBuilder.Create()

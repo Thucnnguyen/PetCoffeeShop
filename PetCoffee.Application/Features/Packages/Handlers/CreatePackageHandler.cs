@@ -2,6 +2,9 @@
 
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using PetCoffee.Application.Common.Enums;
+using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Packages.Commands;
 using PetCoffee.Application.Features.Packages.Models;
 using PetCoffee.Application.Persistence.Repository;
@@ -22,6 +25,15 @@ public class CreatePackageHandler : IRequestHandler<CreatePackageCommand, Packag
 
 	public async Task<PackageResponse> Handle(CreatePackageCommand request, CancellationToken cancellationToken)
 	{
+
+		var isExistedPackage = await _unitOfWork.PackagePromotionRespository
+							.Get(p => p.Duration == request.Duration && !p.Deleted)
+							.FirstOrDefaultAsync();
+		if(isExistedPackage != null)
+		{
+			throw new ApiException(ResponseCode.PackageisExisted);
+		}
+
 		var NewPackage = _mapper.Map<PackagePromotion>(request);
 
 		await _unitOfWork.PackagePromotionRespository.AddAsync(NewPackage);

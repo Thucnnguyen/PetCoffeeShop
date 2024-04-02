@@ -82,14 +82,14 @@ public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequ
 					response.Add(storeRes);
 				}
 			}
-			if (request.Longitude == 0 || request.Latitude == 0)
-			{
-				response = response.OrderBy(x => x.Distance).ThenBy(x => x.CreatedAt).ToList();
-			}
-			else
-			{
-				response = response.OrderByDescending(x => x.CreatedAt).ToList();
-			}
+			//if (request.Longitude == 0 || request.Latitude == 0)
+			//{
+			//	response = response.OrderBy(x => x.Distance).ThenByDescending(x => x.CreatedAt).ToList();
+			//}
+			//else
+			//{
+			response = response.OrderBy(x => x.Distance).ThenByDescending(x => x.CreatedAt).ToList();
+			//}
 
 			var shopResponsesCus = response
 								.Skip((request.PageNumber - 1) * request.PageSize)

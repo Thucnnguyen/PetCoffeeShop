@@ -1,4 +1,5 @@
 ﻿
+using PetCoffee.Domain.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PetCoffee.Domain.Entities;
@@ -14,6 +15,10 @@ public class Event : BaseAuditableEntity
 	public string StartTime { get; set; }
 	public string EndTime { get; set; }
 	public string? Location { get; set; }
+	public int MinParticipants { get; set; }
+	public int MaxParticipants { get; set; }
+
+	public EventStatus Status { get; set; } = EventStatus.Opened;
 
 	public long PetCoffeeShopId { get; set; }
 	public PetCoffeeShop PetCoffeeShop { get; set; }
