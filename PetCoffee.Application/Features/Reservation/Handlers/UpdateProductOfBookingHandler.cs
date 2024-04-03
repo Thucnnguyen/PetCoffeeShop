@@ -63,6 +63,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			}
 
+			//
 			var wallet = await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id);
 			if (!wallet.Any())
 			{
@@ -74,110 +75,89 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			}
 
 
+
+			//
+
 			foreach (var pro in request.Products)
 			{
 				var existingProduct = reservation.ReservationProducts
-					.FirstOrDefault(rp => rp.ProductId == pro.ProductId && rp.ProductPrice == products[pro.ProductId].Price);
+				  .FirstOrDefault(rp => rp.ProductId == pro.ProductId && rp.ProductPrice == products[pro.ProductId].Price);
 
+				//
 				if (existingProduct != null)
 				{
-					if (pro.Quantity > existingProduct.TotalProduct)
-					{
-						var quantityDifference = pro.Quantity - existingProduct.TotalProduct;
-						var priceDifference = quantityDifference * products[pro.ProductId].Price;
 
-						wallet.First().Balance -= priceDifference;
-						var managerAccount = await _unitOfWork.AccountRepository
-							.GetAsync(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == products[pro.ProductId].PetCoffeeShopId));
-						if (!managerAccount.Any())
-						{
-							throw new ApiException(ResponseCode.AccountNotExist);
-						}
-						var managerWallet = await _unitOfWork.WalletRepsitory
-							.GetAsync(w => w.CreatedById == managerAccount.First().Id);
-						if (!managerWallet.Any())
-						{
-							var newManagerWallet = new Wallet(priceDifference);
-							newManagerWallet.CreatedById = managerAccount.First().Id;
-							await _unitOfWork.WalletRepsitory.AddAsync(newManagerWallet);
-						}
-						else
-						{
-							managerWallet.First().Balance += priceDifference;
-						}
+					existingProduct.TotalProduct += pro.Quantity;
 
-						var newTransaction = new Domain.Entities.Transaction()
-						{
-							WalletId = wallet.First().Id,
-							Amount = (decimal)priceDifference,
-							Content = "Thay đổi số lượng đồ uống",
-							RemitterId = managerWallet.FirstOrDefault().Id,
-							PetCoffeeShopId = products.FirstOrDefault().Value.PetCoffeeShopId,
-							TransactionStatus = TransactionStatus.Done,
-							ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
-							TransactionType = TransactionType.AddProducts,
-						};
-						reservation.Transactions.Add(newTransaction);
-						existingProduct.TotalProduct = pro.Quantity;
-					}
-					else if (pro.Quantity < existingProduct.TotalProduct)
-					{
-						var quantityDifference = existingProduct.TotalProduct - pro.Quantity;
-						var priceDifference = quantityDifference * products[pro.ProductId].Price;
 
-						wallet.First().Balance += priceDifference;
-						var managerAccount = await _unitOfWork.AccountRepository
-							.GetAsync(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == products[pro.ProductId].PetCoffeeShopId));
-						if (!managerAccount.Any())
-						{
-							throw new ApiException(ResponseCode.AccountNotExist);
-						}
-						var managerWallet = await _unitOfWork.WalletRepsitory
-							.GetAsync(w => w.CreatedById == managerAccount.First().Id);
-						if (!managerWallet.Any())
-						{
-							var newManagerWallet = new Wallet(priceDifference);
-							newManagerWallet.CreatedById = managerAccount.First().Id;
-							await _unitOfWork.WalletRepsitory.AddAsync(newManagerWallet);
-						}
-						else
-						{
-							managerWallet.First().Balance -= priceDifference;
-						}
 
-						var newTransaction = new Domain.Entities.Transaction()
-						{
-							WalletId = wallet.First().Id,
-							Amount = (decimal)priceDifference,
-							Content = "Thay đổi số lượng đồ uống",
-							RemitterId = managerWallet.FirstOrDefault().Id,
-							PetCoffeeShopId = products.FirstOrDefault().Value.PetCoffeeShopId,
-							TransactionStatus = TransactionStatus.Done,
-							ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
-							TransactionType = TransactionType.MinusProducts,
-						};
-						reservation.Transactions.Add(newTransaction);
-
-						existingProduct.TotalProduct = pro.Quantity;
-					}
 				}
 				else
 				{
+
 					var newReservationProduct = new ReservationProduct
 					{
 						ProductId = pro.ProductId,
 						TotalProduct = pro.Quantity,
 						ProductPrice = products[pro.ProductId].Price,
 					};
+
 					reservation.ReservationProducts.Add(newReservationProduct);
+
+					_unitOfWork.ReservationRepository.UpdateAsync(reservation);
+
+
 				}
+
 			}
 
-			reservation.TotalPrice = totalPrice;
 
+			wallet.First().Balance -= totalPrice;
 			await _unitOfWork.WalletRepsitory.UpdateAsync(wallet.First());
 
+
+			//get manager account 
+			var managerAccount = await _unitOfWork.AccountRepository
+				.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == products.First().Value.PetCoffeeShopId))
+				.FirstOrDefaultAsync();
+
+			var managaerWallet = await _unitOfWork.WalletRepsitory
+				.Get(w => w.CreatedById == managerAccount.Id)
+				.FirstOrDefaultAsync();
+			//
+
+			if (managaerWallet == null)
+			{
+
+				var newWallet = new Wallet((decimal)totalPrice);
+				await _unitOfWork.WalletRepsitory.AddAsync(newWallet);
+				await _unitOfWork.SaveChangesAsync();
+				newWallet.CreatedById = managerAccount.Id;
+				await _unitOfWork.WalletRepsitory.UpdateAsync(newWallet);
+				await _unitOfWork.SaveChangesAsync();
+			}
+			else
+			{
+				managaerWallet.Balance += totalPrice;
+				await _unitOfWork.WalletRepsitory.UpdateAsync(managaerWallet);
+			}
+
+			reservation.TotalPrice += totalPrice;
+
+			var newTransaction = new Domain.Entities.Transaction()
+			{
+				WalletId = wallet.First().Id,
+				Amount = (decimal)totalPrice,
+				Content = "Đặt đồ uống",
+				RemitterId = managaerWallet.Id,
+				PetCoffeeShopId = products.FirstOrDefault().Value.PetCoffeeShopId,
+				TransactionStatus = TransactionStatus.Done,
+				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
+				TransactionType = TransactionType.AddProducts,
+			};
+			reservation.Transactions.Add(newTransaction);
 			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
+
 			await _unitOfWork.SaveChangesAsync();
 
 			return true;
@@ -187,4 +167,3 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 	}
 
 }
-

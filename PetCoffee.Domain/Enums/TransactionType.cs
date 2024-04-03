@@ -28,7 +28,5 @@ public enum TransactionType
 	[Description("Hủy đặt đồ uống")]
 	RemoveProducts = 8,
 
-	[Description("Giảm đồ ăn thức uống")]
-	MinusProducts = 6,
 }
 
