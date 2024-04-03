@@ -16,6 +16,7 @@ public enum ResponseCode
 
 	[Description("Quà tặng đã tồn tại")] ItemNameIsExisted,
 	[Description("Quà tặng không tồn tại")] ItemNotExist,
+	[Description("Quà tặng này không thể mua được nữa!")] CannotBuyItem,
 
 	//Auth
 
@@ -31,6 +32,7 @@ public enum ResponseCode
 
 	[Description("Email đã tồn tại")] AccountIsExisted,
 	[Description("Tài Khoản hoặc mật khẩu sai")] LoginFailed,
+	[Description("Tài Khoản bị vô hiệu hóa")] AccountIsInactive,
 	[Description("Mật khẩu hiện tại bạn nhập sai vui lòng kiểm tra lại")] PassNotValid,
 	//PostCategory
 	[Description("Tên đã tồn tại")] PostCategoryIsExisted,
@@ -59,10 +61,13 @@ public enum ResponseCode
 	//event
 	[Description("Sự kiện Không tồn tại")] EventNotExisted,
 	[Description("Sự kiện Không thể thay đổi vì đã quá thời gian bắt đầu")] EventCannotChanged,
+	[Description("Sự kiện Không thể Xóa vì đã có người tham gia")] EventCannotDeleted,
 	//submitEvent
 	[Description("Gửi form tham gia event không hợp lệ vui lòng xem lại")] SubmittingEventNotCorrectForm,
 	[Description("Form tham gia của bạn không tồn tại")] SubmittingEventNotExist,
 	[Description("Bạn đã tham gia event rồi")] SubmittingEventIsExist,
+	[Description("Sự kiện đã đủ người tham gia")] EventEnoughPaticipant,
+	[Description("Sự kiện đã hủy không thể tham gia được")] EventIsClosed,
 	//EventField
 	[Description("Trường này không tồn tại")] EventFieldIsNotExist,
 
@@ -84,28 +89,26 @@ public enum ResponseCode
 	[Description("Báo cáo không tồn tại")] ReportNotExisted,
 
 
-
-
 	//Reservation
 
 	[Description("Đơn hàng không tồn tại")] ReservationNotExist,
-    [Description("Đơn hàng không tồn tại hoặc đã huỷ")] ReservationNotExistOrIsRefunded,
+	[Description("Đơn hàng không tồn tại hoặc đã huỷ")] ReservationNotExistOrIsRefunded,
 
-    //Table
+	//Table
 
-    [Description("Table không tồn tại")] TableNotExist,
+	[Description("Table không tồn tại")] TableNotExist,
 
 	//PackagePromotion
 
 	[Description("Gói không tồn tại")] PackageNotExist,
+	[Description("Thời hạn của gói đã tồn tại nha")] PackageisExisted,
 
 
-    //Product
+	//Product
 
-    [Description("Sản phẩm không tồn tại")] ProductNotExist,
+	[Description("Sản phẩm không tồn tại")] ProductNotExist,
 
-    [Description("Đơn hàng đã quá hạn")] ExpiredReservation,
-
+	[Description("Đơn hàng đã quá hạn")] ExpiredReservation,
 
 	[Description("Sản phẩm không tồn tại trong đơn hàng")] ProductNotExistInReservation,
 

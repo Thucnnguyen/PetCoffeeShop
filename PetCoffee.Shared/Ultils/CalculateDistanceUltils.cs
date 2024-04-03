@@ -4,7 +4,7 @@ namespace PetCoffee.Shared.Ultils;
 
 public class CalculateDistanceUltils
 {
-	private static double RADIUS = 6378.16;
+	private static double RADIUS = 6371;
 	private static double PI = Math.PI / 180;
 	
 	public static double CalculateDistance(double userLatitude, double userLongitude, double ShopLatitude, double ShopLongitude)
@@ -19,6 +19,6 @@ public class CalculateDistanceUltils
 
 	private static double Radians(double x)
 	{
-		return x * PI / 180;
+		return x * PI;
 	}
 }

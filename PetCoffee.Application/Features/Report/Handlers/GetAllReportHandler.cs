@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Report.Models;
 using PetCoffee.Application.Features.Report.Queries;
@@ -24,7 +25,20 @@ public class GetAllReportHandler : IRequestHandler<GetAllReportQuery, Pagination
 
 	public async Task<PaginationResponse<Domain.Entities.Report, ReportResponse>> Handle(GetAllReportQuery request, CancellationToken cancellationToken)
 	{
-		var reports = await _unitOfWork.ReportRepository.GetAsync(predicate: request.GetExpressions());
+		var reports = _unitOfWork.ReportRepository
+			.Get(
+				predicate: request.GetExpressions()
+			)
+			.Include(r => r.CreatedBy)
+			.Include(r => r.Comment)
+				.ThenInclude(c => c.CreatedBy)
+			.Include(r => r.Comment)
+				.ThenInclude(c => c.PetCoffeeShop)
+			.Include(r => r.Post)
+				.ThenInclude(p => p.CreatedBy)
+			.Include(r => r.Post)
+				.ThenInclude(p => p.PetCoffeeShop)
+			.AsQueryable();
 
 		return new PaginationResponse<Domain.Entities.Report, ReportResponse>(
 		reports,

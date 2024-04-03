@@ -51,14 +51,24 @@ public class GetWalletForCurrentAccountHandler : IRequestHandler<GetWalletForCur
 						 predicate: wi => wi.WalletId == wallet.Id,
 						 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.WalletItem, object>>>
 						 {
-							 wi => wi.Item
+							 wi => wi.Item,
 						 });
 		walletResponse.Items = walletItems.Select(wi => _mapper.Map<ItemWalletResponse>(wi)).ToList();
 
 		var transactions = _unitOfWork.TransactionRepository
-								.Get(tr => tr.WalletId == wallet.Id)
-								.OrderByDescending(tr => tr.CreatedAt)
-								.Take(5);
+								.Get(Transaction => Transaction.Remitter.CreatedById == currentAccount.Id ||
+												Transaction.CreatedById == currentAccount.Id ||
+												Transaction.Wallet.CreatedById == currentAccount.Id)
+								.Include(t => t.Items)
+								.ThenInclude(ti => ti.Item)
+							.Include(t => t.Pet)
+							.Include(t => t.Reservation)
+							.ThenInclude(r => r.Area)
+							.ThenInclude(a => a.PetCoffeeShop)
+							.Include(t => t.PackagePromotion)
+							.Include(t => t.PetCoffeeShop)
+							.Include(t => t.CreatedBy)
+								.OrderByDescending(tr => tr.CreatedAt);
 		walletResponse.Transactions = transactions.Select(tr => _mapper.Map<TransactionResponse>(tr)).ToList();
 		return walletResponse;
 	}

@@ -38,19 +38,21 @@ public class GetCommentByPostIdHandler : IRequestHandler<GetCommentByPostIdQuery
 		var Comments = _unitOfWork.CommentRepository.Get(c => c.PostId == request.PostId, disableTracking: true)
 													.Include(c => c.CreatedBy)
 													.Include(c => c.PetCoffeeShop)
-		.ToList();
+													.OrderByDescending(c => c.CreatedAt)
+													.ToList();
 
-		var ShowComments = Comments.Where(c => c.ParentCommentId != null)
+		var ShowComments = Comments.Where(c => c.ParentCommentId == null)
 							.Skip((request.PageNumber - 1) * request.PageSize)
 							.Take(request.PageSize);
 
 		var response = new List<CommentResponse>();
-		foreach (var comment in Comments)
+		foreach (var comment in ShowComments)
 		{
 			var commentResponse = _mapper.Map<CommentResponse>(comment);
 			commentResponse.TotalSubComments = Comments.Count(c => c.ParentCommentId == comment.Id);
 			response.Add(commentResponse);
 		}
+
 		return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(
 		response,
 		Comments.Count(),

@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿
+using AutoMapper;
+using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -8,23 +10,23 @@ using PetCoffee.Application.Features.Payments.Models;
 using PetCoffee.Application.Features.Payments.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Entities;
 
 namespace PetCoffee.Application.Features.Payments.Handlers;
 
-public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
+public class GetAllTransactionByCurrentWalletHandler : IRequestHandler<GetAllTransactionByCurrentWalletQuery, PaginationResponse<Domain.Entities.Transaction, PaymentResponse>>
 {
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
 
-	public GetAllTransactionHandler(ICurrentAccountService currentAccountService, IUnitOfWork unitOfWork, IMapper mapper)
+	public GetAllTransactionByCurrentWalletHandler(ICurrentAccountService currentAccountService, IUnitOfWork unitOfWork, IMapper mapper)
 	{
 		_currentAccountService = currentAccountService;
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
 	}
-
-	public async Task<PaginationResponse<Domain.Entities.Transaction, PaymentResponse>> Handle(GetAllTransactionQuery request, CancellationToken cancellationToken)
+	public async Task<PaginationResponse<Transaction, PaymentResponse>> Handle(GetAllTransactionByCurrentWalletQuery request, CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
 		if (currentAccount == null)
@@ -36,14 +38,13 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, 
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		if (currentAccount != null && currentAccount.IsCustomer && request.ShopId != 0)
-		{
-			request.CustomerId = currentAccount.Id;
-		}
-
+		var express = request.GetExpressions()
+							.And(Transaction => Transaction.Remitter.CreatedById == currentAccount.Id ||
+												Transaction.CreatedById == currentAccount.Id ||
+												Transaction.Wallet.CreatedById == currentAccount.Id);
 		var payments = _unitOfWork.TransactionRepository
 		   .Get(
-			   predicate: request.GetExpressions(),
+			   predicate: express,
 			   orderBy: request.GetOrder(),
 			   disableTracking: true)
 							.Include(t => t.Items)
@@ -52,6 +53,8 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionQuery, 
 							.Include(t => t.Reservation)
 							.ThenInclude(r => r.Area)
 							.ThenInclude(a => a.PetCoffeeShop)
+							.Include(t => t.PackagePromotion)
+							.Include(t => t.PetCoffeeShop)
 							.AsQueryable();
 
 		return new PaginationResponse<Domain.Entities.Transaction, PaymentResponse>(

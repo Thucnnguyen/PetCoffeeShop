@@ -2,6 +2,7 @@
 
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Packages.Commands;
@@ -28,8 +29,16 @@ public class UpdatePackageHandler : IRequestHandler<UpdatePackageCommand, Packag
 
 	public async Task<PackageResponse> Handle(UpdatePackageCommand request, CancellationToken cancellationToken)
 	{
+		var isExistedPackage = await _unitOfWork.PackagePromotionRespository
+							.Get(p => p.Duration == request.Duration && !p.Deleted)
+							.FirstOrDefaultAsync();
+		if (isExistedPackage != null)
+		{
+			throw new ApiException(ResponseCode.PackageisExisted);
+		}
+
 		var updatedPackage = await _unitOfWork.PackagePromotionRespository
-								.GetByIdAsync(request.Id);
+			.Get(pp => pp.Id == request.Id && !pp.Deleted).FirstOrDefaultAsync(); ;
 
 		if (updatedPackage == null)
 		{

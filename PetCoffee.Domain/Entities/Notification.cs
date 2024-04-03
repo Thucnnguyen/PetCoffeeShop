@@ -45,7 +45,6 @@ public class Notification : BaseAuditableEntity
 					Title = $"Bạn có một lượt thích bải viết mới";
 					Content = $"{like.CreatedBy.FullName} đã thích bài viết của bạn";
 					Level = NotificationLevel.Information;
-					EntityType = EntityType.Post;
 					ReferenceId = like.PostId.ToString();
 					break;
 				}
@@ -107,7 +106,7 @@ public class Notification : BaseAuditableEntity
 					var newEvent = (Event)data;
 
 					Title = $"Sự kiện mới của quán bạn theo dõi";
-					//Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
+					Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
 					Level = NotificationLevel.Information;
 					ReferenceId = newEvent.Id.ToString();
 
@@ -158,6 +157,22 @@ public class Notification : BaseAuditableEntity
 					Content = $"{follow.Shop.Name} đã được tặng quà bời {follow.CreatedBy.FullName}";
 					Level = NotificationLevel.Information;
 					ReferenceId = follow.ShopId.ToString();
+
+					break;
+				}
+			case NotificationType.ReturnOrder:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var reservation = (Reservation)data;
+
+					Title = $"Đơn hàng của bạn đã được hoàn tiền";
+					Content = $"{reservation.CreatedBy.FullName} đơn hàng {reservation.Code} của bạn đã bị hủy!";
+					Level = NotificationLevel.Information;
+					ReferenceId = reservation.Id.ToString();
 
 					break;
 				}

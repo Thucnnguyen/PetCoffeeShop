@@ -53,7 +53,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
 			.ThenInclude(c => c.Category)
 			.Include(p => p.PostPetCoffeeShops)
 			.ThenInclude(shop => shop.Shop)
-		.Include(p => p.CreatedBy)
+			.Include(p => p.CreatedBy)
 			.Where(p => !reportedPostIds.Contains(p.Id))
 			.AsQueryable();
 

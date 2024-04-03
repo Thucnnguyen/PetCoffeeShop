@@ -1,5 +1,7 @@
 ﻿
 
+using PetCoffee.Domain.Enums;
+
 namespace PetCoffee.Application.Features.Events.Models;
 
 public class EventForCardResponse
@@ -15,4 +17,7 @@ public class EventForCardResponse
 	public string? Location { get; set; }
 	public bool IsJoin { get; set; }
 	public long TotalJoinEvent { get; set; } = 0;
+	public EventStatus Status { get; set; }
+	public int MinParticipants { get; set; }
+	public int MaxParticipants { get; set; }
 }

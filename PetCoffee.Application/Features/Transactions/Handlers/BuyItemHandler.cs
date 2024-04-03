@@ -42,11 +42,17 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 		var itemDic = new Dictionary<long, int>();
 		foreach (var item in request.Items)
 		{
-			var existedItem = await _unitOfWork.ItemRepository.GetByIdAsync(item.ItemId);
+			var existedItem = await _unitOfWork.ItemRepository.Get(i => i.ItemId == item.ItemId).FirstOrDefaultAsync();	
 			if (existedItem == null)
 			{
 				throw new ApiException(ResponseCode.ItemNotExist);
 			}
+
+			if (existedItem.Deleted)
+			{
+				throw new ApiException(ResponseCode.CannotBuyItem);
+			}
+
 			items.Add(existedItem);
 			itemDic.Add(item.ItemId, item.Quantity);
 		}
@@ -92,11 +98,27 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 			await _unitOfWork.SaveChangesAsync();
 
 		}
-
+		//var adminAccount = await _unitOfWork.AccountRepository.Get(a => a.IsAdmin).FirstOrDefaultAsync();
+		//var adminWallet = await _unitOfWork.WalletRepsitory.Get(w => w.CreatedById == adminAccount.Id).FirstOrDefaultAsync();
+		//if (adminWallet == null)
+		//{
+		//	var newWallet = new Wallet((decimal)totalMoney);
+		//	await _unitOfWork.WalletRepsitory.AddAsync(newWallet);
+		//	await _unitOfWork.SaveChangesAsync();
+		//	newWallet.CreatedById = adminAccount.Id;
+		//	await _unitOfWork.WalletRepsitory.UpdateAsync(newWallet);
+		//	adminWallet = newWallet;
+		//}
+		//else
+		//{
+		//	adminWallet.Balance += (decimal)totalMoney;
+		//	await _unitOfWork.WalletRepsitory.UpdateAsync(adminWallet);
+		//}
 		var donateTransaction = new Transaction()
 		{
 			Amount = (decimal)totalMoney,
 			Content = "Mua quà Tặng",
+			//RemitterId = adminWallet.Id,
 			TransactionType = TransactionType.BuyItem,
 			TransactionStatus = TransactionStatus.Done,
 			ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),

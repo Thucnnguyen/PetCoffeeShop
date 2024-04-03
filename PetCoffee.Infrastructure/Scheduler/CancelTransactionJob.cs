@@ -6,7 +6,7 @@ using Quartz;
 
 namespace PetCoffee.Infrastructure.Scheduler;
 
-public class CancleTransactionJob : IJob
+public class CancelTransactionJob : IJob
 {
 	public const string DeleteAccountNotVerifyJobKey = "CancleTransactionJob";
 
@@ -14,7 +14,7 @@ public class CancleTransactionJob : IJob
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ILogger<DeleteAccountNotVerifyJob> _logger;
 
-	public CancleTransactionJob(IUnitOfWork unitOfWork, ILogger<DeleteAccountNotVerifyJob> logger)
+	public CancelTransactionJob(IUnitOfWork unitOfWork, ILogger<DeleteAccountNotVerifyJob> logger)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;

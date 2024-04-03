@@ -31,4 +31,6 @@ public class UpdateCoffeeShopCommand : IRequest<PetCoffeeShopResponse>
 	public string? Location { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
+	public string? OpeningTime { get; set; }
+	public string? ClosedTime { get; set; }
 }

@@ -18,7 +18,7 @@ namespace PetCoffee.API.Controllers
 		}
 
 
-		[HttpGet("payments/callback/vnpay/{referenceId}")]
+		[HttpPut("payments/callback/vnpay/{referenceId}")]
 		public async Task<ActionResult<PaymentResponse>> CallbackVNPay([FromRoute] string referenceId, [FromQuery] ProcessVnpayPaymentIpnCommand request)
 		{
 			request.ReferenceId = referenceId;

@@ -33,6 +33,14 @@ namespace PetCoffee.API.Controllers
 			return await Mediator.Send(request);
 		}
 
+		[HttpGet("shops/posts")]
+		[Authorize]
+		public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetAllPostForShop(
+		[FromQuery] GetAllPostByShopIdQuery request)
+		{
+			return await Mediator.Send(request);
+		}
+
 		// GET api/<PostController>/5
 		[HttpGet("currentAccounts/posts")]
 		[Authorize]
@@ -82,5 +90,17 @@ namespace PetCoffee.API.Controllers
 
 			return await Mediator.Send(request);
 		}
+
+
+		[HttpGet("posts/tagged/{ShopId:long}")]
+		[Authorize]
+		public async Task<ActionResult<PaginationResponse<Post, PostResponse>>> GetPostOFShopBeTagged([FromRoute] GetPostOFShopBeTaggedQuery request)
+		{
+
+			return await Mediator.Send(request);
+		}
+
+
+
 	}
 }

@@ -20,7 +20,6 @@ public class AccountRepository : BaseRepository<Account>, IAccountRepository
 	{
 		var user = await _dbContext.Accounts
 									.FirstOrDefaultAsync(a => a.Email.Equals(email)
-														&& (a.IsActive || a.IsVerify)
 														&& a.LoginMethod == LoginMethod.UserNamePass);
 		return user;
 	}

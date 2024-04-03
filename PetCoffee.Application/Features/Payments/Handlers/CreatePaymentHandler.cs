@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -23,12 +21,14 @@ public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Paymen
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IMapper _mapper;
-	public CreatePaymentHandler(IVnPayService vnPayService, ICurrentAccountService currentAccountService, IUnitOfWork unitOfWork, IMapper mapper)
+	private readonly ISchedulerService _schedulerService;
+	public CreatePaymentHandler(IVnPayService vnPayService, ICurrentAccountService currentAccountService, IUnitOfWork unitOfWork, IMapper mapper, ISchedulerService schedulerService)
 	{
 		_vnPayService = vnPayService;
 		_currentAccountService = currentAccountService;
 		_unitOfWork = unitOfWork;
 		_mapper = mapper;
+		_schedulerService = schedulerService;
 	}
 
 
@@ -71,6 +71,8 @@ public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Paymen
 		transaction.WalletId = wallet != null ? wallet.Id : walletId;
 		await _unitOfWork.TransactionRepository.AddAsync(transaction);
 		await _unitOfWork.SaveChangesAsync();
+
+		await _schedulerService.CancelTransactionJob(transaction.Id, transaction.CreatedAt.AddMinutes(3));
 
 		return _mapper.Map<PaymentResponse>(transaction);
 	}

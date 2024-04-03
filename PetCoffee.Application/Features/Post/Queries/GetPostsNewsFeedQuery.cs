@@ -17,7 +17,7 @@ public class GetPostsNewsFeedQuery : PaginationRequest<Domain.Entities.Post>, IR
 		get => _search;
 		set => _search = value?.Trim().ToLower();
 	}
-	public long CategoryId { get; set; } = 0;
+	public long? CategoryId { get; set; }
 
 	public override Expression<Func<Domain.Entities.Post, bool>> GetExpressions()
 	{
@@ -28,7 +28,7 @@ public class GetPostsNewsFeedQuery : PaginationRequest<Domain.Entities.Post>, IR
 				Expression = Expression.And(e => e.Content.ToLower().Contains(Search));
 			}
 		}
-		if (CategoryId > 0)
+		if (CategoryId is not null)
 		{
 			Expression = Expression.And(e => e.PostCategories.Where(p => p.CategoryId == CategoryId).Any());
 		}

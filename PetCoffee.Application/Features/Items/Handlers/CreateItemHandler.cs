@@ -37,7 +37,7 @@ namespace PetCoffee.Application.Features.Items.Handlers
 			}
 
 			//check already have name item
-			var item = _unitOfWork.ItemRepository.IsExisted(c => c.Name == request.Name);
+			var item = _unitOfWork.ItemRepository.IsExisted(c => c.Name == request.Name && !c.Deleted);
 			if (item)
 			{
 				throw new ApiException(ResponseCode.ItemNameIsExisted);

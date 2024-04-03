@@ -29,7 +29,15 @@ public class TransactionController : ApiControllerBase
 
 	[HttpGet("transactions")]
 	[Authorize]
-	public async Task<ActionResult<PaginationResponse<Transaction, PaymentResponse>>> GetAllTransaction([FromQuery] GetAllTransactionQuery request)
+	public async Task<ActionResult<PaginationResponse<Transaction, PaymentResponse>>> GetAllTransaction([FromQuery] GetAllTransactionByCustomerIdOrShopIdQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return response;
+	}
+
+	[HttpGet("wallets/transactions")]
+	[Authorize(Roles ="Manager,Staff")]
+	public async Task<ActionResult<PaginationResponse<Transaction, PaymentResponse>>> GetAllTransactionForShop([FromQuery] GetAllTransactionByCurrentWalletQuery request)
 	{
 		var response = await Mediator.Send(request);
 		return response;

@@ -260,6 +260,12 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("MaxParticipants")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinParticipants")
+                        .HasColumnType("int");
+
                     b.Property<long>("PetCoffeeShopId")
                         .HasColumnType("bigint");
 
@@ -269,6 +275,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<string>("StartTime")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
@@ -525,6 +534,9 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
@@ -1126,6 +1138,12 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<long?>("PackagePromotionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("PetCoffeeShopId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("PetId")
                         .HasColumnType("bigint");
 
@@ -1156,6 +1174,10 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("PackagePromotionId");
+
+                    b.HasIndex("PetCoffeeShopId");
 
                     b.HasIndex("PetId");
 
@@ -1705,6 +1727,14 @@ namespace PetCoffee.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
+                    b.HasOne("PetCoffee.Domain.Entities.PackagePromotion", "PackagePromotion")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PackagePromotionId");
+
+                    b.HasOne("PetCoffee.Domain.Entities.PetCoffeeShop", "PetCoffeeShop")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PetCoffeeShopId");
+
                     b.HasOne("PetCoffee.Domain.Entities.Pet", "Pet")
                         .WithMany("Transactions")
                         .HasForeignKey("PetId");
@@ -1725,7 +1755,11 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.Navigation("CreatedBy");
 
+                    b.Navigation("PackagePromotion");
+
                     b.Navigation("Pet");
+
+                    b.Navigation("PetCoffeeShop");
 
                     b.Navigation("Remitter");
 
@@ -1841,6 +1875,11 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("Transactions");
                 });
 
+            modelBuilder.Entity("PetCoffee.Domain.Entities.PackagePromotion", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
             modelBuilder.Entity("PetCoffee.Domain.Entities.Pet", b =>
                 {
                     b.Navigation("Moments");
@@ -1873,6 +1912,8 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("Products");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Post", b =>

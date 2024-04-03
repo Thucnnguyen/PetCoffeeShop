@@ -32,7 +32,8 @@ public class CreateEventCommand : IRequest<EventResponse>
 	public string StartTime { get; set; }
 	public string EndTime { get; set; }
 	public string? Location { get; set; }
-
+	public int MinParticipants { get; set; }
+	public int MaxParticipants { get; set; }
 }
 
 
