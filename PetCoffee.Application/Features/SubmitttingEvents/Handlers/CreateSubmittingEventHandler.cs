@@ -59,7 +59,7 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 		// check is max participation
 		if (CheckEvent.MaxParticipants == CheckEvent.SubmittingEvents.Count())
 		{
-			throw new ApiException(ResponseCode.SubmittingEventIsExist);
+			throw new ApiException(ResponseCode.EventEnoughPaticipant);
 		}
 
 		//check valid eventifield

@@ -42,11 +42,17 @@ public class BuyItemHandler : IRequestHandler<BuyItemsCommand, bool>
 		var itemDic = new Dictionary<long, int>();
 		foreach (var item in request.Items)
 		{
-			var existedItem = await _unitOfWork.ItemRepository.GetByIdAsync(item.ItemId);
+			var existedItem = await _unitOfWork.ItemRepository.Get(i => i.ItemId == item.ItemId).FirstOrDefaultAsync();	
 			if (existedItem == null)
 			{
 				throw new ApiException(ResponseCode.ItemNotExist);
 			}
+
+			if (existedItem.Deleted)
+			{
+				throw new ApiException(ResponseCode.CannotBuyItem);
+			}
+
 			items.Add(existedItem);
 			itemDic.Add(item.ItemId, item.Quantity);
 		}

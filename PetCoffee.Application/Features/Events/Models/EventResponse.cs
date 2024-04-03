@@ -1,4 +1,6 @@
 ﻿
+using PetCoffee.Domain.Enums;
+
 namespace PetCoffee.Application.Features.Events.Models;
 
 public class EventResponse
@@ -17,5 +19,9 @@ public class EventResponse
 	public int TotalJoinEvent { get; set; } = 0;
 	public bool IsJoin { get; set; } = false;
 	public bool IsCanceled { get; set; } = false;
+	public EventStatus Status { get; set; }
+	public int MinParticipants { get; set; }
+	public int MaxParticipants { get; set; }
+
 	public List<FieldEventResponseForEventResponse>? Fields { get; set; }
 }
