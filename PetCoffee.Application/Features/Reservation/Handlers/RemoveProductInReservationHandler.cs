@@ -45,53 +45,47 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			 predicate: p => p.Id == request.ReservationId && p.CreatedById == currentAccount.Id && p.Status.Equals(OrderStatus.Success) && p.StartTime > DateTimeOffset.UtcNow,
 			 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
 			 {
-					p => p.ReservationProducts
+					p => p.ReservationProducts,
+					p => p.Area
 			 }
 			 ).FirstOrDefault();
 			if (reservation == null)
 			{
 				throw new ApiException(ResponseCode.ReservationNotExist);
 			}
-			var isExistProduct = reservation.ReservationProducts.Any(rp => rp.ProductId == request.ProductId);	
-			if (!isExistProduct)
-			{
-				throw new ApiException(ResponseCode.ProductNotExistInReservation);
-			}
-		
 
-
-			var product = _unitOfWork.ProductRepository.Get(rp => rp.Id == request.ProductId).Include(rp => rp.PetCoffeeShop).FirstOrDefault();
 			decimal backMoney = 0;
-          
-				var pro =  _unitOfWork.ReservationProductRepository.Get(rp => rp.ProductId == request.ProductId && rp.ReservationId == request.ReservationId).FirstOrDefault();
+			foreach (var product in reservation.ReservationProducts)
+			{
+				backMoney += product.TotalProduct * product.ProductPrice;
+			}
 
-				backMoney += pro.TotalProduct * pro.ProductPrice;
-				_unitOfWork.ReservationProductRepository.DeleteAsync(pro);
-
-
-       
+			// Delete all products in the reservation
+			_unitOfWork.ReservationProductRepository.DeleteRange(reservation.ReservationProducts);
 			reservation.TotalPrice -= backMoney;
-			
-			_unitOfWork.ReservationRepository.UpdateAsync(reservation);
 
-			
+			// Update reservation and save changes
+			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
+
+
+
 			var wallet = await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id);
 			if (!wallet.Any())
 			{
 				throw new ApiException(ResponseCode.NotEnoughBalance);
 			}
-		
+
 
 			wallet.First().Balance += backMoney;
 			await _unitOfWork.WalletRepsitory.UpdateAsync(wallet.First());
 
 			var managerAccount = await _unitOfWork.AccountRepository
-			.GetAsync(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == product.PetCoffeeShopId));
+			.GetAsync(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == reservation.Area.PetcoffeeShopId));
 
 
 			var managaerWallet = await _unitOfWork.WalletRepsitory
 				.GetAsync(w => w.CreatedById == managerAccount.First().Id);
-		
+
 
 			if (managaerWallet == null)
 			{
@@ -128,3 +122,4 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 		}
 	}
 }
+

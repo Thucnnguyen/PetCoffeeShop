@@ -48,7 +48,7 @@ public class GetOutcomeHandler : IRequestHandler<GetOutcomeQuery, IncomeForShopR
 		}
 		var shopDic = new Dictionary<string, LinkedList<decimal>>();
 		//get inconme each months
-		for (var i = 0; i < request.Months; i++)
+		for (var i = request.Months; i >= 0; i--)
 		{
 			var month = DateTimeOffset.UtcNow.AddMonths(-i);
 			var firstDayOfMonth = new DateTimeOffset(month.Year, month.Month, 1, 0, 0, 0, month.Offset);
@@ -68,6 +68,7 @@ public class GetOutcomeHandler : IRequestHandler<GetOutcomeQuery, IncomeForShopR
 					}
 					continue;
 				}
+
 				//get all transaction in month
 				var transaction = await _unitOfWork.TransactionRepository
 								.Get(tr => tr.PetCoffeeShopId == shop.Id

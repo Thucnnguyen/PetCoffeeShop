@@ -10,6 +10,7 @@ namespace PetCoffee.Application.Features.Reservation.Commands
 	public class RemoveProductInReservationCommand : IRequest<bool>
 	{
 		public long ReservationId { get; set; }
-		public long ProductId { get; set; }
+
 	}
 }
+

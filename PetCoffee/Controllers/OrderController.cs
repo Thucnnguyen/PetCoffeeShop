@@ -85,7 +85,7 @@ namespace PetCoffee.API.Controllers
 
 		[HttpPut("orders/{id:long}/invoice")]
 		[Authorize]
-		public async Task<ActionResult<bool>> AddProductToBooking(
+		public async Task<ActionResult<bool>> AddMinusProductToBooking(
 		[FromRoute] long id,
 		[FromBody] UpdateProductOfBookingCommand command)
 		{
@@ -110,10 +110,11 @@ namespace PetCoffee.API.Controllers
 		}
 
 
-		[HttpDelete("orders/{ReservationId:long}/reservation-product/{ProductId:long}")]
+
+		[HttpDelete("orders/{ReservationId:long}/reservation-product")]
 		[Authorize]
 		public async Task<ActionResult<bool>> RemoveProductInReservation(
-	 [FromRoute] RemoveProductInReservationCommand command)
+		[FromRoute] RemoveProductInReservationCommand command)
 		{
 
 			return await Mediator.Send(command);
@@ -123,3 +124,4 @@ namespace PetCoffee.API.Controllers
 
 	}
 }
+
