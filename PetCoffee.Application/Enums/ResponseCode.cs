@@ -16,6 +16,7 @@ public enum ResponseCode
 
 	[Description("Quà tặng đã tồn tại")] ItemNameIsExisted,
 	[Description("Quà tặng không tồn tại")] ItemNotExist,
+	[Description("Quà tặng này không thể mua được nữa!")] CannotBuyItem,
 
 	//Auth
 

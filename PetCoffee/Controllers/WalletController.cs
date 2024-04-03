@@ -16,4 +16,20 @@ public class WalletController : ApiControllerBase
 		var response = await Mediator.Send(request);
 		return Ok(response);
 	}
+
+	[HttpGet("account/wallet/income")]
+	[Authorize(Roles ="Manager")]
+	public async Task<ActionResult<IncomeForShopResponse>> GetIncomeHandler([FromQuery] GetIncomeQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+
+	[HttpGet("account/wallet/outcome")]
+	[Authorize(Roles = "Manager")]
+	public async Task<ActionResult<IncomeForShopResponse>> GetOutCome([FromQuery] GetOutcomeQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
 }
