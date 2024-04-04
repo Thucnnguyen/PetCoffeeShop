@@ -9,6 +9,8 @@ using PetCoffee.Application.Features.Wallets.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
+using System;
+using System.Linq;
 
 namespace PetCoffee.Application.Features.Wallets.Handlers;
 
@@ -39,7 +41,7 @@ public class GetIncomeHandler : IRequestHandler<GetIncomeQuery, IncomeForShopRes
 		var shopIds = currentAccount.AccountShops.Select(acs => acs.ShopId).ToList();
 
 		var shops = await _unitOfWork.PetCoffeeShopRepository
-			.Get(s => shopIds.Contains(s.Id) && !s.Deleted)
+			.Get(s => shopIds.Contains(s.Id) && !s.Deleted && s.Status == ShopStatus.Active)
 			.ToListAsync();
 
 		if (!shops.Any())
@@ -47,10 +49,27 @@ public class GetIncomeHandler : IRequestHandler<GetIncomeQuery, IncomeForShopRes
 			return new();
 		}
 		var shopDic = new Dictionary<string, LinkedList<decimal>>();
+
+		//get All Transaction of shop in n months
+		var curDate = DateTimeOffset.UtcNow;
+		var getFromDate = new DateTimeOffset(curDate.AddMonths(-(request.Months - 1)).Year,
+											 curDate.AddMonths(-(request.Months - 1)).Month, 1, 0, 0, 0, DateTimeOffset.UtcNow.Offset);
+		var getToDate = new DateTimeOffset(curDate.Year,
+											 curDate.Month, 1, 0, 0, 0, DateTimeOffset.UtcNow.Offset)
+							.AddDays(-1);
+
+		var transaction = await _unitOfWork.TransactionRepository
+								.Get(tr => tr.PetCoffeeShopId != null && shopIds.Contains(tr.PetCoffeeShopId.Value)
+								&& (tr.CreatedAt <= getToDate && tr.CreatedAt >= getFromDate)
+								&& (tr.TransactionType == TransactionType.Donate ||
+									tr.TransactionType == TransactionType.Reserve ||
+									tr.TransactionType == TransactionType.AddProducts))
+								.ToListAsync();
+
 		//get inconme each months
-		for (var i = request.Months; i >= 0; i--)
+		for (var i = request.Months - 1; i >= 0; i--)
 		{
-			
+
 			var month = DateTimeOffset.UtcNow.AddMonths(-i);
 			var firstDayOfMonth = new DateTimeOffset(month.Year, month.Month, 1, 0, 0, 0, month.Offset);
 			var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
@@ -70,31 +89,18 @@ public class GetIncomeHandler : IRequestHandler<GetIncomeQuery, IncomeForShopRes
 					continue;
 				}
 				//get all transaction in month
-				var transaction = await _unitOfWork.TransactionRepository
-								.Get(tr => tr.PetCoffeeShopId == shop.Id
-								&& (tr.CreatedAt <= lastDayOfMonth && tr.CreatedAt >= firstDayOfMonth))
-								.ToListAsync();
 
-				//var TotalIncomeShop =
-				//	transaction.Where(tr => tr.TransactionType == TransactionType.Donate).Sum(tr => tr.Amount) +
-				//	transaction.Where(tr => tr.TransactionType == TransactionType.Reserve).Sum(tr => tr.Amount) +
-				//	transaction.Where(tr => tr.TransactionType == TransactionType.AddProducts).Sum(tr => tr.Amount) -
-				//	transaction.Where(tr => tr.TransactionType == TransactionType.Refund).Sum(tr => tr.Amount) -
-				//	transaction.Where(tr => tr.TransactionType == TransactionType.RemoveProducts).Sum(tr => tr.Amount);
-
-				var TotalIncomeShop =
-					transaction.Where(tr => tr.TransactionType == TransactionType.Donate).Sum(tr => tr.Amount) +
-					transaction.Where(tr => tr.TransactionType == TransactionType.Reserve).Sum(tr => tr.Amount) +
-					transaction.Where(tr => tr.TransactionType == TransactionType.AddProducts).Sum(tr => tr.Amount);
+				var shopTransactions = transaction.Where(tr => tr.PetCoffeeShopId == shop.Id
+															&& (tr.CreatedAt <= lastDayOfMonth && tr.CreatedAt >= firstDayOfMonth));
 
 				if (!shopDic.ContainsKey(shop.Name))
 				{
 					shopDic.Add(shop.Name, new LinkedList<decimal>());
-					shopDic[shop.Name].AddLast(TotalIncomeShop);
+					shopDic[shop.Name].AddLast(shopTransactions.Sum(tr => tr.Amount));
 				}
 				else
 				{
-					shopDic[shop.Name].AddLast(TotalIncomeShop);
+					shopDic[shop.Name].AddLast(shopTransactions.Sum(tr => tr.Amount));
 				}
 			}
 		}

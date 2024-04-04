@@ -32,4 +32,49 @@ public class WalletController : ApiControllerBase
 		var response = await Mediator.Send(request);
 		return Ok(response);
 	}
+
+	[HttpGet("account/wallet/month/income")]
+	[Authorize(Roles = "Manager")]
+	public async Task<ActionResult<List<GetTransactionAmountResponse>>> GetOutCome([FromQuery] GetIncomeTransactionForShopInMonthQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+	[HttpGet("account/wallet/month/outcome")]
+	[Authorize(Roles = "Manager")]
+	public async Task<ActionResult<List<GetTransactionAmountResponse>>> GetOutCome([FromQuery] GetOutcomeTransactionForShopInMonthQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+
+	[HttpGet("account/wallet/platform/income")]
+	[Authorize(Roles = "Admin")]
+	public async Task<ActionResult<IncomeResponse>> GetIncomePlatform([FromQuery] GetIncomePlatformQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+	[HttpGet("account/wallet/platform/month/income")]
+	[Authorize(Roles = "Admin")]
+	public async Task<ActionResult<GetTransactionAmountResponse>> GetIncomePlatformInMonth([FromQuery] GetIncomePlatFormnInMonthQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+	[HttpGet("account/wallet/shop/income")]
+	[Authorize(Roles = "Manager")]
+	public async Task<ActionResult<IncomeResponse>> GetIncomeByShopId([FromQuery] GetShopIncomeQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+
+	[HttpGet("account/wallet/shop/outcome")]
+	[Authorize(Roles = "Manager")]
+	public async Task<ActionResult<IncomeResponse>> GetOutcomeByShopId([FromQuery] GetShopOutComeQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
 }

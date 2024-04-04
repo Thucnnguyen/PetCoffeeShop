@@ -49,22 +49,22 @@ public class UpdatePetAreaHandler : IRequestHandler<UpdatePetAreaCommand, bool>
 			return false;
 		}
 
-		foreach (var pet in listPets)
-		{
-			if (!request.PetIds.Contains(pet.Id))
-			{
-				var currentPetArea = await _unitOfWork.PetAreaRespository
-								.Get(pa => pa.PetId == pet.Id && pa.EndTime == null)
-								.FirstOrDefaultAsync();
-				if (currentPetArea != null)
-				{
-					currentPetArea.EndTime = DateTime.UtcNow;
-					await _unitOfWork.PetAreaRespository.UpdateAsync(currentPetArea);
-					await _cacheService.RemoveAsync(pet.Id.ToString(), cancellationToken);
-				}
-				request.PetIds.Remove(pet.Id);
-			}
-		}
+		//foreach (var pet in listPets)
+		//{
+		//	if (!request.PetIds.Contains(pet.Id))
+		//	{
+		//		var currentPetArea = await _unitOfWork.PetAreaRespository
+		//						.Get(pa => pa.PetId == pet.Id && pa.EndTime == null)
+		//						.FirstOrDefaultAsync();
+		//		if (currentPetArea != null)
+		//		{
+		//			currentPetArea.EndTime = DateTime.UtcNow;
+		//			await _unitOfWork.PetAreaRespository.UpdateAsync(currentPetArea);
+		//			await _cacheService.RemoveAsync(pet.Id.ToString(), cancellationToken);
+		//		}
+		//		request.PetIds.Remove(pet.Id);
+		//	}
+		//}
 		foreach (var petId in request.PetIds)
 		{
 			var checkPet = await _unitOfWork.PetRepository.GetAsync(p => p.Id == petId && !p.Deleted);
