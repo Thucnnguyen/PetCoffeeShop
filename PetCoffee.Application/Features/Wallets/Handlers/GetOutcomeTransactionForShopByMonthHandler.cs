@@ -159,7 +159,7 @@ public class GetOutcomeTransactionForShopByMonthHandler : IRequestHandler<GetOut
 		var transactionTypeResponse = new[]
 						{
 							TransactionType.Refund,
-							TransactionType.MinusProducts,
+							TransactionType.RemoveProducts,
 							TransactionType.Package
 						};
 		if (curTransactionForShop.Any())

@@ -69,7 +69,7 @@ internal class GetShopOutComeHandler : IRequestHandler<GetShopOutComeQuery, Inco
 
 			var TotalOutcomeShop =
 					transaction.Where(tr => tr.TransactionType == TransactionType.Refund).Sum(tr => tr.Amount) +
-					transaction.Where(tr => tr.TransactionType == TransactionType.MinusProducts).Sum(tr => tr.Amount) +
+					transaction.Where(tr => tr.TransactionType == TransactionType.RemoveProducts).Sum(tr => tr.Amount) +
 					transaction.Where(tr => tr.TransactionType == TransactionType.Package).Sum(tr => tr.Amount);
 
 			monthAmounts.AddLast(TotalOutcomeShop);
