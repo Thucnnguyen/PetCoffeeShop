@@ -58,6 +58,7 @@ public class GetShopIncomeHandler : IRequestHandler<GetShopIncomeQuery, IncomeRe
 			if (i == 0)
 			{
 				monthAmounts.AddLast(0);
+				continue;
 			}
 			//get all transaction in month
 			var transaction = await _unitOfWork.TransactionRepository

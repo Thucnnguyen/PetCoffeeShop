@@ -50,7 +50,7 @@ internal class GetShopOutComeHandler : IRequestHandler<GetShopOutComeQuery, Inco
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 		var monthAmounts = new LinkedList<decimal>();
-		for (var i = request.Months - 1; i >= 0; i--)
+		for (var i = request.Months; i >= 0; --i)
 		{
 
 			var month = DateTimeOffset.UtcNow.AddMonths(-i);
@@ -59,6 +59,7 @@ internal class GetShopOutComeHandler : IRequestHandler<GetShopOutComeQuery, Inco
 			if (i == 0)
 			{
 				monthAmounts.AddLast(0);
+				continue;
 			}
 			//get all transaction in month
 			var transaction = await _unitOfWork.TransactionRepository

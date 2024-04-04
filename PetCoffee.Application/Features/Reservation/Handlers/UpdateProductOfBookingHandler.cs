@@ -104,8 +104,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
                     reservation.ReservationProducts.Add(newReservationProduct);
 
-                    _unitOfWork.ReservationRepository.UpdateAsync(reservation);
-                 
+                    await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
                     
                 }
 

@@ -13,5 +13,6 @@ public class ShopResponseForAccount
 	public string Location { get; set; }
 
 	public ShopStatus Status { get; set; }
+	public ShopType ShopType { get; set; }
 	public string Phone { get; set; }
 }

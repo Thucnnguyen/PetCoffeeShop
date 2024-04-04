@@ -41,12 +41,17 @@ public class GetAllTransactionByCustomerIdOrShopIdQuery : PaginationRequest<Doma
 			Expression = Expression.And(Transaction => Transaction.TransactionStatus == Status);
 		}
 
+		if (Type is not null)
+		{
+			Expression = Expression.And(Transaction => Transaction.TransactionType == Type);
+		}
+
 		if (ShopId != null)
 		{
 			Expression = Expression
 				.And(Transaction => (Transaction.PetCoffeeShopId == ShopId));
 		}
-
+		
 		if (CustomerId != null)
 		{
 			Expression = Expression.And(Transaction => Transaction.CreatedById == CustomerId || Transaction.RemitterId == CustomerId);
