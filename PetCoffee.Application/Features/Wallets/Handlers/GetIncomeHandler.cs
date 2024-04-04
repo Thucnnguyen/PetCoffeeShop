@@ -69,7 +69,6 @@ public class GetIncomeHandler : IRequestHandler<GetIncomeQuery, IncomeForShopRes
 		//get inconme each months
 		for (var i = request.Months - 1; i >= 0; i--)
 		{
-
 			var month = DateTimeOffset.UtcNow.AddMonths(-i);
 			var firstDayOfMonth = new DateTimeOffset(month.Year, month.Month, 1, 0, 0, 0, month.Offset);
 			var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
@@ -88,6 +87,7 @@ public class GetIncomeHandler : IRequestHandler<GetIncomeQuery, IncomeForShopRes
 					}
 					continue;
 				}
+
 				//get all transaction in month
 
 				var shopTransactions = transaction.Where(tr => tr.PetCoffeeShopId == shop.Id
