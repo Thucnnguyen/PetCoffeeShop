@@ -68,11 +68,20 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 			}
 
 			var newArea = _mapper.Map<Domain.Entities.Area>(request);
+			//if (request.Image != null)
+			//{
+			//	await _azureService.CreateBlob(request.Image.FileName, request.Image);
+			//	newArea.Image = await _azureService.GetBlob(request.Image.FileName);
+			//}
+
+
+			//upload Image
 			if (request.Image != null)
 			{
-				await _azureService.CreateBlob(request.Image.FileName, request.Image);
-				newArea.Image = await _azureService.GetBlob(request.Image.FileName);
+				newArea.Image = await _azureService.UpdateloadImages(request.Image);
 			}
+
+
 			await _unitOfWork.AreaRepsitory.AddAsync(newArea);
 			await _unitOfWork.SaveChangesAsync();
 
