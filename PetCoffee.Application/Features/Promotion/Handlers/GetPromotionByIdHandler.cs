@@ -45,8 +45,10 @@ namespace PetCoffee.Application.Features.Promotion.Handlers
 			}
 			var Promotion = await _unitOfWork.PromotionRepository
 					.Get(predicate: p => p.Id == request.Id && !p.Deleted)
+					.Include(p => p.AccountPromotions)
 					.FirstOrDefaultAsync();
 
+			
 
 			if (Promotion == null)
 			{
@@ -55,6 +57,7 @@ namespace PetCoffee.Application.Features.Promotion.Handlers
 
 			var response = _mapper.Map<PromotionResponse>(Promotion);
 
+			response.Avaliable = Promotion.Quantity -  Promotion.AccountPromotions.Count();
 
 			return response;
 		}

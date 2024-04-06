@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCoffee.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240406095529_update-field-rate-order")]
+    partial class updatefieldrateorder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,7 +93,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Account", (string)null);
+                    b.ToTable("Account");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountPromotion", b =>
@@ -105,7 +108,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("AccountId");
 
-                    b.ToTable("AccountPromotion", (string)null);
+                    b.ToTable("AccountPromotion");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountShop", b =>
@@ -120,7 +123,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("AccountShop", (string)null);
+                    b.ToTable("AccountShop");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Area", b =>
@@ -165,7 +168,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetcoffeeShopId");
 
-                    b.ToTable("Area", (string)null);
+                    b.ToTable("Area");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Category", b =>
@@ -194,7 +197,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Comment", b =>
@@ -241,7 +244,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Event", b =>
@@ -306,7 +309,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetCoffeeShopId");
 
-                    b.ToTable("Event", (string)null);
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.EventField", b =>
@@ -336,7 +339,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventFields", (string)null);
+                    b.ToTable("EventFields");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.FollowPetCfShop", b =>
@@ -360,7 +363,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("FollowPetCfShops", (string)null);
+                    b.ToTable("FollowPetCfShops");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Item", b =>
@@ -398,7 +401,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Items", (string)null);
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.JoinEvent", b =>
@@ -422,7 +425,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("FollowEvents", (string)null);
+                    b.ToTable("FollowEvents");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Like", b =>
@@ -446,7 +449,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Like", (string)null);
+                    b.ToTable("Like");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Moment", b =>
@@ -485,7 +488,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetId");
 
-                    b.ToTable("Diaries", (string)null);
+                    b.ToTable("Diaries");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Notification", b =>
@@ -544,7 +547,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Notification", (string)null);
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.PackagePromotion", b =>
@@ -570,7 +573,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PackagePromotions", (string)null);
+                    b.ToTable("PackagePromotions");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Pet", b =>
@@ -634,7 +637,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetCoffeeShopId");
 
-                    b.ToTable("Pet", (string)null);
+                    b.ToTable("Pet");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.PetArea", b =>
@@ -661,7 +664,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetId");
 
-                    b.ToTable("PetArea", (string)null);
+                    b.ToTable("PetArea");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.PetCoffeeShop", b =>
@@ -748,7 +751,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("PetCoffeeShop", (string)null);
+                    b.ToTable("PetCoffeeShop");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Post", b =>
@@ -788,7 +791,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("Post", (string)null);
+                    b.ToTable("Post");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.PostCategory", b =>
@@ -817,7 +820,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("PostCategories", (string)null);
+                    b.ToTable("PostCategories");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.PostPetCoffeeShop", b =>
@@ -846,7 +849,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ShopId");
 
-                    b.ToTable("PostPetCoffeeShops", (string)null);
+                    b.ToTable("PostPetCoffeeShops");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Product", b =>
@@ -890,7 +893,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetCoffeeShopId");
 
-                    b.ToTable("Product", (string)null);
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Promotion", b =>
@@ -936,7 +939,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetCoffeeShopId");
 
-                    b.ToTable("Promotion", (string)null);
+                    b.ToTable("Promotion");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.RatePet", b =>
@@ -966,7 +969,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("RatePet", (string)null);
+                    b.ToTable("RatePet");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Report", b =>
@@ -1010,7 +1013,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PostID");
 
-                    b.ToTable("Report", (string)null);
+                    b.ToTable("Report");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Reservation", b =>
@@ -1074,7 +1077,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Order", (string)null);
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.ReservationProduct", b =>
@@ -1101,7 +1104,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ReservationId");
 
-                    b.ToTable("ReservationProducts", (string)null);
+                    b.ToTable("ReservationProducts");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.SubmittingEvent", b =>
@@ -1131,7 +1134,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("SubmittingEvent", (string)null);
+                    b.ToTable("SubmittingEvent");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.SubmittingEventField", b =>
@@ -1178,7 +1181,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("SubmittingEventId");
 
-                    b.ToTable("SubmittingEventField", (string)null);
+                    b.ToTable("SubmittingEventField");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Transaction", b =>
@@ -1251,7 +1254,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("WalletId");
 
-                    b.ToTable("Transaction", (string)null);
+                    b.ToTable("Transaction");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.TransactionItem", b =>
@@ -1269,7 +1272,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("TransactionItem", (string)null);
+                    b.ToTable("TransactionItem");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Vaccination", b =>
@@ -1297,7 +1300,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("PetId");
 
-                    b.ToTable("Vaccination", (string)null);
+                    b.ToTable("Vaccination");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.Wallet", b =>
@@ -1325,7 +1328,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("Wallet", (string)null);
+                    b.ToTable("Wallet");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.WalletItem", b =>
@@ -1343,7 +1346,7 @@ namespace PetCoffee.Infrastructure.Migrations
 
                     b.HasIndex("ItemId");
 
-                    b.ToTable("WalletItem", (string)null);
+                    b.ToTable("WalletItem");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountPromotion", b =>

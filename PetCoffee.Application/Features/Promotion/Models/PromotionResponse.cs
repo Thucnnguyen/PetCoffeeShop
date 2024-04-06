@@ -23,5 +23,7 @@ namespace PetCoffee.Application.Features.Promotion.Models
 		public long PetCoffeeShopId { get; set; }
 		//public PetCoffeeShop PetCoffeeShop { get; set; }
 
+		public int Avaliable { get; set; }
+
 	}
 }
