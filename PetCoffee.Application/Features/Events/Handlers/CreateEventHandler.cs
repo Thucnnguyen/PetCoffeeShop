@@ -83,6 +83,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, EventRespo
 			);
 			await _notifier.NotifyAsync(notification, true);
 		}
+
 		// set schedule to check total participants
 		var startTimeParts = NewEvent.StartTime.Split(":");
 		var CheckDate = new DateTimeOffset(

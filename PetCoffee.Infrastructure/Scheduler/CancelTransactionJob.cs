@@ -8,7 +8,7 @@ namespace PetCoffee.Infrastructure.Scheduler;
 
 public class CancelTransactionJob : IJob
 {
-	public const string DeleteAccountNotVerifyJobKey = "CancleTransactionJob";
+	public const string CancelTransactionJobJobKey = "CancleTransactionJob";
 
 	public const string TransactionIdKey = "TransactionId";
 	private readonly IUnitOfWork _unitOfWork;

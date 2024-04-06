@@ -177,6 +177,71 @@ public class Notification : BaseAuditableEntity
 
 					break;
 				}
+			case NotificationType.BuyNewPackage:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var transaction = (Transaction)data;
+
+					Title = $"Có của hàng mới mua package";
+					Content = $"{transaction.PetCoffeeShop.Name} đã mua gói {transaction.PackagePromotion.Description}.";
+					Level = NotificationLevel.Information;
+					ReferenceId = transaction.Id.ToString();
+
+					break;
+				}
+
+			case NotificationType.NewReportComment:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var reportComment = (Report)data;
+
+					Title = $"Có báo cáo mới về bình luận!";
+					Content = $"{reportComment.CreatedBy.FullName} đã báo cáo  bình luận";
+					Level = NotificationLevel.Information;
+					ReferenceId = reportComment.Id.ToString();
+
+					break;
+				}
+			case NotificationType.NewReportPost:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var reportComment = (Report)data;
+
+					Title = $"Có báo cáo mới về bài viết!";
+					Content = $"{reportComment.CreatedBy.FullName} đã báo cáo một bài viết";
+					Level = NotificationLevel.Information;
+					ReferenceId = reportComment.Id.ToString();
+
+					break;
+				}
+			case NotificationType.ChangePetArea:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var reservation = (Reservation)data;
+
+					Title = $"Thú cưng trong đơn hàng của bạn đổi tầng";
+					Content = $"Thú cưng trong đơn hàng {reservation.Code} đã chuyển sang tầng khác bạn có thể hủy đơn hàng và hoàn về 100%";
+					Level = NotificationLevel.Information;
+					ReferenceId = reservation.Id.ToString();
+
+					break;
+				}
 		}
 	}
 };

@@ -7,6 +7,8 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Packages.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Application.Service.Notifications;
+using PetCoffee.Application.Service.Notifications.Models;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
@@ -17,12 +19,14 @@ public class BuyPackagehandler : IRequestHandler<BuyPackageCommand, bool>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
-	//private readonly Iwebno
-
-	public BuyPackagehandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
+	private readonly IWebNotificationService _webNotificationService;
+	private readonly INotifier _notifier;
+	public BuyPackagehandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IWebNotificationService webNotificationService, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
+		_webNotificationService = webNotificationService;
+		_notifier = notifier;
 	}
 
 	public async Task<bool> Handle(BuyPackageCommand request, CancellationToken cancellationToken)
@@ -41,12 +45,14 @@ public class BuyPackagehandler : IRequestHandler<BuyPackageCommand, bool>
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
 		}
+
 		// check package
 		var package = await _unitOfWork.PackagePromotionRespository.Get(pp => pp.Id == request.PackageId && !pp.Deleted).FirstOrDefaultAsync();
 		if (package == null)
 		{
 			throw new ApiException(ResponseCode.PackageNotExist);
 		}
+
 		//check shop
 		var shop = await _unitOfWork.PetCoffeeShopRepository
 				.Get(s => s.Id == request.ShopId && !s.Deleted)
@@ -115,6 +121,17 @@ public class BuyPackagehandler : IRequestHandler<BuyPackageCommand, bool>
 		};
 		await _unitOfWork.TransactionRepository.AddAsync(packageTransaction);
 		await _unitOfWork.SaveChangesAsync();
+
+		// notification for admin
+		var notification = new Notification(
+				account: adminAccount,
+				type: NotificationType.BuyNewPackage,
+				entityType: EntityType.Transaction,
+				data: packageTransaction,
+				shopId: shop.Id
+			);
+
+		await _notifier.NotifyAsync(notification, true);
 
 		return true;
 	}

@@ -48,7 +48,8 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 				{
 					shop => shop.CreatedBy,
 					shop => shop.Products,
-					shop => shop.Areas
+					shop => shop.Areas,
+					shop => shop.Follows,
 				},
 			disableTracking: true
 			).FirstOrDefaultAsync();
@@ -85,8 +86,9 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		response.StartTime = CurrentShop.OpeningTime;
 		response.EndTime = CurrentShop.ClosedTime;
 
-		response.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == request.Id);
-		response.IsFollow = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(s => s.CreatedById == CurrentUser.Id && s.ShopId == CurrentShop.Id)).Any();
+		response.TotalFollow = CurrentShop.Follows.Count();
+		response.IsFollow = CurrentShop.Follows.Any(f => f.CreatedById == CurrentUser.Id && f.ShopId == CurrentShop.Id);
+
 		// calculate distance
 		if (request.Longitude != 0 && request.Latitude != 0)
 		{

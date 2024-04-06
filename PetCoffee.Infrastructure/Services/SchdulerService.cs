@@ -90,4 +90,28 @@ public class SchdulerService : ISchedulerService
 			_logger.LogError("Schedule to clear expired account error {error}", ex.Message);
 		}
 	}
+
+	public async Task NotiforChangePetArea(string areaIds, DateTimeOffset time)
+	{
+		try
+		{
+			_logger.LogInformation("change reservation in areas {areaIds} will be delete at {time} if not verify", areaIds, time);
+
+			var scheduler = await _schedulerFactory.GetScheduler();
+			await scheduler.Start();
+
+			var job = JobBuilder.Create<SendNotiAndUpdateReservationWhenChangePetAreaJob>()
+					.UsingJobData(SendNotiAndUpdateReservationWhenChangePetAreaJob.AreaIdsKey, areaIds)
+					.Build();
+
+			var trigger = TriggerBuilder.Create()
+					.StartAt(time)
+					.Build();
+			await scheduler.ScheduleJob(job, trigger);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Schedule to change reservation in areas error {error}", ex.Message);
+		}
+	}
 }

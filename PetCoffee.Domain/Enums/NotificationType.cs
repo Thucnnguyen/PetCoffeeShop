@@ -26,5 +26,13 @@ public enum NotificationType
 	ReturnOrder = 8,
 	[Description("Sự kiện bạn tham gia bị hủy do không đủ số lượng")]
 	CancelOrder = 9,
+	[Description("Có shop mua package mới")]
+	BuyNewPackage = 10,
+	[Description("Có báo cáo mới về bình luận")]
+	NewReportComment = 11,
+	[Description("Có báo cáo mới về bình luận")]
+	NewReportPost = 12,
+	[Description("Đổi vị trí của thú cưng")]
+	ChangePetArea = 13,
 
 }
