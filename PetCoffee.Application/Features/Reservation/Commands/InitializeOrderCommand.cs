@@ -23,6 +23,8 @@ namespace PetCoffee.Application.Features.Reservation.Commands
 		public string? Note { get; set; }
 
 		public int TotalSeat { get; set; }
+
+		public string? CodePromotion { get; set; }
 	}
 
 

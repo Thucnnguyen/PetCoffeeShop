@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCoffee.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240406074349_add-accountPromotion")]
+    partial class addaccountPromotion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,13 +98,13 @@ namespace PetCoffee.Infrastructure.Migrations
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountPromotion", b =>
                 {
-                    b.Property<long>("PromotionId")
+                    b.Property<long>("ShopId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("AccountId")
                         .HasColumnType("bigint");
 
-                    b.HasKey("PromotionId", "AccountId");
+                    b.HasKey("ShopId", "AccountId");
 
                     b.HasIndex("AccountId");
 
@@ -1354,15 +1357,15 @@ namespace PetCoffee.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PetCoffee.Domain.Entities.Promotion", "Promotion")
+                    b.HasOne("PetCoffee.Domain.Entities.PetCoffeeShop", "Shop")
                         .WithMany()
-                        .HasForeignKey("PromotionId")
+                        .HasForeignKey("ShopId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
 
-                    b.Navigation("Promotion");
+                    b.Navigation("Shop");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountShop", b =>

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PetCoffee.Infrastructure.Persistence.Context;
 
@@ -10,9 +11,11 @@ using PetCoffee.Infrastructure.Persistence.Context;
 namespace PetCoffee.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240406054837_add-promotion")]
+    partial class addpromotion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,21 +94,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Account");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.AccountPromotion", b =>
-                {
-                    b.Property<long>("PromotionId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("AccountId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("PromotionId", "AccountId");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("AccountPromotion");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountShop", b =>
@@ -1344,25 +1332,6 @@ namespace PetCoffee.Infrastructure.Migrations
                     b.HasIndex("ItemId");
 
                     b.ToTable("WalletItem");
-                });
-
-            modelBuilder.Entity("PetCoffee.Domain.Entities.AccountPromotion", b =>
-                {
-                    b.HasOne("PetCoffee.Domain.Entities.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PetCoffee.Domain.Entities.Promotion", "Promotion")
-                        .WithMany()
-                        .HasForeignKey("PromotionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("PetCoffee.Domain.Entities.AccountShop", b =>

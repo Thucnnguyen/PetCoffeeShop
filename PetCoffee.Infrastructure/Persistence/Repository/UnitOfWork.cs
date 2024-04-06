@@ -82,10 +82,15 @@ public class UnitOfWork : IUnitOfWork
 	private IPackagePromotionRespository? _packagePromotionRespository;
     private IReservationProductRepository? _reservationProductRepository;
 
+	private IPromotionRepository? _promotionRepository;
+	private IAccountPromotionRepository? _accountPromotionRepository;
 
 
 
-    public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
+
+
+
+	public IAccountRepository AccountRepository => _accountRepository ??= new AccountRepository(_dbContext);
 	public ICategoryRepository CategoryRepository => _categoryRepository ??= new CategoryRepository(_dbContext);
 	public ICommentRepository CommentRepository => _commentRepository ??= new CommentRepository(_dbContext);
 	public IMomentRepository MomentRepository => _momentRepository ??= new MomentRepository(_dbContext);
@@ -121,4 +126,7 @@ public class UnitOfWork : IUnitOfWork
 	public IPackagePromotionRespository PackagePromotionRespository => _packagePromotionRespository ??= new PackagePromotionRespository(_dbContext);
 
     public IReservationProductRepository ReservationProductRepository => _reservationProductRepository ??= new ReservationProductRepository(_dbContext);
+	public IPromotionRepository PromotionRepository => _promotionRepository ??= new PromotionRepository(_dbContext);
+	public IAccountPromotionRepository AccountPromotionRepository => _accountPromotionRepository ??= new AccountPromotionRepository(_dbContext);
+
 }

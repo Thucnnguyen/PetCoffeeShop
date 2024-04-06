@@ -43,6 +43,9 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				throw new ApiException(ResponseCode.PermissionDenied);
 			}
 
+	
+
+
 			//check exist area
 			var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
 
@@ -64,6 +67,27 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			{
 				throw new ApiException(ResponseCode.AreaInsufficientSeating);
 			}
+
+
+
+
+			// check voucher is valid 
+			Domain.Entities.Promotion promotion = new Domain.Entities.Promotion();
+
+			if (request.CodePromotion != null)
+			{
+				var pro = (await _unitOfWork.PromotionRepository.GetAsync(p => !p.Deleted && p.Code == request.CodePromotion && p.Quantity > 0
+																						&& p.PetCoffeeShopId == area.PetcoffeeShopId
+																						&& p.To >= DateTimeOffset.Now && p.From <= DateTimeOffset.Now)).FirstOrDefault();
+				if (pro == null)
+				{
+					throw new ApiException(ResponseCode.PromotionNotExisted);
+				}
+
+				promotion = pro;
+			}
+
+		
 
 			//cal price in order
 			TimeSpan duration = request.EndTime - request.StartTime;
@@ -94,8 +118,8 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				EndTime = request.EndTime,
 				Note = request.Note,
 				AreaId = request.AreaId,
-				TotalPrice = totalPrice, //  
-				Discount = 0, //
+				TotalPrice = request.CodePromotion == null ? totalPrice : (totalPrice - totalPrice * promotion.Percent / 100), //  
+				Discount = request.CodePromotion == null ? 0 : totalPrice * promotion.Percent, //
 				Code = TokenUltils.GenerateOTPCode(6), //
 				BookingSeat = request.TotalSeat
 			};
@@ -124,7 +148,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			var newTransaction = new Domain.Entities.Transaction()
 			{
 				WalletId = customerWallet.Id,
-				Amount = (decimal)totalPrice,
+				Amount = (decimal)order.TotalPrice,
 				Content = "Đặt chỗ",
 				RemitterId = managaerWallet.Id,
 				PetCoffeeShopId = area.PetcoffeeShopId,
@@ -137,13 +161,22 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			// minus money in wallet for booking
 
-			customerWallet.Balance -= (decimal)totalPrice;
-			managaerWallet.Balance += (decimal)totalPrice;
+			customerWallet.Balance -= (decimal)order.TotalPrice;
+			managaerWallet.Balance += (decimal)order.TotalPrice;
 			await _unitOfWork.WalletRepsitory.UpdateAsync(customerWallet);
 			await _unitOfWork.WalletRepsitory.UpdateAsync(managaerWallet);
 
 
 			await _unitOfWork.ReservationRepository.AddAsync(order);
+
+			// save accountpromotion
+			AccountPromotion accountPromotion = new AccountPromotion
+			{
+				AccountId = currentAccount.Id,
+				PromotionId = promotion.Id,
+			};
+			await _unitOfWork.AccountPromotionRepository.AddAsync(accountPromotion);
+
 			await _unitOfWork.SaveChangesAsync();
 
 			// get order just inserted
