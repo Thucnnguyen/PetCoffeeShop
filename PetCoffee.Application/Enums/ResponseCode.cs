@@ -87,6 +87,7 @@ public enum ResponseCode
 
 	//Report
 	[Description("Báo cáo không tồn tại")] ReportNotExisted,
+	[Description("Bạn không nên báo cáo bình luận hoặc bài viết của mình")] NotReportYourself,
 
 
 	//Reservation

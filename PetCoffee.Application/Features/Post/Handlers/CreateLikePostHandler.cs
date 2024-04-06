@@ -72,7 +72,8 @@ public class CreateLikePostHandler : IRequestHandler<CreateLikePostCommand, bool
 					account: staff,
 					type: NotificationType.LikePost,
 					entityType: EntityType.Like,
-					data: newLikePost
+					data: newLikePost,
+					shopId: post.ShopId
 				);
 
 				await _notifier.NotifyAsync(notification, true);

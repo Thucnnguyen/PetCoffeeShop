@@ -34,26 +34,39 @@ public class GetAllNotificationQuery : PaginationRequest<Notification>, IRequest
 
 	public override Expression<Func<Notification, bool>> GetExpressions()
 	{
-		if (Search != null)
+
+		if(Search is not null)
 		{
-			Search = Search.Trim().ToLower();
+			Expression = Expression.And(notification =>  notification.Content.ToLower().Contains(Search));
 		}
-
-		Expression = Expression.And(notification => Search == null || notification.Content.ToLower().Contains(Search));
-
-		Expression = Expression.And(notification => Type == null || Type.Equals(notification.Type));
-
-		Expression = Expression.And(notification => EntityType == null || EntityType.Equals(notification.EntityType));
-
-		Expression = Expression.And(notification => From == null || notification.CreatedAt >= From);
-
-		Expression = Expression.And(notification => To == null || notification.CreatedAt <= To);
-
-		Expression = Expression.And(notification => IsRead == null || notification.IsRead == IsRead);
-
-		Expression = Expression.And(notification => AccountId == null || notification.AccountId == AccountId);
-
-		Expression = Expression.And(notification => Level == null || notification.Level == Level);
+		if(Type is not null)
+		{
+			Expression = Expression.And(notification => Type.Equals(notification.Type));
+		}
+		if(EntityType is not null)
+		{
+			Expression = Expression.And(notification =>  EntityType.Equals(notification.EntityType));
+		}
+		if(From is not null)
+		{
+			Expression = Expression.And(notification => notification.CreatedAt >= From);
+		}
+		if(To is not null)
+		{
+			Expression = Expression.And(notification => notification.CreatedAt <= To);
+		}
+		if(IsRead is not null)
+		{
+			Expression = Expression.And(notification =>  notification.IsRead == IsRead);
+		}
+		if(AccountId is not null)
+		{
+			Expression = Expression.And(notification => notification.AccountId == AccountId);
+		}
+		if(Level is not null)
+		{
+			Expression = Expression.And(notification => notification.Level == Level);
+		}
 
 		return Expression;
 	}

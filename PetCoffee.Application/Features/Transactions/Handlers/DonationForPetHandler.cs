@@ -133,7 +133,8 @@ public class DonationForPetHandler : IRequestHandler<DonationForPetCommand, Paym
             account: managerAccount,
             type: NotificationType.Donation,
             entityType: EntityType.Transaction,
-            data: newTransaction
+            data: newTransaction,
+            shopId: pet.PetCoffeeShopId
         );
         await _notifier.NotifyAsync(notification, true);
 

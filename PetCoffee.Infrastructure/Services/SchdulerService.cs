@@ -43,6 +43,30 @@ public class SchdulerService : ISchedulerService
 		}
 	}
 
+	public async Task CheckEventHasEnoughParticipantJob(long EventId, DateTimeOffset time)
+	{
+		try
+		{
+			_logger.LogInformation("Event with ID: {id} check enough participants {time}", EventId, time);
+
+			var scheduler = await _schedulerFactory.GetScheduler();
+			await scheduler.Start();
+
+			var job = JobBuilder.Create<CheckEventHasEnoughParticipantsJob>()
+					.UsingJobData(CheckEventHasEnoughParticipantsJob.EventIdKey, EventId)
+					.Build();
+
+			var trigger = TriggerBuilder.Create()
+					.StartAt(time)
+					.Build();
+			await scheduler.ScheduleJob(job, trigger);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Schedule to clear expired account error {error}", ex.Message);
+		}
+	}
+
 	public async Task DeleteAccountNotVerify(long accountId, DateTimeOffset time)
 	{
 		try

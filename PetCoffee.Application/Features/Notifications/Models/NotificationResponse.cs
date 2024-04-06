@@ -15,6 +15,7 @@ public class NotificationResponse
 	public EntityType EntityType { get; set; }
 	public string? ReferenceId { get; set; }
 	public DateTimeOffset? ReadAt { get; set; }
+	public long? ShopId { get; set; }
 	public bool IsRead { get; set; }
 	public NotificationLevel Level { get; set; } = NotificationLevel.Information;
 

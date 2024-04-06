@@ -20,14 +20,16 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, EventRespo
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
 	private readonly INotifier _notifier;
+	private readonly ISchedulerService _schedulerService;
 
-	public CreateEventHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper, INotifier notifier)
+	public CreateEventHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper, INotifier notifier, ISchedulerService schedulerService)
 	{
 		_unitOfWork = unitOfWork;
 		_azureService = azureService;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
 		_notifier = notifier;
+		_schedulerService = schedulerService;
 	}
 
 	public async Task<EventResponse> Handle(CreateEventCommand request, CancellationToken cancellationToken)
@@ -76,10 +78,23 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, EventRespo
 				account: follow.CreatedBy,
 				type: NotificationType.NewEvent,
 				entityType: EntityType.Event,
-				data: NewEvent
+				data: NewEvent,
+				shopId: NewEvent.PetCoffeeShopId
 			);
 			await _notifier.NotifyAsync(notification, true);
 		}
+		// set schedule to check total participants
+		var startTimeParts = NewEvent.StartTime.Split(":");
+		var CheckDate = new DateTimeOffset(
+			NewEvent.StartDate.Year,
+			NewEvent.StartDate.Month,
+			NewEvent.StartDate.Day,
+			int.Parse(startTimeParts[0]),
+			int.Parse(startTimeParts[1]),
+			0,
+			DateTimeOffset.UtcNow.Offset
+		);
+		await _schedulerService.CheckEventHasEnoughParticipantJob(NewEvent.Id, CheckDate.AddMinutes(-2));
 		return response;
 	}
 }

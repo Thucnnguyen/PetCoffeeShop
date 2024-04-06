@@ -8,6 +8,7 @@ using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Post.Handlers
 {
@@ -39,8 +40,11 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
 			var followedShopIds = (await _unitOfWork.FollowPetCfShopRepository.GetAsync(f => f.CreatedById == currentAccount.Id)).ToList();
 
-			// 
-			var reportedPostIds = (await _unitOfWork.ReportRepository.GetAsync(r => r.CreatedById == currentAccount.Id && r.PostID != null)).Select(r => r.PostID).ToList();
+			// get Report post
+			var reportedPostIds = (await _unitOfWork.ReportRepository
+				.GetAsync(r => r.CreatedById == currentAccount.Id && r.PostID != null && r.Status != ReportStatus.Reject))
+				.Select(r => r.PostID)
+				.ToList();
 			//
 			var postsQuery = _unitOfWork.PostRepository.Get(
 			  predicate: request.GetExpressions(),

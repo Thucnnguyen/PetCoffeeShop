@@ -46,7 +46,7 @@ public class CheckEventHasEnoughParticipantsJob : IJob
 			return;
 		}
 
-		if (existedEvent.SubmittingEvents.Count() <= existedEvent.MinParticipants)
+		if (existedEvent.SubmittingEvents.Count() < existedEvent.MinParticipants)
 		{
 			//update event
 			existedEvent.Status = EventStatus.Closed;

@@ -93,23 +93,38 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 			if (parrentComment != null && parrentComment.CreatedById != currentAccount.Id)
 			{
 				var notificationForComment = new Notification(
-					account: post.CreatedBy,
+					account: parrentComment.CreatedBy,
 					type: NotificationType.CommentPost,
-					entityType: EntityType.Like,
-					data: NewCommentData
+					entityType: EntityType.Post,
+					data: NewCommentData,
+					post.ShopId
 				);
 				await _notifier.NotifyAsync(notificationForComment, true);
 			}
 		}
-
+		// notification for poster
+		if(currentAccount.Id != post.CreatedById)
+		{
+			var notificationForPoster = new Notification(
+					account: post.CreatedBy,
+					type: NotificationType.ReplyComment,
+					entityType: EntityType.Post,
+					data: NewCommentData,
+					post.ShopId
+				);
+			await _notifier.NotifyAsync(notificationForPoster, true);
+		}
+		
+		
 		var notificationForReply = new Notification(
 					account: post.CreatedBy,
 					type: NotificationType.ReplyComment,
-					entityType: EntityType.Like,
-					data: NewCommentData
+					entityType: EntityType.Post,
+					data: NewCommentData,
+					post.ShopId
 				);
-
 		await _notifier.NotifyAsync(notificationForReply, true);
+
 		return response;
 
 	}

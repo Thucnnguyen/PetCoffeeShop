@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Report.Commands;
@@ -34,11 +35,19 @@ namespace PetCoffee.Application.Features.Report.Handlers
 				throw new ApiException(ResponseCode.AccountNotActived);
 			}
 
-			var comment = await _unitOfWork.CommentRepository.GetAsync(p => p.Id == request.CommentID);
-			if (!comment.Any())
+			var comment = await _unitOfWork.CommentRepository
+							.Get(p => p.Id == request.CommentID)
+							.FirstOrDefaultAsync();
+			if (comment != null)
 			{
 				throw new ApiException(ResponseCode.CommentNotExist);
 			}
+
+			if (comment.CreatedById == curAccount.Id)
+			{
+				throw new ApiException(ResponseCode.NotReportYourself);
+			}
+
 			// check already report
 			var reportComment = await _unitOfWork.ReportRepository.GetAsync(l => l.CommentId == request.CommentID && l.CreatedById == curAccount.Id);
 			if (reportComment.Any())

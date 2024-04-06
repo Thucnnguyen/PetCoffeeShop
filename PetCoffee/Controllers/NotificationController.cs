@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
+using PetCoffee.Application.Features.Notifications.Commands;
 using PetCoffee.Application.Features.Notifications.Models;
 using PetCoffee.Application.Features.Notifications.Queries;
 using PetCoffee.Domain.Entities;
@@ -23,6 +24,14 @@ public class NotificationController : ApiControllerBase
 	[HttpGet("notifications/unread")]
 	[Authorize]
 	public async Task<ActionResult<UnreadNotificationCountResponse>> CountNotificaitonUnread([FromQuery] GetUnreadNotificationQuery request)
+	{
+		var response = await Mediator.Send(request);
+		return Ok(response);
+	}
+
+	[HttpPut("notifications/read-all")]
+	[Authorize]
+	public async Task<ActionResult<bool>> ReadAllNotis([FromQuery] ReadAllNotificationCommand request)
 	{
 		var response = await Mediator.Send(request);
 		return Ok(response);

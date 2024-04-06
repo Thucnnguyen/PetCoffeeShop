@@ -17,20 +17,22 @@ public class Notification : BaseAuditableEntity
 	public string? ReferenceId { get; set; }
 	public DateTimeOffset? ReadAt { get; set; }
 	public NotificationLevel Level { get; set; } = NotificationLevel.Information;
-
+	public long? ShopId { get; set; }
 	public long AccountId { get; set; }
 	public Account Account { get; set; }
 	[Projectable]
-	public bool IsRead => ReadAt != null || Deleted;
+	public bool IsRead => ReadAt != null;
 	public Notification()
 	{
 	}
-	public Notification(Account account, NotificationType type, EntityType entityType, object? data = null, bool? saved = true)
+	public Notification(Account account, NotificationType type, EntityType entityType, object? data = null, long? shopId = null, bool ? saved = true)
 	{
 		Type = type;
 		Account = account;
 		AccountId = account.Id;
 		EntityType = entityType;
+		ShopId = shopId;
+
 		switch (Type)
 		{
 			case NotificationType.LikePost:
@@ -42,7 +44,7 @@ public class Notification : BaseAuditableEntity
 
 					var like = (Like)data;
 
-					Title = $"Bạn có một lượt thích bải viết mới";
+					Title = $"Bài viết của bạn có thêm lượt thích";
 					Content = $"{like.CreatedBy.FullName} đã thích bài viết của bạn";
 					Level = NotificationLevel.Information;
 					ReferenceId = like.PostId.ToString();
@@ -57,10 +59,10 @@ public class Notification : BaseAuditableEntity
 
 					var comment = (Comment)data;
 
-					Title = $" Bạn có một bình luận mới";
+					Title = $"Bạn có bình luận mới";
 					Content = $"{comment.CreatedBy.FullName} đã bình luận bài viết của bạn";
 					Level = NotificationLevel.Information;
-					ReferenceId = comment.Id.ToString();
+					ReferenceId = comment.PostId.ToString();
 
 					break;
 				}
@@ -74,9 +76,9 @@ public class Notification : BaseAuditableEntity
 					var comment = (Comment)data;
 
 					Title = $"Bạn có một bình luận mới";
-					Content = $"{comment.CreatedBy.FullName} đã trả lời bình luận bài viết của bạn";
+					Content = $"{comment.CreatedBy.FullName} đã trả lời bình luận của bạn";
 					Level = NotificationLevel.Information;
-					ReferenceId = comment.Id.ToString();
+					ReferenceId = comment.PostId.ToString();
 
 					break;
 				}
@@ -89,7 +91,7 @@ public class Notification : BaseAuditableEntity
 
 					var post = (Post)data;
 
-					Title = $"Bài viết mới của quán bạn theo dõi";
+					Title = $"Bài viết mới có thể bạn quan tâm";
 					Content = $"{post.PetCoffeeShop.Name} đã đăng một bài viết mới";
 					Level = NotificationLevel.Information;
 					ReferenceId = post.Id.ToString();
@@ -105,7 +107,7 @@ public class Notification : BaseAuditableEntity
 
 					var newEvent = (Event)data;
 
-					Title = $"Sự kiện mới của quán bạn theo dõi";
+					Title = $"Sự kiện mới đang chờ bạn tham gia!";
 					Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
 					Level = NotificationLevel.Information;
 					ReferenceId = newEvent.Id.ToString();
@@ -121,8 +123,8 @@ public class Notification : BaseAuditableEntity
 
 					var newEvent = (Event)data;
 
-					Title = $"Sự kiện mới của quán bạn theo dõi";
-					Content = $"{newEvent.PetCoffeeShop.Name} đã tạo một sự kiện mới";
+					Title = $"Có người mới tham gia sự kiện của bạn";
+					Content = $"{newEvent.PetCoffeeShop.Name} đã tham gia {newEvent.Title} ";
 					Level = NotificationLevel.Information;
 					ReferenceId = newEvent.Id.ToString();
 
@@ -137,7 +139,7 @@ public class Notification : BaseAuditableEntity
 
 					var transaction = (Transaction)data;
 
-					Title = $"Thú cưng của shop được tặng quà";
+					Title = $"Thú cưng được tặng quà";
 					Content = $"{transaction.Pet.Name} đã được tặng quà bời {transaction.CreatedBy.FullName}";
 					Level = NotificationLevel.Information;
 					ReferenceId = transaction.Id.ToString();
@@ -154,10 +156,9 @@ public class Notification : BaseAuditableEntity
 					var follow = (FollowPetCfShop)data;
 
 					Title = $"Quán của bạn có người theo dõi mới";
-					Content = $"{follow.Shop.Name} đã được tặng quà bời {follow.CreatedBy.FullName}";
+					Content = $"{follow.CreatedBy.FullName} đã theo dõiS {follow.Shop.Name}";
 					Level = NotificationLevel.Information;
 					ReferenceId = follow.ShopId.ToString();
-
 					break;
 				}
 			case NotificationType.ReturnOrder:

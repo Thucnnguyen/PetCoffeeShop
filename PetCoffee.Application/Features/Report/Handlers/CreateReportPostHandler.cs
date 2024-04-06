@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Entities;
 using PetCoffee.Shared.Extensions;
 
 namespace PetCoffee.Application.Features.Report.Handlers
@@ -35,11 +37,19 @@ namespace PetCoffee.Application.Features.Report.Handlers
 				throw new ApiException(ResponseCode.AccountNotActived);
 			}
 
-			var post = await _unitOfWork.PostRepository.GetAsync(p => p.Id == request.postId && p.Status == Domain.Enums.PostStatus.Active);
-			if (!post.Any())
+			var post = await _unitOfWork.PostRepository
+				.Get(p => p.Id == request.postId && p.Status == Domain.Enums.PostStatus.Active)
+				.FirstOrDefaultAsync();
+			if (post != null)
 			{
 				throw new ApiException(ResponseCode.PostNotExisted);
 			}
+
+			if (post.CreatedById == curAccount.Id)
+			{
+				throw new ApiException(ResponseCode.NotReportYourself);
+			}
+
 			// check already report
 			var reportPost = await _unitOfWork.ReportRepository.GetAsync(l => l.PostID == request.postId && l.CreatedById == curAccount.Id);
 			if (reportPost.Any())

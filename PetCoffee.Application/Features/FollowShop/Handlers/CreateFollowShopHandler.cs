@@ -59,6 +59,7 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 								.Include(p => p.Shop)
 								.Include(p => p.CreatedBy)
 								.FirstOrDefaultAsync();
+
 		var managerAccount = await _unitOfWork.AccountRepository
 			.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == newFollowShopData.ShopId))
 			.FirstOrDefaultAsync();
@@ -68,7 +69,8 @@ internal class CreateFollowShopHandler : IRequestHandler<CreateFollowShopCommand
 					account: managerAccount,
 					type: NotificationType.NewFollower,
 					entityType: EntityType.Shop,
-					data: newFollowShopData
+					data: newFollowShopData,
+					shopId: NewFollowShop.ShopId
 				);
 			await _notifier.NotifyAsync(notification, true);
 		}

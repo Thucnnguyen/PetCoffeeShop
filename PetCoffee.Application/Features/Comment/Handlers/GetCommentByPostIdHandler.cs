@@ -8,6 +8,7 @@ using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Comment.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Comment.Handlers;
 
@@ -35,7 +36,13 @@ public class GetCommentByPostIdHandler : IRequestHandler<GetCommentByPostIdQuery
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-		var Comments = _unitOfWork.CommentRepository.Get(c => c.PostId == request.PostId, disableTracking: true)
+		// get Report post
+		var reportedCommentIds = (await _unitOfWork.ReportRepository
+			.GetAsync(r => r.CreatedById == currentAccount.Id && r.CommentId != null && r.Status != ReportStatus.Reject))
+			.Select(r => r.CommentId)
+			.ToList();
+
+		var Comments = _unitOfWork.CommentRepository.Get(c => c.PostId == request.PostId && !reportedCommentIds.Contains(c.Id), disableTracking: true)
 													.Include(c => c.CreatedBy)
 													.Include(c => c.PetCoffeeShop)
 													.OrderByDescending(c => c.CreatedAt)

@@ -8,6 +8,7 @@ using PetCoffee.Application.Features.Comment.Models;
 using PetCoffee.Application.Features.Comment.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Comment.Handlers;
 
@@ -35,17 +36,21 @@ public class GetSubCommentByCommentIdHandler : IRequestHandler<GetSubCommentByCo
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
+
+		// get Report post
+		var reportedCommentIds = (await _unitOfWork.ReportRepository
+			.GetAsync(r => r.CreatedById == currentAccount.Id && r.CommentId != null && r.Status != ReportStatus.Reject))
+			.Select(r => r.CommentId)
+			.ToList();
+
 		var Comments = await _unitOfWork.CommentRepository
 			.GetAsync(
-				predicate: c => c.ParentCommentId == request.CommentId,
+				predicate: c => c.ParentCommentId == request.CommentId && !reportedCommentIds.Contains(c.Id),
 				includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Comment, object>>>
 				{
 					c =>c.CreatedBy,
 					c =>c.PetCoffeeShop
 				});
-
-
-
 
 		return new PaginationResponse<Domain.Entities.Comment, CommentResponse>(
 			   Comments,

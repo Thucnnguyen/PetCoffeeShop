@@ -174,7 +174,7 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 				account: reservation.CreatedBy,
 				type: NotificationType.ReturnOrder,
 				entityType: EntityType.Reservation,
-				data: reservation );
+				data: reservation);
 
 				await _notifier.NotifyAsync(notification, true);
 			}
