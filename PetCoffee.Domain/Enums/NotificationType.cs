@@ -27,4 +27,7 @@ public enum NotificationType
 	[Description("Sự kiện bạn tham gia bị hủy do không đủ số lượng")]
 	CancelOrder = 9,
 
+	[Description("Quán hiện tại chưa có thú cưng, cần thêm thú cưng vào quán")]
+	RemindShopAboutNotHavingPet = 10,
+
 }
