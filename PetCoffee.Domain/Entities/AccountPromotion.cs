@@ -10,10 +10,10 @@ namespace PetCoffee.Domain.Entities
 	public class AccountPromotion
 	{
 	
-		public long ShopId { get; set; }
+		public long PromotionId { get; set; }
 		public long AccountId { get; set; }
 
-		public PetCoffeeShop Shop { get; set; }	
+		public Promotion Promotion { get; set; }	
 		public Account Account	{ get; set; }
 	}
 }

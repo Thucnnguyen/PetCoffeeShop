@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PetCoffee.Domain.Entities
 {
@@ -22,6 +19,10 @@ namespace PetCoffee.Domain.Entities
 
 		public long PetCoffeeShopId { get; set; }
 		public PetCoffeeShop PetCoffeeShop { get; set; }
+
+
+		[InverseProperty(nameof(AccountPromotion.Promotion))]
+		public IList<AccountPromotion> AccountPromotions { get; set; } = new List<AccountPromotion>();
 
 
 	}
