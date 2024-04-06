@@ -114,5 +114,9 @@ public enum ResponseCode
 	[Description("Sản phẩm không tồn tại trong đơn hàng")] ProductNotExistInReservation,
 
 
+	//Promotion
+	[Description("Khuyến mãi không tồn tại")] PromotionNotExisted,
+
+
 
 }

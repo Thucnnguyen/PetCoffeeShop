@@ -27,6 +27,8 @@ using PetCoffee.Application.Features.PostCategory.Commands;
 using PetCoffee.Application.Features.PostCategory.Models;
 using PetCoffee.Application.Features.Product.Commands;
 using PetCoffee.Application.Features.Product.Models;
+using PetCoffee.Application.Features.Promotion.Commands;
+using PetCoffee.Application.Features.Promotion.Models;
 using PetCoffee.Application.Features.RatePets.Models;
 using PetCoffee.Application.Features.Report.Commands;
 using PetCoffee.Application.Features.Report.Models;
@@ -302,5 +304,10 @@ public class MappingProfile : Profile
         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
         .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Product.Image));
 
-    }
+
+		//promition
+
+		CreateMap<Promotion, PromotionResponse>().ReverseMap();
+		CreateMap<Promotion, CreatePromotionForShopCommand>().ReverseMap();
+	}
 }

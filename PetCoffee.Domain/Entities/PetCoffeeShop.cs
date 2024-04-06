@@ -57,4 +57,7 @@ public class PetCoffeeShop : BaseAuditableEntity
 
 	[InverseProperty(nameof(Product.PetCoffeeShop))]
 	public IList<Product> Products { get; set; } = new List<Product>();
+
+	[InverseProperty(nameof(Promotion.PetCoffeeShop))]
+	public IList<Promotion> Promotions { get; set; } = new List<Promotion>();
 }
