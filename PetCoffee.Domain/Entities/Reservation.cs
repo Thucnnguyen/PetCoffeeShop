@@ -16,7 +16,7 @@ public class Reservation : BaseAuditableEntity
 	public DateTimeOffset EndTime { get; set; }
 	public string? Note { get; set; }
 	public string Code { get; set; }
-	public string? Rate { get; set; }
+	public long? Rate { get; set; }
 	public string? Comment { get; set; }
 
 	public int BookingSeat { get; set; }

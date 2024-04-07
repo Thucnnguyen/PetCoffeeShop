@@ -35,4 +35,7 @@ public enum NotificationType
 	[Description("Đổi vị trí của thú cưng")]
 	ChangePetArea = 13,
 
+	[Description("Quán hiện tại chưa có thú cưng, cần thêm thú cưng vào quán")]
+	RemindShopAboutNotHavingPet = 10,
+
 }

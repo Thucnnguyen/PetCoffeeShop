@@ -122,6 +122,16 @@ namespace PetCoffee.API.Controllers
 		}
 
 
+
+		[HttpPut("order/{id:long}/rate")]
+		[Authorize]
+		public async Task<ActionResult<ReservationResponse>> RatingOrder([FromRoute] long id, [FromBody] RatingReservationCommand request)
+		{
+			request.Id = id;
+			return await Mediator.Send(request);
+		}
+
+
 	}
 }
 
