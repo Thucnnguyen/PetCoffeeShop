@@ -49,6 +49,14 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return Ok(response);
 		}
+		[HttpGet("shops/{ShopId}/reports]")]
+		[Authorize]
+		public async Task<ActionResult<PaginationResponse<Domain.Entities.Report, ReportResponse>>> GetByShopId([FromRoute] long ShopId, [FromQuery] GetReportByShopIdQuery request)
+		{
+			request.ShopId = ShopId;
+			var response = await Mediator.Send(request);
+			return Ok(response);
+		}
 		[HttpPost("comments/{Id}/reports")]
 		[Authorize]
 		public async Task<ActionResult<bool>> CreateReportCommentByCurrentAccount(

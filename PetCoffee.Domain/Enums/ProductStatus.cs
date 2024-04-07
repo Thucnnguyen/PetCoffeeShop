@@ -1,10 +1,7 @@
-﻿namespace PetCoffee.Domain.Enums
+﻿namespace PetCoffee.Domain.Enums;
+
+public enum ProductStatus
 {
-	public enum ProductStatus
-	{
-		Active = 0,
-		Inactive = 1
-	}
-
-
+	Active = 0,
+	Inactive = 1
 }

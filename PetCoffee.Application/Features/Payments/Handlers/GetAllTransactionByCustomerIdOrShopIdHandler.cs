@@ -65,7 +65,7 @@ public class GetAllTransactionHandler : IRequestHandler<GetAllTransactionByCusto
 							.Skip((request.PageNumber - 1) * request.PageSize)
 							.Take(request.PageSize);
 		var response = new List<PaymentResponse>();
-		foreach ( var item in payments )
+		foreach ( var item in paymentsResponse)
 		{
 			var payment = _mapper.Map<PaymentResponse>(item);
 			if (item.Reservation != null)

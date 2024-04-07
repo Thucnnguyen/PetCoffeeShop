@@ -110,8 +110,9 @@ namespace PetCoffee.API.Controllers
 
 		[HttpGet("petcoffeeshops/{ShopId}/events")]
 		[Authorize]
-		public async Task<ActionResult<PaginationResponse<Event, EventForCardResponse>>> GetEventByShopId([FromRoute] GetEventsByShopIdQuery request)
+		public async Task<ActionResult<PaginationResponse<Event, EventForCardResponse>>> GetEventByShopId([FromRoute] long ShopId, [FromQuery] GetEventsByShopIdQuery request)
 		{
+			request.ShopId = ShopId;
 			var response = await Mediator.Send(request);
 			return response;
 		}
