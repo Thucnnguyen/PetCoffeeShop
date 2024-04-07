@@ -1,32 +1,21 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.Product.Commands;
 using PetCoffee.Application.Features.Promotion.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Promotion.Handlers
 {
 	public class DeletePromotionHandler : IRequestHandler<DeletePromotionCommand, bool>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly IMapper _mapper;
 		private readonly ICurrentAccountService _currentAccountService;
-		private readonly ICacheService _cacheService;
 
-		public DeletePromotionHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService, ICacheService cacheService)
+		public DeletePromotionHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService)
 		{
 			_unitOfWork = unitOfWork;
-			_mapper = mapper;
 			_currentAccountService = currentAccountService;
-			_cacheService = cacheService;
 		}
 
 		public async Task<bool> Handle(DeletePromotionCommand request, CancellationToken cancellationToken)
