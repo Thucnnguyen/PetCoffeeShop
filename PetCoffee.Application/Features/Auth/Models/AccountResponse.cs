@@ -19,4 +19,7 @@ public class AccountResponse
 	public DateTime? EndTimeBlockComment { get; set; }
 	public long TotalIsFollowing { get; set; } = 0;
 	public IList<ShopResponseForAccount>? ShopResponses { get; set; }
+	public long TotalPost { get; set; } = 0;
+	public long TotalReservation { get; set; } = 0;
+
 }

@@ -47,7 +47,9 @@ public class GetCurrentAccountHandler : IRequestHandler<GetCurrentAccountInfomat
 
 		}
 
-		response.TotalIsFollowing = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.CreatedById == currentAccount.Id); ;
+		response.TotalIsFollowing = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.CreatedById == currentAccount.Id);
+		response.TotalPost = await _unitOfWork.PostRepository.CountAsync(p => p.CreatedById == currentAccount.Id && p.DeletedAt == null);
+		response.TotalReservation = await _unitOfWork.ReservationRepository.CountAsync(r => r.CreatedById == currentAccount.Id);
 		return response;
 	}
 }
