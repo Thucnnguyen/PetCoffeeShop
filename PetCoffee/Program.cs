@@ -39,12 +39,7 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseCors(builder =>
-{
-	builder.AllowAnyHeader();
-	builder.AllowAnyMethod();
-	builder.AllowAnyOrigin();
-});
+
 
 app.UseHttpsRedirection();
 
@@ -58,4 +53,10 @@ app.UseMiddleware<ExceptionMidleware>();
 
 app.MapHub<NotificationHub>("/notification-hub");
 
+app.UseCors(builder =>
+{
+	builder.AllowAnyHeader();
+	builder.AllowAnyMethod();
+	builder.AllowAnyOrigin();
+});
 app.Run();

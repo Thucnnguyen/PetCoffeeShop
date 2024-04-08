@@ -72,14 +72,27 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
 			// check voucher is valid 
-			Domain.Entities.Promotion promotion = new Domain.Entities.Promotion();
+			var promotion = new Domain.Entities.Promotion();
 
-			if (request.CodePromotion != null)
+			if (request.PromotionId != null)
 			{
-				var pro = (await _unitOfWork.PromotionRepository.GetAsync(p => !p.Deleted && p.Code == request.CodePromotion && p.Quantity > 0
-																						&& p.PetCoffeeShopId == area.PetcoffeeShopId
-																						&& p.To >= DateTimeOffset.Now && p.From <= DateTimeOffset.Now)).FirstOrDefault();
+				var pro = (await _unitOfWork.PromotionRepository
+					.GetAsync(
+						predicate: p => !p.Deleted && p.Id == request.PromotionId
+									&& p.PetCoffeeShopId == area.PetcoffeeShopId
+									&& p.To >= DateTimeOffset.Now && p.From <= DateTimeOffset.Now,
+						includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Promotion, object>>>()
+						{
+							p => p.AccountPromotions.Where(ap => ap.AccountId == currentAccount.Id),
+						}
+					))
+					.FirstOrDefault();
 				if (pro == null)
+				{
+					throw new ApiException(ResponseCode.PromotionNotExisted);
+				}
+
+				if(pro.AccountPromotions.Any())
 				{
 					throw new ApiException(ResponseCode.PromotionNotExisted);
 				}
@@ -89,15 +102,13 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 		
 
-			//cal price in order
+			//calculate price in order
 			TimeSpan duration = request.EndTime - request.StartTime;
 			decimal durationInHours = (decimal)duration.TotalHours;
 			var totalPrice = (durationInHours * area.PricePerHour) * request.TotalSeat;
 
 			// check wallet
 			var customerWallet = (await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id)).FirstOrDefault();
-
-
 
 			if (customerWallet == null)
 			{
@@ -112,15 +123,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			var order = new Domain.Entities.Reservation
 			{
-
 				Status = OrderStatus.Success,
 				StartTime = request.StartTime,
 				EndTime = request.EndTime,
 				Note = request.Note,
 				AreaId = request.AreaId,
-				TotalPrice = request.CodePromotion == null ? totalPrice : (totalPrice - totalPrice * promotion.Percent / 100), //  
-				Discount = request.CodePromotion == null ? 0 : totalPrice * promotion.Percent, //
-				Code = TokenUltils.GenerateOTPCode(6), //
+				TotalPrice = request.PromotionId == null ? totalPrice : totalPrice - (totalPrice * promotion.Percent / 100), //  
+				Discount = request.PromotionId == null ? 0 : totalPrice * promotion.Percent, //
+				Code = TokenUltils.GenerateCodeForOrder(), // code to search
 				BookingSeat = request.TotalSeat
 			};
 
@@ -169,7 +179,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			await _unitOfWork.ReservationRepository.AddAsync(order);
 
-			// save accountpromotion
+			// save accountPromotion
 			AccountPromotion accountPromotion = new AccountPromotion
 			{
 				AccountId = currentAccount.Id,
@@ -186,34 +196,21 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 					 {
 								 p => p.CreatedBy,
 								 o => o.Area,
-		o => o.Area.PetCoffeeShop
+								 o => o.Area.PetCoffeeShop
 					 },
 					 disableTracking: true)
 				.FirstOrDefaultAsync();
-			//
-
-
+			
 			var response = _mapper.Map<ReservationResponse>(reservations);
-			var petCoffeeShopResponse = _mapper.Map<PetCoffeeShopResponse>(reservations.Area.PetCoffeeShop);
 			response.AreaResponse = _mapper.Map<AreaResponse>(area);
 			response.AccountForReservation = _mapper.Map<AccountForReservation>(reservations.CreatedBy);
-			response.PetCoffeeShopResponse = petCoffeeShopResponse;
+			response.PetCoffeeShopResponse = _mapper.Map<PetCoffeeShopResponse>(reservations.Area.PetCoffeeShop);
 			return response;
 		}
 
 
 		public bool IsAreaAvailable(long areaId, DateTimeOffset startTime, DateTimeOffset endTime, int requestedSeats, Area area)
 		{
-
-
-			//var existingReservations = _unitOfWork.ReservationRepository
-			//    .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing) &&
-			//                ((startTime >= r.StartTime && startTime < r.EndTime) ||
-			//                 (endTime > r.StartTime && endTime <= r.EndTime) ||
-			//                 (startTime <= r.StartTime && endTime >= r.EndTime)))
-			//    .ToList();
-
-
 
 			var existingReservations = _unitOfWork.ReservationRepository
 				 .Get(r => r.AreaId == areaId && (r.Status == OrderStatus.Success)

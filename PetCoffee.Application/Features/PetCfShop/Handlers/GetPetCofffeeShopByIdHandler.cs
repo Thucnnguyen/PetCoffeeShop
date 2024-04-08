@@ -80,7 +80,7 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 		var areaWithMinPrice = CurrentShop.Areas.MinBy(a => a.PricePerHour);
 
 		response.MaxPriceArea = areaWithMaxPrice != null ? areaWithMaxPrice.PricePerHour: 0;
-		response.MinPriceProduct = areaWithMinPrice != null ? areaWithMinPrice.PricePerHour: 0;
+		response.MinPriceArea = areaWithMinPrice != null ? areaWithMinPrice.PricePerHour: 0;
 
 
 		response.StartTime = CurrentShop.OpeningTime;

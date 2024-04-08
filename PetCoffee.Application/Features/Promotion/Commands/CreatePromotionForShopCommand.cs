@@ -29,13 +29,10 @@ namespace PetCoffee.Application.Features.Promotion.Commands
 	{
 
 		public long PetCoffeeShopId { get; set; }
-		//public string Code { get; set; }
 		public DateTimeOffset From { get; set; }
 		public DateTimeOffset To { get; set; }
 
 		public int Quantity { get; set; }
 		public int Percent { get; set; }
-
-		
 	}
 }

@@ -2,14 +2,8 @@
 using MediatR;
 using PetCoffee.Application.Common.Models.Request;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Promotion.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Promotion.Queries
 {
@@ -33,7 +27,7 @@ namespace PetCoffee.Application.Features.Promotion.Queries
 			}
 
 			Expression = Expression.And(p => p.PetCoffeeShopId == ShopId && !p.Deleted);
-			
+
 
 			return Expression;
 		}

@@ -299,15 +299,17 @@ public class MappingProfile : Profile
 
         //
         CreateMap<ReservationProduct, ProductForReservationResponse>()
-            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ProductPrice))
+        .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ProductPrice))
         .ForMember(dest => dest.Quantity, opt => opt.MapFrom(src => src.TotalProduct))
         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
         .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Product.Image));
 
 
-		//promition
+        //promition
 
-		CreateMap<Promotion, PromotionResponse>().ReverseMap();
+        CreateMap<Promotion, PromotionResponse>()
+            .ForMember(dest => dest.Available, opt => opt.MapFrom(src => src.Quantity - src.AccountPromotions.Count()));
+
 		CreateMap<Promotion, CreatePromotionForShopCommand>().ReverseMap();
 	}
 }

@@ -156,7 +156,7 @@ public class Notification : BaseAuditableEntity
 					var follow = (FollowPetCfShop)data;
 
 					Title = $"Quán của bạn có người theo dõi mới";
-					Content = $"{follow.CreatedBy.FullName} đã theo dõiS {follow.Shop.Name}";
+					Content = $"{follow.CreatedBy.FullName} đã theo dõi {follow.Shop.Name}";
 					Level = NotificationLevel.Information;
 					ReferenceId = follow.ShopId.ToString();
 					break;

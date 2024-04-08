@@ -24,7 +24,7 @@ namespace PetCoffee.Application.Features.Reservation.Commands
 
 		public int TotalSeat { get; set; }
 
-		public string? CodePromotion { get; set; }
+		public long? PromotionId { get; set; }
 	}
 
 

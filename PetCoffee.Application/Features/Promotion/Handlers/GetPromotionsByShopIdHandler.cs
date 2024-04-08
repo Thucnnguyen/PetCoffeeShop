@@ -1,19 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.Product.Models;
-using PetCoffee.Application.Features.Product.Queries;
 using PetCoffee.Application.Features.Promotion.Models;
 using PetCoffee.Application.Features.Promotion.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Promotion.Handlers
 {
@@ -46,8 +40,10 @@ namespace PetCoffee.Application.Features.Promotion.Handlers
 			{
 				throw new ApiException(ResponseCode.ShopNotExisted);
 			}
+
 			var Promotions = _unitOfWork.PromotionRepository
 						.Get(predicate: request.GetExpressions())
+						.Include(pr => pr.AccountPromotions)
 						.AsQueryable();
 
 			return new PaginationResponse<Domain.Entities.Promotion, PromotionResponse>(

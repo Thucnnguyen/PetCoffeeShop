@@ -116,6 +116,7 @@ public enum ResponseCode
 
 	//Promotion
 	[Description("Khuyến mãi không tồn tại")] PromotionNotExisted,
+	[Description("Bạn đã sử dụng Khuyến mãi rồi")] PromotionWasUsed,
 
 
 

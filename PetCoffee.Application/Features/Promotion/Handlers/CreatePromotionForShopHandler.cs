@@ -2,33 +2,24 @@
 using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
-using PetCoffee.Application.Features.Product.Commands;
-using PetCoffee.Application.Features.Product.Models;
 using PetCoffee.Application.Features.Promotion.Commands;
 using PetCoffee.Application.Features.Promotion.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Promotion.Handlers
 {
 	public class CreatePromotionForShopHandler : IRequestHandler<CreatePromotionForShopCommand, PromotionResponse>
 	{
 		private readonly IUnitOfWork _unitOfWork;
-		private readonly IAzureService _azureService;
 		private readonly ICurrentAccountService _currentAccountService;
 		private readonly IMapper _mapper;
 
-		public CreatePromotionForShopHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper)
+		public CreatePromotionForShopHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
 		{
 			_unitOfWork = unitOfWork;
-			_azureService = azureService;
 			_currentAccountService = currentAccountService;
 			_mapper = mapper;
 		}
