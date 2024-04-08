@@ -91,7 +91,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 						var newRefundTransactionProduct = new Transaction()
 						{
 							WalletId = transaction.Wallet.Id,
-							Amount = (decimal)transaction.Amount,
+							Amount = (decimal)transactionProduct.Amount,
 							Content = "Hoàn tiền đặt Nước",
 							TransactionStatus = TransactionStatus.Done,
 							ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
@@ -123,7 +123,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 						var newRefundTransaction = new Transaction()
 						{
 							WalletId = transaction.Wallet.Id,
-							Amount = (decimal)reservation.TotalPrice,
+							Amount = (decimal)transaction.Amount,
 							Content = "Hoàn tiền đặt chỗ",
 							TransactionStatus = TransactionStatus.Done,
 							ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
@@ -140,7 +140,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 							var newRefundTransactionProduct = new Transaction()
 							{
 								WalletId = transaction.Wallet.Id,
-								Amount = (decimal)transaction.Amount,
+								Amount = (decimal)transactionProduct.Amount,
 								Content = "Hoàn tiền đặt Nước",
 								TransactionStatus = TransactionStatus.Done,
 								ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
@@ -161,7 +161,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 						var newRefundTransaction = new Transaction()
 						{
 							WalletId = transaction.Wallet.Id,
-							Amount = (decimal)(reservation.TotalPrice * 60) / 100,
+							Amount = (decimal)(transaction.Amount * 60) / 100,
 							Content = "Hoàn tiền đặt chỗ",
 							TransactionStatus = TransactionStatus.Done,
 							ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
@@ -180,7 +180,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 							var newRefundTransactionProduct = new Transaction()
 							{
 								WalletId = transaction.Wallet.Id,
-								Amount = (decimal)transaction.Amount,
+								Amount = (decimal)transactionProduct.Amount,
 								Content = "Hoàn tiền đặt Nước",
 								TransactionStatus = TransactionStatus.Done,
 								ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),

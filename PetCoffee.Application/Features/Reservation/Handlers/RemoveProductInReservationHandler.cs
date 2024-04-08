@@ -72,12 +72,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			var wallet = await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id);
 			if (!wallet.Any())
 			{
-				throw new ApiException(ResponseCode.NotEnoughBalance);
+				var newWallet = new Wallet(backMoney);
+				await _unitOfWork.WalletRepsitory.AddAsync(newWallet);
 			}
-
-
-			wallet.First().Balance += backMoney;
-			await _unitOfWork.WalletRepsitory.UpdateAsync(wallet.First());
+			else
+			{
+				wallet.First().Balance += backMoney;
+				await _unitOfWork.WalletRepsitory.UpdateAsync(wallet.First());
+			}
 
 			var managerAccount = await _unitOfWork.AccountRepository
 			.GetAsync(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == reservation.Area.PetcoffeeShopId));
@@ -106,13 +108,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			{
 				WalletId = wallet.First().Id,
 				Amount = (decimal)backMoney,
-				Content = "Xoá sản phẩm khỏi reservation booking",
+				Content = "Hủy đồ uống khỏi đơn hàng",
 				RemitterId = managaerWallet.First().Id,
 				TransactionStatus = TransactionStatus.Done,
 				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 				TransactionType = TransactionType.RemoveProducts,
 			};
 			reservation.Transactions.Add(newTransaction);
+			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
 
 			await _unitOfWork.SaveChangesAsync();
 

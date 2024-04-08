@@ -242,6 +242,22 @@ public class Notification : BaseAuditableEntity
 
 					break;
 				}
+			case NotificationType.RemindShopAboutNotHavingPet:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var reservation = (PetCoffeeShop)data;
+
+					Title = $"Cửa hàng của bạn chưa có thú cưng nào";
+					Content = $"Cửa hàng của bạn chưa có bất kì thú cưng nào vui lòng cập nhật thông tin thú cưng quán của bạn";
+					Level = NotificationLevel.Warning;
+					ReferenceId = reservation.Id.ToString();
+
+					break;
+				}
 		}
 	}
 };

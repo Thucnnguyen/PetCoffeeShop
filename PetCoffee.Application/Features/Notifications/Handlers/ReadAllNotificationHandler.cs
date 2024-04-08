@@ -3,7 +3,6 @@ using MediatR;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Notifications.Commands;
-using PetCoffee.Application.Features.Notifications.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 
@@ -33,7 +32,7 @@ public class ReadAllNotificationHandler : IRequestHandler<ReadAllNotificationCom
 		}
 
 
-		var notifications = await _unitOfWork.NotificationRepository.GetAsync(n => n.AccountId == currentAccount.Id && n.IsRead);
+		var notifications = await _unitOfWork.NotificationRepository.GetAsync(n => n.AccountId == currentAccount.Id && !n.IsRead);
 
 		if (notifications == null)
 		{

@@ -43,8 +43,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				throw new ApiException(ResponseCode.PermissionDenied);
 			}
 
-	
 
+			// check wallet
+			var customerWallet = (await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id)).FirstOrDefault();
+
+			if (customerWallet == null)
+			{
+				throw new ApiException(ResponseCode.NotEnoughBalance);
+			}
 
 			//check exist area
 			var area = (await _unitOfWork.AreaRepsitory.GetAsync(a => !a.Deleted && a.Id == request.AreaId)).FirstOrDefault();
@@ -94,7 +100,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 				if(pro.AccountPromotions.Any())
 				{
-					throw new ApiException(ResponseCode.PromotionNotExisted);
+					throw new ApiException(ResponseCode.PromotionWasUsed);
 				}
 
 				promotion = pro;
@@ -105,15 +111,9 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			//calculate price in order
 			TimeSpan duration = request.EndTime - request.StartTime;
 			decimal durationInHours = (decimal)duration.TotalHours;
-			var totalPrice = (durationInHours * area.PricePerHour) * request.TotalSeat;
+			var totalPrice = Math.Round((durationInHours * area.PricePerHour) * request.TotalSeat, 2, MidpointRounding.AwayFromZero);
 
-			// check wallet
-			var customerWallet = (await _unitOfWork.WalletRepsitory.GetAsync(w => w.CreatedById == currentAccount.Id)).FirstOrDefault();
 
-			if (customerWallet == null)
-			{
-				throw new ApiException(ResponseCode.NotEnoughBalance);
-			}
 			//check balance
 			//var isEnoughMoney = customerWallet.Balance >= totalPrice;
 			if (customerWallet.Balance < totalPrice)
@@ -128,8 +128,8 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				EndTime = request.EndTime,
 				Note = request.Note,
 				AreaId = request.AreaId,
-				TotalPrice = request.PromotionId == null ? totalPrice : totalPrice - (totalPrice * promotion.Percent / 100), //  
-				Discount = request.PromotionId == null ? 0 : totalPrice * promotion.Percent, //
+				TotalPrice = request.PromotionId == null ? totalPrice : totalPrice - (totalPrice * promotion.Percent) / 100, //  
+				Discount = request.PromotionId == null ? 0 : (totalPrice * promotion.Percent)/100, //
 				Code = TokenUltils.GenerateCodeForOrder(), // code to search
 				BookingSeat = request.TotalSeat
 			};
@@ -180,12 +180,16 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			await _unitOfWork.ReservationRepository.AddAsync(order);
 
 			// save accountPromotion
-			AccountPromotion accountPromotion = new AccountPromotion
+			if(request.PromotionId != null)
 			{
-				AccountId = currentAccount.Id,
-				PromotionId = promotion.Id,
-			};
-			await _unitOfWork.AccountPromotionRepository.AddAsync(accountPromotion);
+				AccountPromotion accountPromotion = new AccountPromotion
+				{
+					AccountId = currentAccount.Id,
+					PromotionId = promotion.Id,
+				};
+				await _unitOfWork.AccountPromotionRepository.AddAsync(accountPromotion);
+			}
+
 
 			await _unitOfWork.SaveChangesAsync();
 

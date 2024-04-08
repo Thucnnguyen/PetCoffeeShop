@@ -18,6 +18,7 @@ using PetCoffee.Application.Service.Payment;
 using PetCoffee.Infrastructure.Persistence.Context;
 using PetCoffee.Infrastructure.Persistence.Interceptors;
 using PetCoffee.Infrastructure.Persistence.Repository;
+using PetCoffee.Infrastructure.Scheduler;
 using PetCoffee.Infrastructure.Services;
 using PetCoffee.Infrastructure.Services.Notifications;
 using PetCoffee.Infrastructure.Services.Notifications.Website.SignalR;
@@ -27,6 +28,7 @@ using PetCoffee.Infrastructure.Settings;
 using PetCoffee.Infrastructure.SinalR;
 using PetCoffee.Infrastructure.SinalR.Notifications;
 using Quartz;
+using Quartz.AspNetCore;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -53,6 +55,20 @@ public static class ConfigureService
 		services.AddQuartz(q =>
 		{
 			q.UseMicrosoftDependencyInjectionJobFactory();
+
+			// Cron jobs for order overtime jobs every hours 
+			var remindShopNotHavePet = new JobKey(CheckShopHasPetJob.CheckShopHasPetJobKey);
+			q.AddJob<CheckShopHasPetJob>(options => options.WithIdentity(remindShopNotHavePet));
+
+			q.AddTrigger(options =>
+				options.ForJob(remindShopNotHavePet)
+					.WithIdentity($"{CheckShopHasPetJob.CheckShopHasPetJobKey}-trigger")
+					.WithCronSchedule("0 0 0/3 ? * * *", x => x.InTimeZone(TimeZoneInfo.Utc))
+			);
+		});
+		services.AddQuartzServer(options =>
+		{
+			// options.WaitForJobsToComplete = true;
 		});
 		//add scoped
 		services.AddScoped<ICurrentPrincipalService, CurrentPrincipleService>();

@@ -1,23 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.FollowShop.Commands;
-using PetCoffee.Application.Features.Product.Commands;
-using PetCoffee.Application.Features.Product.Models;
-using PetCoffee.Application.Features.Product.Queries;
 using PetCoffee.Application.Features.Promotion.Commands;
 using PetCoffee.Application.Features.Promotion.Models;
 using PetCoffee.Application.Features.Promotion.Queries;
 
 namespace PetCoffee.API.Controllers
 {
-	[Route("api/promotion")]
+	[Route("api/v1")]
 	[ApiController]
 
 	public class PromotionController : ApiControllerBase
 	{
-		[HttpPost("")]
+		[HttpPost("promotion")]
 		[Authorize]
 		public async Task<ActionResult<PromotionResponse>> CreatePromotionForShop([FromForm] CreatePromotionForShopCommand request)
 		{
@@ -25,6 +20,13 @@ namespace PetCoffee.API.Controllers
 			return response;
 		}
 
+		[HttpPut("promotion")]
+		[Authorize]
+		public async Task<ActionResult<bool>> UpdatePromotionForShop([FromBody] UpdatePromotionForShopCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 
 		[HttpGet("petCoffeeShops/promotion")]
 		[Authorize]
@@ -41,7 +43,6 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return Ok(response);
 		}
-
 
 
 		[HttpDelete("promotion/{Id}")]
