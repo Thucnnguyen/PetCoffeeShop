@@ -45,6 +45,8 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 					.ThenInclude(t => t.Wallet)
 				.Include(r => r.Transactions)
 					.ThenInclude(t => t.Remitter)
+				.Include(r => r.ReservationProducts)
+					.ThenInclude(p => p.Product)
 				.FirstOrDefault();
 				if (reservation == null)
 				{
@@ -82,28 +84,42 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 					};
 
 					//return money back for products
-					var transactionProduct = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.AddProducts);
-					if (transactionProduct != null)
+					if (reservation.ReservationProducts.Any())
 					{
-						transaction.Wallet.Balance += transactionProduct.Amount;
-						transaction.Remitter.Balance -= transactionProduct.Amount;
+						List<TransactionProduct> TransactionProducts = new();
+
+						decimal backMoney = 0;
+						foreach (var product in reservation.ReservationProducts)
+						{
+							backMoney += product.TotalProduct * product.ProductPrice;
+							TransactionProducts.Add(new TransactionProduct
+							{
+								Price = product.ProductPrice,
+								ProductId = product.ProductId,
+								ProductName = product.Product.Name,
+								Quantity = product.TotalProduct,
+							});
+						}
+
+						transaction.Wallet.Balance += backMoney;
+						transaction.Remitter.Balance -= backMoney;
 
 						var newRefundTransactionProduct = new Transaction()
 						{
 							WalletId = transaction.Wallet.Id,
-							Amount = (decimal)transactionProduct.Amount,
+							Amount = (decimal)backMoney,
 							Content = "Hoàn tiền đặt Nước",
 							TransactionStatus = TransactionStatus.Done,
 							ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 							TransactionType = TransactionType.Refund,
 						};
+						newRefundTransactionProduct.TransactionProducts = TransactionProducts;
 						reservation.Transactions.Add(newRefundTransactionProduct);
 					}
 
 					reservation.Transactions.Add(newRefundTransaction);
 					//return amount
 					totalAmountRefund = reservation.TotalPrice;
-
 				}
 				else
 				{
@@ -131,21 +147,36 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 						};
 
 						//return money back for products
-						var transactionProduct = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.AddProducts);
-						if (transactionProduct != null)
+						if (reservation.ReservationProducts.Any())
 						{
-							transaction.Wallet.Balance += transactionProduct.Amount;
-							transaction.Remitter.Balance -= transactionProduct.Amount;
+							List<TransactionProduct> TransactionProducts = new();
+
+							decimal backMoney = 0;
+							foreach (var product in reservation.ReservationProducts)
+							{
+								backMoney += product.TotalProduct * product.ProductPrice;
+								TransactionProducts.Add(new TransactionProduct
+								{
+									Price = product.ProductPrice,
+									ProductId = product.ProductId,
+									ProductName = product.Product.Name,
+									Quantity = product.TotalProduct,
+								});
+							}
+
+							transaction.Wallet.Balance += backMoney;
+							transaction.Remitter.Balance -= backMoney;
 
 							var newRefundTransactionProduct = new Transaction()
 							{
 								WalletId = transaction.Wallet.Id,
-								Amount = (decimal)transactionProduct.Amount,
+								Amount = (decimal)backMoney,
 								Content = "Hoàn tiền đặt Nước",
 								TransactionStatus = TransactionStatus.Done,
 								ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 								TransactionType = TransactionType.Refund,
 							};
+							newRefundTransactionProduct.TransactionProducts = TransactionProducts;
 							reservation.Transactions.Add(newRefundTransactionProduct);
 						}
 						reservation.Transactions.Add(newRefundTransaction);
@@ -171,29 +202,54 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 						reservation.Transactions.Add(newRefundTransaction);
 
 						//return money back for products
-						var transactionProduct = reservation.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.AddProducts);
-						if (transactionProduct != null)
+						decimal backMoney = 0;
+
+						if (reservation.ReservationProducts.Any())
 						{
-							transaction.Wallet.Balance += transactionProduct.Amount;
-							transaction.Remitter.Balance -= transactionProduct.Amount;
+							List<TransactionProduct> TransactionProducts = new();
+
+							foreach (var product in reservation.ReservationProducts)
+							{
+								backMoney += product.TotalProduct * product.ProductPrice;
+								TransactionProducts.Add(new TransactionProduct
+								{
+									Price = product.ProductPrice,
+									ProductId = product.ProductId,
+									ProductName = product.Product.Name,
+									Quantity = product.TotalProduct,
+								});
+							}
+
+							transaction.Wallet.Balance += backMoney;
+							transaction.Remitter.Balance -= backMoney;
 
 							var newRefundTransactionProduct = new Transaction()
 							{
 								WalletId = transaction.Wallet.Id,
-								Amount = (decimal)transactionProduct.Amount,
+								Amount = (decimal)backMoney,
 								Content = "Hoàn tiền đặt Nước",
 								TransactionStatus = TransactionStatus.Done,
 								ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 								TransactionType = TransactionType.Refund,
 							};
+							newRefundTransactionProduct.TransactionProducts = TransactionProducts;
 							reservation.Transactions.Add(newRefundTransactionProduct);
 						}
-
-						totalAmountRefund = (transaction.Amount * 60) / 100 + (transactionProduct != null ? transactionProduct.Amount : 0);
+						totalAmountRefund = (transaction.Amount * 60) / 100 + (backMoney != 0 ? backMoney : 0);
 					}
 				}
 
 				reservation.Status = OrderStatus.Returned;
+
+				if (reservation.PromotionId != null)
+				{
+					var promotionAccount = new AccountPromotion()
+					{
+						AccountId = reservation.CreatedById.Value,
+						PromotionId = reservation.PromotionId.Value,
+					};
+					await _unitOfWork.AccountPromotionRepository.DeleteAsync(promotionAccount);
+				}
 
 				var response = _mapper.Map<ReservationResponse>(reservation);
 				response.AmountRefund = totalAmountRefund;
@@ -206,7 +262,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				return response;
 			}
 
-			
+
 			var reservationReturn = _unitOfWork.ReservationRepository.Get(p => p.Id == request.OrderId && p.Status.Equals(OrderStatus.Success))
 			.Include(r => r.Transactions)
 			.ThenInclude(t => t.Wallet)
@@ -239,17 +295,22 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			reservationReturn.Transactions.Add(newRefundTransactionByShop);
 
-			// return money back for products
-			var transactionProductReturn = reservationReturn.Transactions.FirstOrDefault(t => t.TransactionStatus == TransactionStatus.Done && t.TransactionType == TransactionType.AddProducts);
-			if (transactionProductReturn != null)
+			//return money back for products
+			if (reservationReturn.ReservationProducts.Any())
 			{
-				transactionReturn.Wallet.Balance += transactionProductReturn.Amount;
-				transactionReturn.Remitter.Balance -= transactionProductReturn.Amount;
+				decimal backMoney = 0;
+				foreach (var product in reservationReturn.ReservationProducts)
+				{
+					backMoney += product.TotalProduct * product.ProductPrice;
+				}
+
+				transactionReturn.Wallet.Balance += backMoney;
+				transactionReturn.Remitter.Balance -= backMoney;
 
 				var newRefundTransactionProduct = new Transaction()
 				{
 					WalletId = transactionReturn.Wallet.Id,
-					Amount = (decimal)transactionProductReturn.Amount,
+					Amount = (decimal)backMoney,
 					Content = "Hoàn tiền đặt Nước",
 					TransactionStatus = TransactionStatus.Done,
 					ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),

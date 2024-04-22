@@ -15,7 +15,7 @@ namespace PetCoffee.Application.Features.Promotion.Models
 		public int Percent { get; set; }
 
 		public long PetCoffeeShopId { get; set; }
-
+		public bool IsUsed { get; set; }
 		public int Available { get; set; } = 0;
 
 	}

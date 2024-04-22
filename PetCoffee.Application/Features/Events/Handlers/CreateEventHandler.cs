@@ -95,7 +95,7 @@ public class CreateEventHandler : IRequestHandler<CreateEventCommand, EventRespo
 			0,
 			DateTimeOffset.UtcNow.Offset
 		);
-		await _schedulerService.CheckEventHasEnoughParticipantJob(NewEvent.Id, CheckDate.AddMinutes(-2));
+		await _schedulerService.CheckEventHasEnoughParticipantJob(NewEvent.Id, CheckDate.AddDays(-1));
 		return response;
 	}
 }

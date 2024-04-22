@@ -114,4 +114,28 @@ public class SchdulerService : ISchedulerService
 			_logger.LogError("Schedule to change reservation in areas error {error}", ex.Message);
 		}
 	}
+
+	public async Task SetReservationToOvertime(long ReservationId, DateTimeOffset time)
+	{
+		try
+		{
+			_logger.LogInformation("update overtime reservation: {ReservationId} at {time}", ReservationId, time);
+
+			var scheduler = await _schedulerFactory.GetScheduler();
+			await scheduler.Start();
+
+			var job = JobBuilder.Create<SetReservationToOvertimeJob>()
+					.UsingJobData(SetReservationToOvertimeJob.ReservationIdKey, ReservationId)
+					.Build();
+
+			var trigger = TriggerBuilder.Create()
+					.StartAt(time)
+					.Build();
+			await scheduler.ScheduleJob(job, trigger);
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Schedule to update reservation overtime error {error}", ex.Message);
+		}
+	}
 }

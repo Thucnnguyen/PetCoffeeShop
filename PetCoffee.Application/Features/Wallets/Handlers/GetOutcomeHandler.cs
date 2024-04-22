@@ -52,8 +52,8 @@ public class GetOutcomeHandler : IRequestHandler<GetOutcomeQuery, IncomeForShopR
 		var curDate = DateTimeOffset.UtcNow;
 		var getFromDate = new DateTimeOffset(curDate.AddMonths(-(request.Months - 1)).Year,
 											 curDate.AddMonths(-(request.Months - 1)).Month, 1, 0, 0, 0, DateTimeOffset.UtcNow.Offset);
-		var getToDate = new DateTimeOffset(curDate.AddMonths(-1).Year,
-											 curDate.AddMonths(-1).Month, 1, 0, 0, 0, DateTimeOffset.UtcNow.Offset);
+		var getToDate = new DateTimeOffset(curDate.Year,
+											 curDate.Month, 1, 0, 0, 0, DateTimeOffset.UtcNow.Offset).AddDays(-1);
 
 		var transaction = await _unitOfWork.TransactionRepository
 								.Get(tr => tr.PetCoffeeShopId != null && shopIds.Contains(tr.PetCoffeeShopId.Value)

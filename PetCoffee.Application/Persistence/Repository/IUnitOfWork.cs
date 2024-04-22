@@ -49,4 +49,5 @@ public interface IUnitOfWork
     IReservationProductRepository ReservationProductRepository { get; }
 	IPromotionRepository PromotionRepository { get; }
 	IAccountPromotionRepository AccountPromotionRepository { get; }
+	ITransactionProductRespostiory TransactionProductRespostiory { get; }
 }

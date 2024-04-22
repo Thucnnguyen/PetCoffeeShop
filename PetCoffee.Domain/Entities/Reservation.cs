@@ -26,13 +26,13 @@ public class Reservation : BaseAuditableEntity
 
 	public bool IsTotallyRefund { get; set; } = false;
 
+	public long? PromotionId {  get; set; }
+	public Promotion? Promotion { get; set; }
+
     [InverseProperty(nameof(Transaction.Reservation))]
 	public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     [InverseProperty(nameof(ReservationProduct.Reservation))]
 	public IList<ReservationProduct> ReservationProducts { get; set; } = new List<ReservationProduct>();
-
-
-
 
 }

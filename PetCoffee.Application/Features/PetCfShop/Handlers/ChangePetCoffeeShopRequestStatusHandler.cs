@@ -66,7 +66,7 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 			if (checkIsRequest)
 			{
 				var EmailContent = string.Format(EmailConstant.AcceptShop, createdBy.FullName);
-				await _azureService.SendEmail(createdBy.Email, EmailContent, EmailConstant.EmailSubject);
+				await _azureService.SendEmail(createdBy.Email, EmailContent, EmailConstant.EmailSubjectShopRequest);
 			}
 			else //active shop again
 			{
@@ -180,7 +180,7 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 			}
 				
 			var EmailContent = string.Format(EmailConstant.InActiveShop, PetCoffShopChangeStatus.CreatedBy.FullName);
-			await _azureService.SendEmail(PetCoffShopChangeStatus.CreatedBy.Email, EmailContent, EmailConstant.EmailSubject);
+			await _azureService.SendEmail(PetCoffShopChangeStatus.CreatedBy.Email, EmailContent, EmailConstant.EmailSubjectShopRequest);
 			return true;
 		}
 
@@ -190,7 +190,7 @@ public class ChangePetCoffeeShopRequestStatusHandler : IRequestHandler<ChangePet
 
 			await _unitOfWork.SaveChangesAsync();
 			var EmailContent = string.Format(EmailConstant.RejectShop, PetCoffShopChangeStatus.CreatedBy.FullName);
-			await _azureService.SendEmail(PetCoffShopChangeStatus.CreatedBy.Email, EmailContent, EmailConstant.EmailSubject);
+			await _azureService.SendEmail(PetCoffShopChangeStatus.CreatedBy.Email, EmailContent, EmailConstant.EmailSubjectShopRequest);
 			return true;
 		}
 

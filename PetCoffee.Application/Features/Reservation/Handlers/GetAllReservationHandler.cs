@@ -52,14 +52,17 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 								 o => o.Transactions
 							 },
 						disableTracking: true
-						).Skip((request.PageNumber - 1) * request.PageSize)
-						 .Take(request.PageSize)
-						 .ToListAsync(); 
-             
+						)
+						 .OrderByDescending( o => o.Id )
+						 .ToListAsync();
+
+			var reservationsResponse = reservations
+						 .Skip((request.PageNumber - 1) * request.PageSize)
+						 .Take(request.PageSize);
 
 
-            var response = new List<ReservationResponse>();
-			foreach (var reservation in reservations)
+			var response = new List<ReservationResponse>();
+			foreach (var reservation in reservationsResponse)
 			{
 				var reservationRes = _mapper.Map<ReservationResponse>(reservation);
 				var petCoffeeShopResponse = _mapper.Map<PetCoffeeShopResponse>(reservation.Area.PetCoffeeShop);
@@ -75,10 +78,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				reservationRes.AreaResponse = areaResponse;
 				if (reservation.Status == OrderStatus.Returned) 
 				{
-					var returnTransaction = reservation.Transactions.FirstOrDefault(t => t.TransactionType == TransactionType.Refund);
+					var returnTransaction = reservation.Transactions.Where(t => t.TransactionType == TransactionType.Refund);
 					if(returnTransaction != null)
 					{
-						reservationRes.AmountRefund = returnTransaction.Amount;
+						reservationRes.AmountRefund = returnTransaction.Sum(rt => rt.Amount);
 
 					}
 				}
@@ -87,7 +90,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 			return new PaginationResponse<Domain.Entities.Reservation, ReservationResponse>(
 		response,
-        reservations.Count(),
+		reservations.Count(),
 		request.PageNumber,
 		request.PageSize);
 		}

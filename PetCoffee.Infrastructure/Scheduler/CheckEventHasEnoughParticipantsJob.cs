@@ -15,10 +15,10 @@ public class CheckEventHasEnoughParticipantsJob : IJob
 
 	public const string EventIdKey = "EventId";
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ILogger<DeleteAccountNotVerifyJob> _logger;
+	private readonly ILogger<CheckEventHasEnoughParticipantsJob> _logger;
 	private readonly INotifier _notifier;
 
-	public CheckEventHasEnoughParticipantsJob(IUnitOfWork unitOfWork, ILogger<DeleteAccountNotVerifyJob> logger, INotifier notifier)
+	public CheckEventHasEnoughParticipantsJob(IUnitOfWork unitOfWork, ILogger<CheckEventHasEnoughParticipantsJob> logger, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;
@@ -59,7 +59,7 @@ public class CheckEventHasEnoughParticipantsJob : IJob
 			{
 				var notification = new Notification(
 					account: submit.CreatedBy,
-					type: NotificationType.CancelOrder,
+					type: NotificationType.CancelEvent,
 					entityType: EntityType.Event,
 					data: existedEvent
 				);

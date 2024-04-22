@@ -25,18 +25,15 @@ public class GetAllPostByShopIdQuery : PaginationRequest<Domain.Entities.Post>, 
 
 		if (Search is not null)
 		{
-			if (Search is not null)
-			{
-				Expression = Expression.And(e => e.Content.ToLower().Contains(Search));
-			}
+			Expression = Expression.And(e => e.Content.ToLower().Contains(Search));
 		}
-		
+
 		if (CategoryId is not null)
 		{
 			Expression = Expression.And(e => e.PostCategories.Where(p => p.CategoryId == CategoryId).Any());
 		}
 
-		Expression = Expression.And(p => p.ShopId == ShopId);
+		Expression = Expression.And(p => p.ShopId == ShopId && !p.Deleted);
 		return Expression;
 	}
 }

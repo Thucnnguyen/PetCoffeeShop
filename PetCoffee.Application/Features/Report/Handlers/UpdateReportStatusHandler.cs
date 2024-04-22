@@ -45,7 +45,7 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 
 
 				// change status for post has same postId
-				var ReportByPostId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.PostID == report.PostID && !rp.Deleted);
+				var ReportByPostId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.PostID == report.PostID && !rp.Deleted && rp.Status != ReportStatus.Accept);
 				if (ReportByPostId.Any())
 				{
 					foreach (var r in ReportByPostId)
@@ -58,25 +58,21 @@ public class UpdateReportStatusHandler : IRequestHandler<UpdateReportStatuscomma
 
 			if (report.CommentId != null)
 			{
-				var AnyAcceptedReport = await _unitOfWork.ReportRepository
-					.Get(r => r.CommentId == report.CommentId && r.Status == ReportStatus.Accept)
-					.AnyAsync();
-				if (AnyAcceptedReport)
+				var comment = await _unitOfWork.CommentRepository.Get(c => c.Id == report.CommentId && !c.Deleted)
+						.FirstOrDefaultAsync();
+				if (comment != null)
 				{
-					var comments = await _unitOfWork.CommentRepository
-												.GetAsync(c => c.Id == report.CommentId && c.ParentCommentId == report.CommentId);
-					if (comments != null)
-					{
-						await _unitOfWork.CommentRepository.DeleteRange(comments);
-					}
+					comment.DeletedAt = DateTimeOffset.UtcNow;
+					await _unitOfWork.CommentRepository.UpdateAsync(comment);
 				}
 				report.Status = ReportStatus.Accept;
 				await _unitOfWork.ReportRepository.UpdateAsync(report);
+
 				// change status for post has same comment
-				var ReportByPostId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.CommentId == report.CommentId && !rp.Deleted);
-				if (ReportByPostId.Any())
+				var ReportByCommentId = await _unitOfWork.ReportRepository.GetAsync(rp => rp.CommentId == report.CommentId && !rp.Deleted && rp.Status != ReportStatus.Accept);
+				if (ReportByCommentId.Any())
 				{
-					foreach (var r in ReportByPostId)
+					foreach (var r in ReportByCommentId)
 					{
 						r.Status = ReportStatus.Accept;
 						await _unitOfWork.ReportRepository.UpdateAsync(r);

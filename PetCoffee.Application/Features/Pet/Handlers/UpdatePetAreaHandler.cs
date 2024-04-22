@@ -6,7 +6,9 @@ using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Pet.Commands;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Domain.Entities;
+using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Pet.Handlers;
 
@@ -17,14 +19,16 @@ public class UpdatePetAreaHandler : IRequestHandler<UpdatePetAreaCommand, bool>
 	private readonly IMapper _mapper;
 	private readonly ICacheService _cacheService;
 	private readonly ISchedulerService _schedulerService;
+	private readonly INotifier _notifier;
 
-	public UpdatePetAreaHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper, ICacheService cacheService, ISchedulerService schedulerService)
+	public UpdatePetAreaHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper, ICacheService cacheService, ISchedulerService schedulerService, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
 		_cacheService = cacheService;
 		_schedulerService = schedulerService;
+		_notifier = notifier;
 	}
 
 	public async Task<bool> Handle(UpdatePetAreaCommand request, CancellationToken cancellationToken)
@@ -66,7 +70,7 @@ public class UpdatePetAreaHandler : IRequestHandler<UpdatePetAreaCommand, bool>
 				currentPetArea.EndTime = DateTime.UtcNow;
 				await _unitOfWork.PetAreaRespository.UpdateAsync(currentPetArea);
 				await _cacheService.RemoveAsync(petId.ToString(), cancellationToken);
-				areaIds += currentPetArea.AreaId.ToString() + ";";
+				areaIds += currentPetArea.AreaId.ToString() + ",";
 			}
 			await _unitOfWork.PetAreaRespository.AddAsync(new PetArea()
 			{
@@ -82,6 +86,30 @@ public class UpdatePetAreaHandler : IRequestHandler<UpdatePetAreaCommand, bool>
 		{
 			areaIds = areaIds.Trim().Remove(areaIds.Length - 1, 1);
 			await _schedulerService.NotiforChangePetArea(areaIds, DateTimeOffset.UtcNow);
+			//var listAreaIds = areaIds.Split(',').Select(a => long.Parse(a)).ToList();
+			//var areas = await _unitOfWork.AreaRepsitory
+			//				.Get(a => listAreaIds.Any(id => id == a.Id))
+			//				.Include(a => a.Reservations.Where(r => r.StartTime > DateTimeOffset.UtcNow))
+			//					.ThenInclude(r => r.CreatedBy)
+			//				.ToListAsync();
+
+			//foreach (var are in areas)
+			//{
+			//	foreach (var resvation in are.Reservations.DistinctBy(r => r.CreatedById))
+			//	{
+			//		resvation.IsTotallyRefund = true;
+			//		await _unitOfWork.ReservationRepository.UpdateAsync(resvation);
+
+			//		var notification = new Notification(
+			//		account: resvation.CreatedBy,
+			//		type: NotificationType.ChangePetArea,
+			//		entityType: EntityType.Reservation,
+			//		data: resvation
+			//		);
+			//		await _notifier.NotifyAsync(notification, true);
+			//	}
+			//	await _unitOfWork.SaveChangesAsync();
+			//}
 		}
 
 		return true;

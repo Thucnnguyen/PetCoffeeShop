@@ -11,7 +11,6 @@ namespace PetCoffee.Application.Features.Report.Commands
 		public CreateReportPostCommandValidation()
 		{
 			RuleFor(model => model.ReportCategory)
-				.IsInEnum()
 				.NotNull();
 		}
 	}

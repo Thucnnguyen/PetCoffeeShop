@@ -49,6 +49,50 @@ public class Notifier : INotifier
 		{
 			webNotificationService,
 		});
+		_provider.Attach(NotificationType.NewFollower, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.ChangePetArea, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.BuyNewPackage, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.CancelOrder, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.ReturnOrder, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.RemindShopAboutNotHavingPet, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.Donation, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.NewReportComment, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.NewReportPost, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.NewShopRequest, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
+		_provider.Attach(NotificationType.CancelEvent, new List<INotificationService>()
+		{
+			webNotificationService,
+		});
 	}
 
 	public async Task NotifyAsync(Notification notification, bool IsSaved)

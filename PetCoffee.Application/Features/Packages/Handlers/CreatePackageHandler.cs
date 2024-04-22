@@ -27,12 +27,17 @@ public class CreatePackageHandler : IRequestHandler<CreatePackageCommand, Packag
 	{
 
 		var isExistedPackage = await _unitOfWork.PackagePromotionRespository
-							.Get(p => p.Duration == request.Duration && !p.Deleted)
+							.Get(p => p.Duration == request.Duration || p.Description == request.Description && !p.Deleted)
 							.FirstOrDefaultAsync();
-		if(isExistedPackage != null)
+		if (isExistedPackage != null && isExistedPackage.Duration == request.Duration)
 		{
 			throw new ApiException(ResponseCode.PackageisExisted);
 		}
+		if (isExistedPackage != null && isExistedPackage.Description == request.Description)
+		{
+			throw new ApiException(ResponseCode.PackageNameIsExisted);
+		}
+
 
 		var NewPackage = _mapper.Map<PackagePromotion>(request);
 

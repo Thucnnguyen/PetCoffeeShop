@@ -20,12 +20,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IMapper _mapper;
 		private readonly ICurrentAccountService _currentAccountService;
+		private readonly ISchedulerService _schedulerService;
 
-		public InitializeOrderHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService)
+		public InitializeOrderHandler(IUnitOfWork unitOfWork, IMapper mapper, ICurrentAccountService currentAccountService, ISchedulerService schedulerService)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapper;
 			_currentAccountService = currentAccountService;
+			_schedulerService = schedulerService;
 		}
 		public async Task<ReservationResponse> Handle(InitializeOrderCommand request, CancellationToken cancellationToken)
 		{
@@ -98,7 +100,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 					throw new ApiException(ResponseCode.PromotionNotExisted);
 				}
 
-				if(pro.AccountPromotions.Any())
+				if (pro.AccountPromotions.Any())
 				{
 					throw new ApiException(ResponseCode.PromotionWasUsed);
 				}
@@ -106,7 +108,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				promotion = pro;
 			}
 
-		
+
 
 			//calculate price in order
 			TimeSpan duration = request.EndTime - request.StartTime;
@@ -129,9 +131,10 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				Note = request.Note,
 				AreaId = request.AreaId,
 				TotalPrice = request.PromotionId == null ? totalPrice : totalPrice - (totalPrice * promotion.Percent) / 100, //  
-				Discount = request.PromotionId == null ? 0 : (totalPrice * promotion.Percent)/100, //
+				Discount = request.PromotionId == null ? 0 : (totalPrice * promotion.Percent) / 100, //
 				Code = TokenUltils.GenerateCodeForOrder(), // code to search
-				BookingSeat = request.TotalSeat
+				BookingSeat = request.TotalSeat,
+				PromotionId = request.PromotionId != null ? promotion.Id : null,
 			};
 
 			//Get ManagerAccount
@@ -180,7 +183,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			await _unitOfWork.ReservationRepository.AddAsync(order);
 
 			// save accountPromotion
-			if(request.PromotionId != null)
+			if (request.PromotionId != null)
 			{
 				AccountPromotion accountPromotion = new AccountPromotion
 				{
@@ -192,7 +195,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
 			await _unitOfWork.SaveChangesAsync();
-
+			await _schedulerService.SetReservationToOvertime(order.Id, order.EndTime.UtcDateTime.AddMinutes(1));
 			// get order just inserted
 			var reservations = await _unitOfWork.ReservationRepository.Get(
 					 predicate: o => o.Id == order.Id,
@@ -204,7 +207,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 					 },
 					 disableTracking: true)
 				.FirstOrDefaultAsync();
-			
+
 			var response = _mapper.Map<ReservationResponse>(reservations);
 			response.AreaResponse = _mapper.Map<AreaResponse>(area);
 			response.AccountForReservation = _mapper.Map<AccountForReservation>(reservations.CreatedBy);

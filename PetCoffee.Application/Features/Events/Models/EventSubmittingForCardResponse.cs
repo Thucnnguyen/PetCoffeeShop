@@ -13,8 +13,8 @@ public class EventSubmittingForCardResponse
 	public string? Description { get; set; }
 	public DateTimeOffset StartDate { get; set; }
 	public DateTimeOffset EndDate { get; set; }
-	public TimeSpan StartTime { get; set; }
-	public TimeSpan EndTime { get; set; }
+	public string StartTime { get; set; }
+	public string EndTime { get; set; }
 	public string? Location { get; set; }
 	public long TotalJoinEvent { get; set; } = 0;
 	public AccountForPostModel? AccountForPostModel { get; set; }

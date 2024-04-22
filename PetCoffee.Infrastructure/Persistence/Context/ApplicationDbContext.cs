@@ -76,4 +76,5 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<ReservationProduct> ReservationProducts => Set<ReservationProduct>();
 	public DbSet<AccountPromotion> AccountPromotion => Set<AccountPromotion>();
+	public DbSet<TransactionProduct> transactionProducts => Set<TransactionProduct>();
 }

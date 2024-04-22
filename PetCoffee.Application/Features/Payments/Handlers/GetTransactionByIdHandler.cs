@@ -43,6 +43,7 @@ public class GetTransactionByIdHandler : IRequestHandler<GetTransactionByIdQuery
 							.Include(t => t.CreatedBy)
 							.Include(t => t.Reservation)
 								.ThenInclude(r => r.Area)
+							.Include(t => t.TransactionProducts)
 							.FirstOrDefaultAsync();
 
 		if (transaction == null)

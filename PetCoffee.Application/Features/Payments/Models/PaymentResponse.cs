@@ -10,7 +10,7 @@ namespace PetCoffee.Application.Features.Payments.Models;
 public class PaymentResponse : BaseAuditableEntityResponse
 {
 	public long Id { get; set; }
-	public double Amount { get; set; }
+	public decimal Amount { get; set; }
 	public string? Content { get; set; }
 	public string? ReferenceTransactionId { get; set; }
 	public string? Url { get; set; }
@@ -25,4 +25,5 @@ public class PaymentResponse : BaseAuditableEntityResponse
 	public PackageResponse? Package { get; set; }
 	public AccountForPostModel? Creator { get; set; }
 
+	public List<TransactionProductResponse> TransactionProducts { get; set; }
 }

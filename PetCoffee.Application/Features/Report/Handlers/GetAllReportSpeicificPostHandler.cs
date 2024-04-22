@@ -30,7 +30,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 				throw new ApiException(ResponseCode.AccountNotExist);
 			}
 
-			var reports = _unitOfWork.ReportRepository.Get(p => p.PostID == request.postId);
+			var reports = _unitOfWork.ReportRepository.Get(p => p.PostID == request.postId).OrderByDescending(p => p.Id);
 
 			if (reports == null)
 			{

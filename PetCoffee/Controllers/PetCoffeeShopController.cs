@@ -18,7 +18,7 @@ namespace PetCoffee.API.Controllers
 		[HttpGet("petcoffeeshops")]
 		[Authorize]
 		public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetPetCfShops(
-			[FromQuery] GetAllPetCfShopRequestQuery request)
+			[FromQuery] GetAllPetCfShopQuery request)
 		{
 			return await Mediator.Send(request);
 		}
@@ -73,7 +73,7 @@ namespace PetCoffee.API.Controllers
 		[HttpGet("petcoffeeshops/processing")]
 		[Authorize(Roles = "Admin,PlatformStaff")]
 		public async Task<ActionResult<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>> GetListOfProcessingShop(
-			[FromRoute] GetAllPetCfShopRequestQuery request)
+			[FromRoute] GetAllPetCfShopQuery request)
 		{
 			return await Mediator.Send(request);
 		}

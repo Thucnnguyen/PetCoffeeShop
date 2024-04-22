@@ -14,7 +14,7 @@ namespace PetCoffee.API.Controllers
 	{
 		[HttpPost("promotion")]
 		[Authorize]
-		public async Task<ActionResult<PromotionResponse>> CreatePromotionForShop([FromForm] CreatePromotionForShopCommand request)
+		public async Task<ActionResult<PromotionResponse>> CreatePromotionForShop([FromBody] CreatePromotionForShopCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;

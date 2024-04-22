@@ -20,12 +20,12 @@ public class GetReportByShopIdQuery : PaginationRequest<Domain.Entities.Report>,
 	public long ShopId { get; set; }
 	public override Expression<Func<Domain.Entities.Report, bool>> GetExpressions()
 	{
-		if (StartDate == null)
+		if (StartDate != null)
 		{
 			Expression = Expression.And(e => e.CreatedAt >= StartDate);
 		}
 
-		if (EndDate == null)
+		if (EndDate != null)
 		{
 			Expression = Expression.And(e => e.CreatedAt <= EndDate);
 		}

@@ -1,5 +1,4 @@
-﻿
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
@@ -49,7 +48,7 @@ public class GetOutcomeTransactionForShopByMonthHandler : IRequestHandler<GetOut
 				.ToListAsync();
 
 
-			var TransactionDic = new Dictionary<TransactionType, decimal>();
+			var TransactionDic = new Dictionary<TransactionType, List<Transaction>>();
 			decimal PreTotal = 0;
 			decimal CurTotal = 0;
 			var transactionTypes = new[]
@@ -96,11 +95,12 @@ public class GetOutcomeTransactionForShopByMonthHandler : IRequestHandler<GetOut
 				{
 					if (TransactionDic.ContainsKey(type))
 					{
-						TransactionDic[type] += curTransaction.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount);
+						TransactionDic[type].AddRange(curTransaction.Where(tr => tr.TransactionType == type));
 					}
 					else
 					{
-						TransactionDic.Add(type, curTransaction.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount));
+						TransactionDic.Add(type, new());
+						TransactionDic[type].AddRange(curTransaction.Where(tr => tr.TransactionType == type));
 					}
 				}
 			}
@@ -109,11 +109,15 @@ public class GetOutcomeTransactionForShopByMonthHandler : IRequestHandler<GetOut
 				Balance = CurTotal,
 				Percent = PreTotal == 0 ? 0 : (decimal)(CurTotal / PreTotal) * 100,
 				IsUp = CurTotal > PreTotal,
-				Transactions = curTransactions.Any() ?  TransactionDic.Select(td => new TransactionAmountResponse()
-				{
-					Amount = td.Value,
-					TransactionTypes = td.Key,
-				}).ToList() : null
+				Transactions = curTransactions.Any() ? TransactionDic.Where(td => td.Value.Sum(t => t.Amount) > 0)
+								.Select(td => new TransactionAmountResponse()
+								{
+									Amount = td.Value.Sum(t => t.Amount),
+									TotalTransaction = td.Value.Count(),
+									TransactionTypes = td.Key
+								})
+								.ToList()
+								: null
 			};
 			return response;
 		}
@@ -141,7 +145,7 @@ public class GetOutcomeTransactionForShopByMonthHandler : IRequestHandler<GetOut
 
 		var preTransactionForShop = await _unitOfWork.TransactionRepository
 								.Get(tr => tr.PetCoffeeShopId == shopById.Id
-								&& (tr.CreatedAt <= preFrom && tr.CreatedAt >= preTo)
+								&& (tr.CreatedAt >= preFrom && tr.CreatedAt <= preTo)
 								&& (tr.TransactionType == TransactionType.Package ||
 									tr.TransactionType == TransactionType.RemoveProducts ||
 									tr.TransactionType == TransactionType.Refund))
@@ -164,13 +168,20 @@ public class GetOutcomeTransactionForShopByMonthHandler : IRequestHandler<GetOut
 						};
 		if (curTransactionForShop.Any())
 		{
+			newIncomeForShopResponse.Transactions = new();
 			foreach (var type in transactionTypeResponse)
 			{
-				newIncomeForShopResponse.Transactions.Add(new()
+				var TotalAmount = curTransactionForShop.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount);
+				if (TotalAmount != 0)
 				{
-					Amount = curTransactionForShop.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount),
-					TransactionTypes = type
-				});
+					newIncomeForShopResponse.Transactions.Add(new()
+					{
+						Amount = TotalAmount,
+						TotalTransaction = curTransactionForShop.Where(tr => tr.TransactionType == type).Count(),
+						TransactionTypes = type
+					});
+				}
+					
 			}
 		}
 

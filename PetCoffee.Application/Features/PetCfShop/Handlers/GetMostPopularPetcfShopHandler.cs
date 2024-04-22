@@ -42,35 +42,32 @@ public class GetMostPopularPetcfShopHandler : IRequestHandler<GetMostPopularPetc
 
 		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
 			predicate: request.GetExpressions(),
+			includes: new List<System.Linq.Expressions.Expression<Func<PetCoffeeShop, object>>>()
+			{
+				ps => ps.Promotions,
+				ps => ps.Follows
+			},
 			disableTracking: true
 		)).ToList();
-		var response = new List<PetCoffeeShopForCardResponse>();
 
-		if (request.Longitude == 0 || request.Latitude == 0)
+		var response = stores.Select(store =>
 		{
-			foreach (var store in stores)
+			var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+
+			if (request.Longitude != 0 || request.Latitude != 0)
 			{
-				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
-				storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
-				response.Add(storeRes);
-			}
-		}
-		else
-		{
-			foreach (var store in stores)
-			{
-				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
 				storeRes.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
-				storeRes.TotalFollow = storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
-
-				response.Add(storeRes);
 			}
-		}
-		response = response.OrderBy(x => x.TotalFollow).ThenBy(x => x.CreatedAt).ToList();
+
+			storeRes.TotalFollow = store.Follows.Count();
+			return storeRes;
+		}).OrderByDescending(x => x.TotalFollow).ThenByDescending(x => x.CreatedAt).ToList();
+
 		response = response
 			   .Skip((request.PageNumber - 1) * request.PageSize)
 			   .Take(request.PageSize)
 			   .ToList();
+
 		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
 			response,
 			stores.Count(),

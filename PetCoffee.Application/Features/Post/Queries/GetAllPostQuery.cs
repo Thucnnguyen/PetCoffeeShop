@@ -24,6 +24,8 @@ namespace PetCoffee.Application.Features.Post.Queries
 				Expression = Expression.And(post => (post.Content != null && post.Content.ToLower().Contains(Search)));
 			}
 
+			Expression = Expression.And(post => !post.Deleted);
+
 			return Expression;
 		}
 	}

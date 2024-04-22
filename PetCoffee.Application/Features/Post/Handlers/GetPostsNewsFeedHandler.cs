@@ -64,16 +64,16 @@ namespace PetCoffee.Application.Features.Post.Handlers
 			if (followedShopIds.Any())
 			{
 				postsQuery = postsQuery
-							.OrderByDescending(post => post.PostPetCoffeeShops.Any(pcs => followedShopIds.Select(f => f.ShopId).Contains(pcs.ShopId)))
-							.ThenByDescending(post => post.Likes.Count)
-							.ThenByDescending(post => post.CreatedAt);
+							.OrderByDescending(post => post.CreatedAt)
+							.ThenByDescending(post => post.PostPetCoffeeShops.Any(pcs => followedShopIds.Select(f => f.ShopId).Contains(pcs.ShopId)))
+							.ThenByDescending(post => post.Likes.Count);
 			}
 			else
 			{
 
 				postsQuery = postsQuery
-					.OrderByDescending(post => post.Likes.Count)
-					.ThenByDescending(post => post.CreatedAt);
+					.OrderByDescending(post => post.CreatedAt)
+					.ThenByDescending(post => post.Likes.Count);
 			}
 
 

@@ -23,7 +23,5 @@ namespace PetCoffee.Domain.Entities
 
 		[InverseProperty(nameof(AccountPromotion.Promotion))]
 		public IList<AccountPromotion> AccountPromotions { get; set; } = new List<AccountPromotion>();
-
-
 	}
 }

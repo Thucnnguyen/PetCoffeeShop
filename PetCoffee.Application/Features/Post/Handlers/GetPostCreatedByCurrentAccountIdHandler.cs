@@ -33,12 +33,13 @@ public class GetPostCreatedByCurrentAccountIdHandler : IRequestHandler<GetPostCr
 			throw new ApiException(ResponseCode.AccountNotExist);
 		}
 
-		var Posts = _unitOfWork.PostRepository.Get(p => p.CreatedById == currentAccount.Id && p.Status == PostStatus.Active)
+		var Posts = _unitOfWork.PostRepository.Get(p => p.CreatedById == currentAccount.Id && p.Status == PostStatus.Active && !p.Deleted)
 				.Include(p => p.PostCategories)
 				.ThenInclude(c => c.Category)
 				.Include(p => p.PostPetCoffeeShops)
 				.ThenInclude(shop => shop.Shop)
-				.Include(p => p.CreatedBy);
+				.Include(p => p.CreatedBy)
+				.OrderByDescending(p => p.CreatedAt);
 
 		if (Posts == null)
 		{

@@ -63,7 +63,7 @@ public class CustomerRegisterHandler : IRequestHandler<CustomerRegisterCommand, 
 		var EmailContent = string.Format(EmailConstant.EmailForm, account.FullName, account.OTP);
 		await _azureService.SendEmail(account.Email, EmailContent, EmailConstant.EmailSubject);
 		await _schedulerService.DeleteAccountNotVerify(account.Id, account.CreatedAt.AddDays(2));
-		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(newAccount));
+		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(newAccount), newAccount.Status);
 		return resp;
 	}
 }

@@ -1,22 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
-using PetCoffee.Application.Features.PetCfShop.Models;
 using PetCoffee.Application.Features.Post.Model;
 using PetCoffee.Application.Features.Post.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
-using PetCoffee.Shared.Ultils;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PetCoffee.Application.Features.Post.Handlers
 {
@@ -61,23 +54,39 @@ namespace PetCoffee.Application.Features.Post.Handlers
 
 			//var postPetCfShop = await _unitOfWork.PostCoffeeShopRepository.GetAsync(pc => pc.ShopId == CurrentShop.Id);
 
-			var postPetCfShop = (await _unitOfWork.PostCoffeeShopRepository.GetAsync(
-	predicate: p => p.ShopId == request.ShopId && !p.Deleted,
-	includes: new List<Expression<Func<PostPetCoffeeShop, object>>>()
-		{
-					shop => shop.Post
-		},
-	disableTracking: true
-	)).ToList();
+			//var postPetCfShop = await _unitOfWork.PostCoffeeShopRepository.Get(
+			//					predicate: p => p.ShopId == request.ShopId && !p.Deleted,
+			//					disableTracking: true
+			//				)
+			//				.Include(p => p.Post)
+								
+											
+			//				.ToListAsync();
+			var postPetCfShop = _unitOfWork.PostRepository.Get(
+			  predicate: p => p.PostPetCoffeeShops.Any(p => p.ShopId == request.ShopId && !p.Deleted),
+			  disableTracking: true
+			)
+			.Include(p => p.Likes)
+			.Include(p => p.PetCoffeeShop)
+			.Include(p => p.Comments)
+			.Include(p => p.PostCategories)
+			.ThenInclude(c => c.Category)
+			.Include(p => p.PostPetCoffeeShops)
+			.ThenInclude(shop => shop.Shop)
+			.Include(p => p.CreatedBy)
+			.AsQueryable();
 
 			var response = new List<PostResponse>();
 
-			foreach (var postTag in  postPetCfShop)
+			foreach (var post in postPetCfShop)
 			{
-				var postTagRes = _mapper.Map<PostResponse>(postTag.Post);
-			
+				var postResponse = _mapper.Map<PostResponse>(post);
+				postResponse.TotalComment = post.Comments.Count();
+				postResponse.TotalLike = post.Likes.Count();
+				postResponse.IsLiked = post.Likes.FirstOrDefault(l => l.CreatedById == currentAccount.Id) != null;
 
-				response.Add(postTagRes);
+
+				response.Add(postResponse);
 			}
 
 			response = response

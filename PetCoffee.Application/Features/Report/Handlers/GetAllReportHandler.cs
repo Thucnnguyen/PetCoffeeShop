@@ -38,6 +38,7 @@ public class GetAllReportHandler : IRequestHandler<GetAllReportQuery, Pagination
 				.ThenInclude(p => p.CreatedBy)
 			.Include(r => r.Post)
 				.ThenInclude(p => p.PetCoffeeShop)
+			.OrderByDescending(r => r.Id)
 			.AsQueryable();
 
 		return new PaginationResponse<Domain.Entities.Report, ReportResponse>(

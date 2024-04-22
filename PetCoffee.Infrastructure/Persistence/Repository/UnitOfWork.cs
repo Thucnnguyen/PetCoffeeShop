@@ -84,6 +84,7 @@ public class UnitOfWork : IUnitOfWork
 
 	private IPromotionRepository? _promotionRepository;
 	private IAccountPromotionRepository? _accountPromotionRepository;
+	private ITransactionProductRespostiory? _transactionProductRespostiory;
 
 
 
@@ -128,5 +129,6 @@ public class UnitOfWork : IUnitOfWork
     public IReservationProductRepository ReservationProductRepository => _reservationProductRepository ??= new ReservationProductRepository(_dbContext);
 	public IPromotionRepository PromotionRepository => _promotionRepository ??= new PromotionRepository(_dbContext);
 	public IAccountPromotionRepository AccountPromotionRepository => _accountPromotionRepository ??= new AccountPromotionRepository(_dbContext);
+	public ITransactionProductRespostiory TransactionProductRespostiory => _transactionProductRespostiory ??= new TransactionProductRespostiory(_dbContext);
 
 }

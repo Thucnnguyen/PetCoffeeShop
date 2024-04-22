@@ -38,7 +38,6 @@ internal class GetShopOutComeHandler : IRequestHandler<GetShopOutComeQuery, Inco
 		if (!currentAccount.AccountShops.Any(acs => acs.ShopId == request.ShopId))
 		{
 			throw new ApiException(ResponseCode.PermissionDenied);
-
 		}
 
 		var shop = await _unitOfWork.PetCoffeeShopRepository
@@ -50,7 +49,7 @@ internal class GetShopOutComeHandler : IRequestHandler<GetShopOutComeQuery, Inco
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
 		var monthAmounts = new LinkedList<decimal>();
-		for (var i = request.Months; i >= 0; --i)
+		for (var i = request.Months-1; i >= 0; --i)
 		{
 
 			var month = DateTimeOffset.UtcNow.AddMonths(-i);

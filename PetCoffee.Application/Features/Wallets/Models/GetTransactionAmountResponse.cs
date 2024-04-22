@@ -14,6 +14,7 @@ public class GetTransactionAmountResponse
 
 public class TransactionAmountResponse
 {
-	public decimal Amount { get; set; }	
+	public decimal Amount { get; set; }
+	public int TotalTransaction { get; set; } = 0;
 	public TransactionType TransactionTypes { get; set; }
 }

@@ -103,6 +103,7 @@ public enum ResponseCode
 
 	[Description("Gói không tồn tại")] PackageNotExist,
 	[Description("Thời hạn của gói đã tồn tại nha")] PackageisExisted,
+	[Description("Tên của gói đã tồn tại nha")] PackageNameIsExisted,
 
 
 	//Product

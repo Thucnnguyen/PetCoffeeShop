@@ -24,6 +24,7 @@ namespace PetCoffee.Application.Features.Reservation.Queries
 
         public DateTimeOffset? To { get; set; }
 
+        public long? ShopId { get; set; }
         public override Expression<Func<Domain.Entities.Reservation, bool>> GetExpressions()
         {
             if (Status is not null)
@@ -39,10 +40,13 @@ namespace PetCoffee.Application.Features.Reservation.Queries
                 Expression = Expression.And(order => To == null || order.CreatedAt.Date <= To);
 
             }
+			if (Search is not null)
+			{
+				Expression = Expression.And(reservation =>  reservation.Code.Contains(Search));
+			}
 
-          
 
-            return Expression;
+			return Expression;
         }
     }
 }

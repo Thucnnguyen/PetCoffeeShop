@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.PetCfShop.Queries;
 
-public class GetAllPetCfShopRequestQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
+public class GetAllPetCfShopQuery : PaginationRequest<PetCoffeeShop>, IRequest<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
 {
 	private string? _search;
 

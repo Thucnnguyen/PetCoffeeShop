@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LinqKit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
@@ -40,17 +41,47 @@ namespace PetCoffee.Application.Features.Promotion.Handlers
 			{
 				throw new ApiException(ResponseCode.ShopNotExisted);
 			}
+			var Promotions = new List<Domain.Entities.Promotion>();
+			if (currentAccount.IsCustomer)
+			{
+				request.GetOrder();
+				var expression = request.GetExpressions().And(p => p.From<= DateTimeOffset.UtcNow && p.To >= DateTimeOffset.UtcNow);
+				Promotions= await _unitOfWork.PromotionRepository
+					   .Get(predicate: request.GetExpressions())
+					   .OrderBy(p => p.From)
+					   .ThenByDescending(p => p.Percent)
+					   .Include(pr => pr.AccountPromotions)
+					   .ToListAsync();
+			}
+			else
+			{
+				Promotions = await _unitOfWork.PromotionRepository
+					   .Get(predicate: request.GetExpressions())
+					   .OrderByDescending(p => p.CreatedAt)
+					   .Include(pr => pr.AccountPromotions)
+					   .ToListAsync();
+			}
+			
 
-			var Promotions = _unitOfWork.PromotionRepository
-						.Get(predicate: request.GetExpressions())
-						.Include(pr => pr.AccountPromotions)
-						.AsQueryable();
+			var promotionPagging = Promotions
+					.Skip((request.PageNumber - 1) * request.PageSize)
+					.Take(request.PageSize)
+					.ToList(); // Fetch and filter promotions
+
+			var promotionResponses = promotionPagging.Select(promotion =>
+			{
+				var promotionResponse = _mapper.Map<PromotionResponse>(promotion);
+				promotionResponse.IsUsed = promotion.AccountPromotions.Any(ap => ap.AccountId == currentAccount.Id);
+				return promotionResponse;
+			})
+			.ToList();
 
 			return new PaginationResponse<Domain.Entities.Promotion, PromotionResponse>(
-					Promotions,
+					promotionResponses,
+					Promotions.Count(),
 					request.PageNumber,
-					request.PageSize,
-					promotion => _mapper.Map<PromotionResponse>(promotion));
+					request.PageSize
+			);
 		}
 	}
 }

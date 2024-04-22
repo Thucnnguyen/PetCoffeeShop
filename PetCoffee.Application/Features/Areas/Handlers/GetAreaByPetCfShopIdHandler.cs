@@ -33,15 +33,11 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 			{
 				throw new ApiException(ResponseCode.AccountNotExist);
 			}
-			//if (currentAccount.IsVerify)
-			//{
-			//    throw new ApiException(ResponseCode.AccountNotActived);
-			//}
+		
 			var CurrentShop = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-		predicate: p => p.Id == request.ShopId,
-
-		disableTracking: true
-		)).FirstOrDefault();
+										predicate: p => p.Id == request.ShopId && !p.Deleted,
+									disableTracking: true
+								)).FirstOrDefault();
 
 			if (CurrentShop == null)
 			{
@@ -51,9 +47,13 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 			var areas = _unitOfWork.AreaRepsitory.Get(c => c.PetcoffeeShopId == request.ShopId && !c.Deleted, disableTracking: true)
 												.ToList();
 
+			var areaResponses = areas
+						 .Skip((request.PageNumber - 1) * request.PageSize)
+						 .Take(request.PageSize);
+
 			var response = new List<AreaResponse>();
 
-			foreach (var area in areas)
+			foreach (var area in areaResponses)
 			{
 				var areaResponse = _mapper.Map<AreaResponse>(area);
 				var pets = await _unitOfWork.PetRepository
@@ -68,7 +68,7 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 
 			return new PaginationResponse<Domain.Entities.Area, AreaResponse>(
 					response,
-					response.Count(),
+					areas.Count(),
 					request.PageNumber,
 					request.PageSize);
 		}

@@ -44,7 +44,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 				.Get(p => p.Id == request.postId && p.Status == Domain.Enums.PostStatus.Active)
 				.Include(p => p.CreatedBy)
 				.FirstOrDefaultAsync();
-			if (post != null)
+			if (post == null)
 			{
 				throw new ApiException(ResponseCode.PostNotExisted);
 			}
@@ -55,7 +55,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 			}
 
 			// check already report
-			var reportPost = await _unitOfWork.ReportRepository.GetAsync(l => l.PostID == request.postId && l.CreatedById == curAccount.Id);
+			var reportPost = await _unitOfWork.ReportRepository.GetAsync(l => l.PostID == request.postId && l.CreatedById == curAccount.Id && l.Status == ReportStatus.Processing);
 			if (reportPost.Any())
 			{
 				return false;
@@ -68,7 +68,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 
 			//send Notification for admin  staff platform
 			var adminAndStaffAccount = await _unitOfWork.AccountRepository
-									.Get(a => a.IsAdmin && a.IsPlatformStaff && !a.Deleted)
+									.Get(a => (a.IsAdmin || a.IsPlatformStaff) && !a.Deleted && a.Status == AccountStatus.Active)
 									.ToListAsync();
 
 			newReportPost.Post = post;

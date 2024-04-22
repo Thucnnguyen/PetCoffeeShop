@@ -37,17 +37,16 @@ namespace PetCoffee.Application.Features.Areas.Handlers
             var shopId = request.ShopId;
 
 
-            //var availableAreas =  _unitOfWork.AreaRepsitory.Get(
-            //    predicate: a => a.PetcoffeeShopId == shopId &&
-            //                     !a.Reservations.Any(r => !(r.StartTime >= request.EndTime || r.EndTime <= request.StartTime))).ToList();
-
             var availableAreas = _unitOfWork.AreaRepsitory.Get(
-                predicate: a => a.PetcoffeeShopId == shopId).ToList();
+                predicate: a => a.PetcoffeeShopId == shopId && !a.Deleted).ToList();
 
+			var areaResponses = availableAreas
+						 .Skip((request.PageNumber - 1) * request.PageSize)
+						 .Take(request.PageSize);
 
-            var response = new List<AreaResponse>();
+			var response = new List<AreaResponse>();
 
-            foreach (var area in availableAreas)
+            foreach (var area in areaResponses)
             {
                 var existingReservations = await _unitOfWork.ReservationRepository
                     .GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success)
@@ -56,7 +55,6 @@ namespace PetCoffee.Application.Features.Areas.Handlers
                 var test = await _unitOfWork.ReservationRepository
                     .GetAsync(r => r.AreaId == area.Id);
 
-                //var totalSeatsBooked = existingReservations.Sum(r => r.TotalSeatBook);
                 var totalSeated = existingReservations.Sum(x => x.BookingSeat);
 
                 var availableSeat = area.TotalSeat - totalSeated < 0 ? 0 : area.TotalSeat - totalSeated;
@@ -75,50 +73,12 @@ namespace PetCoffee.Application.Features.Areas.Handlers
 
             return new PaginationResponse<Domain.Entities.Area, AreaResponse>(
                 response,
-                response.Count(),
+				availableAreas.Count(),
                 request.PageNumber,
                 request.PageSize);
         }
     }
 
 }
-
-
-//
-//List<AreaResponse> response = new List<AreaResponse>(); 
-
-//foreach(var  area in availableAreas)
-//{
-//    var existingReservations = await _unitOfWork.ReservationRepository
-//.GetAsync(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status != OrderStatus.Processing));
-
-
-//    //existingReservations = existingReservations
-//    //    .Where(r => r.Status == OrderStatus.Success)
-//    //    .ToList();
-
-//    var avaliableSeat = area.TotalSeat - existingReservations.Count();
-//    var rs = _mapper.Map<AreaResponse>(area);
-//    rs.AvailableSeat = avaliableSeat;
-//    response.Add(rs);
-//}
-
-//
-//List<AreaResponse> response = new List<AreaResponse>();
-
-//foreach (var area in availableAreas)
-//{
-//    var existingReservations =  _unitOfWork.ReservationRepository
-//        .Get(r => r.AreaId == area.Id && (r.Status == OrderStatus.Success || r.Status == OrderStatus.Processing)).ToList();
-
-//    var avaliableSeat = area.TotalSeat - existingReservations.Count();
-
-//    // You may want to filter out "Processing" reservations here:
-//    // existingReservations = existingReservations.Where(r => r.Status == OrderStatus.Success || r.Status == OrderStatus.Cancelled).ToList();
-
-//    var rs = _mapper.Map<AreaResponse>(area);
-//    rs.AvailableSeat = avaliableSeat;
-//    response.Add(rs);
-//
 
 

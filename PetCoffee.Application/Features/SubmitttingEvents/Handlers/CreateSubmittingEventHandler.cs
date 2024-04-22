@@ -7,6 +7,7 @@ using PetCoffee.Application.Features.SubmitttingEvents.Commands;
 using PetCoffee.Application.Features.SubmitttingEvents.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Application.Service.Notifications;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 
@@ -17,12 +18,14 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly ICurrentAccountService _currentAccountService;
 	private readonly IMapper _mapper;
+	private readonly INotifier _notifier;
 
-	public CreateSubmittingEventHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper)
+	public CreateSubmittingEventHandler(IUnitOfWork unitOfWork, ICurrentAccountService currentAccountService, IMapper mapper, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_currentAccountService = currentAccountService;
 		_mapper = mapper;
+		_notifier = notifier;
 	}
 
 	public async Task<SubmittingEventResponse> Handle(CreateSubmittingEventCommand request, CancellationToken cancellationToken)
@@ -51,10 +54,10 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 			throw new ApiException(ResponseCode.SubmittingEventIsExist);
 		}
 
-		if(CheckEvent.Status == EventStatus.Closed)
+		if (CheckEvent.Status == EventStatus.Closed)
 		{
 			throw new ApiException(ResponseCode.EventIsClosed);
-		}	
+		}
 
 		// check is max participation
 		if (CheckEvent.MaxParticipants == CheckEvent.SubmittingEvents.Count())
@@ -96,6 +99,7 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 		}
 		var GetNewSubmittingEvent = _unitOfWork.SubmittingEventRepsitory.Get(s => s.Id == NewSubmittingEvent.Id)
 									.Include(s => s.Event)
+									.Include(s => s.CreatedBy)
 									.Include(s => s.SubmittingEventFields)
 									.FirstOrDefault();
 
@@ -104,6 +108,20 @@ public class CreateSubmittingEventHandler : IRequestHandler<CreateSubmittingEven
 		if (GetNewSubmittingEvent.SubmittingEventFields.Any())
 		{
 			response.EventFields = GetNewSubmittingEvent.SubmittingEventFields.Select(a => _mapper.Map<EventFieldResponse>(a)).ToList();
+		}
+		var managerAccount = await _unitOfWork.AccountRepository
+			.Get(a => a.IsManager && a.AccountShops.Any(ac => ac.ShopId == GetNewSubmittingEvent.Event.PetCoffeeShopId))
+			.FirstOrDefaultAsync();
+		if (managerAccount != null)
+		{
+			var notification = new Notification(
+					account: managerAccount,
+					type: NotificationType.JoinEvent,
+					entityType: EntityType.Event,
+					data: GetNewSubmittingEvent,
+					shopId: GetNewSubmittingEvent.Event.PetCoffeeShopId
+				);
+			await _notifier.NotifyAsync(notification, true);
 		}
 		return response;
 	}

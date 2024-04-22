@@ -38,10 +38,12 @@ namespace PetCoffee.Application.Features.Items.Handlers
 				throw new ApiException(ResponseCode.AccountNotActived);
 			}
 			var items = await _unitOfWork.ItemRepository.GetAsync(i => !i.Deleted);
-			//var Expression = request.GetExpressions();
-			//var items = await _unitOfWork.ItemRepository.Get(Expression).ToListAsync();
+			var ShowItems = items
+						 .Skip((request.PageNumber - 1) * request.PageSize)
+						 .Take(request.PageSize);
+
 			var response = new List<ItemResponse>();
-			foreach (var i in items)
+			foreach (var i in ShowItems)
 			{
 				var itemResponse = _mapper.Map<ItemResponse>(i);
 				response.Add(itemResponse);
@@ -50,7 +52,7 @@ namespace PetCoffee.Application.Features.Items.Handlers
 
 			return new PaginationResponse<Item, ItemResponse>(
 				response,
-				response.Count(),
+				items.Count(),
 				request.PageNumber,
 				request.PageSize);
 		}

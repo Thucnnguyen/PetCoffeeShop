@@ -30,11 +30,15 @@ public class UpdatePackageHandler : IRequestHandler<UpdatePackageCommand, Packag
 	public async Task<PackageResponse> Handle(UpdatePackageCommand request, CancellationToken cancellationToken)
 	{
 		var isExistedPackage = await _unitOfWork.PackagePromotionRespository
-							.Get(p => p.Duration == request.Duration && !p.Deleted)
+							.Get(p => p.Id != request.Id && (p.Duration == request.Duration || p.Description == request.Description) && !p.Deleted)
 							.FirstOrDefaultAsync();
-		if (isExistedPackage != null)
+		if (isExistedPackage != null && isExistedPackage.Duration == request.Duration)
 		{
 			throw new ApiException(ResponseCode.PackageisExisted);
+		}
+		if(isExistedPackage != null && isExistedPackage.Description == request.Description)
+		{
+			throw new ApiException(ResponseCode.PackageNameIsExisted);
 		}
 
 		var updatedPackage = await _unitOfWork.PackagePromotionRespository

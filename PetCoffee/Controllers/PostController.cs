@@ -66,6 +66,22 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
+		[HttpPut("posts")]
+		[Authorize]
+		public async Task<ActionResult<PostResponse>> UpdatePost([FromForm] UpdatePostCommand request)
+
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
+		[HttpDelete("posts/{Id}")]
+		[Authorize]
+		public async Task<ActionResult<bool>> DeletePost([FromRoute] DeletePostCommand request)
+
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 		[HttpDelete("posts/{PostId}/likes")]
 		[Authorize]
 		public async Task<ActionResult<bool>> DeleteLikePost([FromRoute] DeleteLikePostCommand request)

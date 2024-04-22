@@ -8,9 +8,8 @@ using PetCoffee.Application.Features.Wallets.Models;
 using PetCoffee.Application.Features.Wallets.Queries;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
+using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
-using System.Linq;
-using static Google.Apis.Requests.BatchRequest;
 
 namespace PetCoffee.Application.Features.Wallets.Handlers;
 
@@ -68,13 +67,13 @@ public class GetIncomeTransactionForShopByMonthHandler : IRequestHandler<GetInco
 
 			var preTransactions = await _unitOfWork.TransactionRepository
 								.Get(tr => tr.PetCoffeeShopId != null && shopIds.Contains(tr.PetCoffeeShopId.Value)
-								&& (tr.CreatedAt <= preFrom && tr.CreatedAt >= preTo)
+								&& (tr.CreatedAt >= preFrom && tr.CreatedAt <= preTo)
 								&& (tr.TransactionType == TransactionType.Donate ||
 									tr.TransactionType == TransactionType.Reserve ||
 									tr.TransactionType == TransactionType.AddProducts))
 								.ToListAsync();
 
-			var TransactionDic = new Dictionary<TransactionType, decimal>();
+			var TransactionDic = new Dictionary<TransactionType, List<Transaction>>();
 			decimal PreTotal = 0;
 			decimal CurTotal = 0;
 			//get inconme each months
@@ -97,11 +96,12 @@ public class GetIncomeTransactionForShopByMonthHandler : IRequestHandler<GetInco
 				{
 					if (TransactionDic.ContainsKey(type))
 					{
-						TransactionDic[type] += curTransaction.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount);
+						TransactionDic[type].AddRange(curTransaction.Where(tr => tr.TransactionType == type));
 					}
 					else
 					{
-						TransactionDic.Add(type, curTransaction.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount));
+						TransactionDic.Add(type, new());
+						TransactionDic[type].AddRange(curTransaction.Where(tr => tr.TransactionType == type));
 					}
 				}
 			}
@@ -110,16 +110,24 @@ public class GetIncomeTransactionForShopByMonthHandler : IRequestHandler<GetInco
 				Balance = CurTotal,
 				Percent = PreTotal == 0 ? 0 : (decimal)(CurTotal / PreTotal) * 100,
 				IsUp = CurTotal > PreTotal,
-				Transactions = curTransactions.Any() ? TransactionDic.Select(td => new TransactionAmountResponse()
-				{
-					Amount = td.Value,
-					TransactionTypes = td.Key,
-				}).ToList() : null
+				Transactions = curTransactions.Any()
+									? TransactionDic.Where(td => td.Value.Sum(t => t.Amount) > 0)  
+								.Select(td => new TransactionAmountResponse()
+								{
+									Amount = td.Value.Sum(t => t.Amount),
+									TotalTransaction = td.Value.Count(),
+									TransactionTypes = td.Key
+								})
+								.ToList()
+								: null
 			};
 			return response;
 		}
 
-
+		if(!currentAccount.AccountShops.Any(acs => acs.ShopId == request.ShopId))
+		{
+			throw new ApiException(ResponseCode.PermissionDenied);
+		}
 		var shopById = await _unitOfWork.PetCoffeeShopRepository
 			.Get(s => s.Id == request.ShopId && !s.Deleted)
 			.FirstOrDefaultAsync();
@@ -166,13 +174,20 @@ public class GetIncomeTransactionForShopByMonthHandler : IRequestHandler<GetInco
 							TransactionType.Reserve,
 							TransactionType.AddProducts
 						};
+			newIncomeForShopResponse.Transactions = new();
 			foreach (var type in transactionTypeResponse)
 			{
-				newIncomeForShopResponse.Transactions.Add(new()
+				var TotalAmount = curTransactionForShop.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount);
+				if(TotalAmount != 0)
 				{
-					Amount = curTransactionForShop.Where(tr => tr.TransactionType == type).Sum(tr => tr.Amount),
-					TransactionTypes = type
-				});
+					newIncomeForShopResponse.Transactions.Add(new()
+					{
+						Amount = TotalAmount,
+						TotalTransaction = curTransactionForShop.Where(tr => tr.TransactionType == type).Count(),
+						TransactionTypes = type
+					});
+				}
+				
 			}
 		}
 		return newIncomeForShopResponse;

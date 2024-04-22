@@ -12,6 +12,7 @@ public class Notification : BaseAuditableEntity
 	public string Title { get; set; }
 	public string Content { get; set; }
 	public string? Data { get; set; }
+	public bool? IsReportForComment { get; set; } = false;
 	public EntityType EntityType { get; set; }
 	public NotificationType Type { get; set; }
 	public string? ReferenceId { get; set; }
@@ -121,12 +122,12 @@ public class Notification : BaseAuditableEntity
 						throw new Exception($"[Notification] Data is required. Type: {Type}");
 					}
 
-					var newEvent = (Event)data;
+					var newEvent = (SubmittingEvent)data;
 
 					Title = $"Có người mới tham gia sự kiện của bạn";
-					Content = $"{newEvent.PetCoffeeShop.Name} đã tham gia {newEvent.Title} ";
+					Content = $"{newEvent.CreatedBy.FullName} đã tham gia {newEvent.Event.Title} ";
 					Level = NotificationLevel.Information;
-					ReferenceId = newEvent.Id.ToString();
+					ReferenceId = newEvent.Event.Id.ToString();
 
 					break;
 				}
@@ -206,8 +207,8 @@ public class Notification : BaseAuditableEntity
 					Title = $"Có báo cáo mới về bình luận!";
 					Content = $"{reportComment.CreatedBy.FullName} đã báo cáo  bình luận";
 					Level = NotificationLevel.Information;
-					ReferenceId = reportComment.Id.ToString();
-
+					ReferenceId = reportComment.CommentId.ToString();
+					IsReportForComment = true;
 					break;
 				}
 			case NotificationType.NewReportPost:
@@ -222,7 +223,7 @@ public class Notification : BaseAuditableEntity
 					Title = $"Có báo cáo mới về bài viết!";
 					Content = $"{reportComment.CreatedBy.FullName} đã báo cáo một bài viết";
 					Level = NotificationLevel.Information;
-					ReferenceId = reportComment.Id.ToString();
+					ReferenceId = reportComment.PostID.ToString();
 
 					break;
 				}
@@ -236,7 +237,7 @@ public class Notification : BaseAuditableEntity
 					var reservation = (Reservation)data;
 
 					Title = $"Thú cưng trong đơn hàng của bạn đổi tầng";
-					Content = $"Thú cưng trong đơn hàng {reservation.Code} đã chuyển sang tầng khác bạn có thể hủy đơn hàng và hoàn về 100%";
+					Content = $"Đơn hàng {reservation.Code} có thể hủy và hoàn về 100%";
 					Level = NotificationLevel.Information;
 					ReferenceId = reservation.Id.ToString();
 
@@ -249,12 +250,44 @@ public class Notification : BaseAuditableEntity
 						throw new Exception($"[Notification] Data is required. Type: {Type}");
 					}
 
-					var reservation = (PetCoffeeShop)data;
+					var shop = (PetCoffeeShop)data;
 
 					Title = $"Cửa hàng của bạn chưa có thú cưng nào";
 					Content = $"Cửa hàng của bạn chưa có bất kì thú cưng nào vui lòng cập nhật thông tin thú cưng quán của bạn";
 					Level = NotificationLevel.Warning;
-					ReferenceId = reservation.Id.ToString();
+					ReferenceId = shop.Id.ToString();
+
+					break;
+				}
+			case NotificationType.NewShopRequest:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var shop = (PetCoffeeShop)data;
+
+					Title = $"Có đăng ký cửa hàng mới";
+					Content = $"{shop.CreatedBy.FullName} đã đăng ký cửa hàng {shop.Name}";
+					Level = NotificationLevel.Information;
+					ReferenceId = shop.Id.ToString();
+
+					break;
+				}
+			case NotificationType.CancelEvent:
+				{
+					if (data == null)
+					{
+						throw new Exception($"[Notification] Data is required. Type: {Type}");
+					}
+
+					var events = (Event)data;
+
+					Title = $"Sự Kiện bạn đăng ký đã hủy!";
+					Content = $"{events.Title} đã hủy do không đủ số lượng người tham gia";
+					Level = NotificationLevel.Information;
+					ReferenceId = events.Id.ToString();
 
 					break;
 				}

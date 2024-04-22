@@ -21,6 +21,8 @@ namespace PetCoffee.Domain.Entities
 
 		[InverseProperty(nameof(ReservationProduct.Product))]
 		public IList<ReservationProduct> Invoices { get; set; } = new List<ReservationProduct>();
+		[InverseProperty(nameof(TransactionProduct.Product))]
+		public IList<TransactionProduct> TransactionProducts { get; set; } = new List<TransactionProduct>();
 
 
 

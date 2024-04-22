@@ -42,16 +42,12 @@ namespace PetCoffee.Application.Features.Reservation.Queries
                 Expression = Expression.And(order => To == null || order.CreatedAt.Date <= To);
 
             }
-            if (Search is not null)
-            {
-                Expression = Expression
-                    .And(reservation => (reservation.CreatedBy.FullName != null && reservation.CreatedBy.FullName.ToLower().Contains(Search))
-                    || (reservation.CreatedBy.PhoneNumber != null && reservation.CreatedBy.PhoneNumber.Trim() == Search)
-                    || (reservation.Code != null && reservation.Code == Search)
-                    );
-            }
+			if (Search is not null)
+			{
+				Expression = Expression.And(reservation => reservation.Code.Contains(Search));
+			}
 
-            Expression = Expression.And(reservation => (reservation.Area.PetcoffeeShopId == ShopId));
+			Expression = Expression.And(reservation => (reservation.Area.PetcoffeeShopId == ShopId));
             
             return Expression;
         }

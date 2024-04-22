@@ -20,4 +20,6 @@ public class PetCoffeeShopForCardResponse
 	public DateTimeOffset CreatedAt { get; set; }
 	public double? Latitude { get; set; }
 	public double? Longitude { get; set; }
+	public double? Rates { get; set; } = 0;
+	public bool? HasPromotion { get; set; } = false;
 }

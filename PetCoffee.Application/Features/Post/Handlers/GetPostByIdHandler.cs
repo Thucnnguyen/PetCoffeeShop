@@ -37,10 +37,11 @@ namespace PetCoffee.Application.Features.Post.Handlers
 			.Include(p => p.Comments)
 			.Include(p => p.Likes)
 			.Include(p => p.PostCategories)
-			.ThenInclude(c => c.Category)
+				.ThenInclude(c => c.Category)
 			.Include(p => p.PostPetCoffeeShops)
-			.ThenInclude(shop => shop.Shop)
-		   .Include(p => p.CreatedBy)
+				.ThenInclude(shop => shop.Shop)
+		    .Include(p => p.CreatedBy)
+			.Include(p => p.PetCoffeeShop)
 			.Where(p => !reportedPostIds.Contains(p.Id))
 			.FirstOrDefaultAsync();
 
@@ -52,8 +53,7 @@ namespace PetCoffee.Application.Features.Post.Handlers
 			var postResponse = _mapper.Map<PostResponse>(post);
 			postResponse.TotalComment = post.Comments.Count();
 			postResponse.TotalLike = post.Likes.Count();
-			postResponse.IsLiked = (await _unitOfWork.LikeRepository.GetAsync(l => l.PostId == post.Id && l.CreatedById == currentAccount.Id)).Any();
-
+			postResponse.IsLiked = post.Likes.Any(l => l.CreatedById == currentAccount.Id);		
 			return postResponse;
 
 		}

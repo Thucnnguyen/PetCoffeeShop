@@ -42,12 +42,15 @@ public class GetFollowShopForCurrentUserHandler : IRequestHandler<GetFollowShopF
 		var Expression = request.GetExpressions().And(f => f.CreatedById == CurrentUser.Id);
 		var follows = await _unitOfWork.FollowPetCfShopRepository.Get(Expression)
 									.Include(f => f.Shop)
+										.ThenInclude(s => s.Promotions)
 									.ToListAsync();
-
+		var followResponse = follows
+						 .Skip((request.PageNumber - 1) * request.PageSize)
+						 .Take(request.PageSize);
 		var response = new List<PetCoffeeShopForCardResponse>();
 		if (request.Longitude != 0 && request.Latitude != 0)
 		{
-			foreach (var f in follows)
+			foreach (var f in followResponse)
 			{
 				if (f.Shop == null) continue;
 				var shopResponse = _mapper.Map<PetCoffeeShopForCardResponse>(f.Shop);
@@ -68,7 +71,7 @@ public class GetFollowShopForCurrentUserHandler : IRequestHandler<GetFollowShopF
 		}
 		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
 			response,
-			response.Count(),
+			follows.Count(),
 			request.PageNumber,
 			request.PageSize);
 	}

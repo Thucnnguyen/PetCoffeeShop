@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using MediatR;
+using PetCoffee.Application.Common.Constantsl;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Auth.Commands;
@@ -16,13 +17,11 @@ public class LoginEmailPassHandler : IRequestHandler<LoginEmailPassCommand, Acce
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IJwtService _jwtService;
-	private readonly IMapper _mapper;
 
-	public LoginEmailPassHandler(IUnitOfWork unitOfWork, IJwtService jwtService, IMapper mapper)
+	public LoginEmailPassHandler(IUnitOfWork unitOfWork, IJwtService jwtService)
 	{
 		_unitOfWork = unitOfWork;
 		_jwtService = jwtService;
-		_mapper = mapper;
 	}
 
 	public async Task<AccessTokenResponse> Handle(LoginEmailPassCommand request, CancellationToken cancellationToken)
@@ -40,7 +39,6 @@ public class LoginEmailPassHandler : IRequestHandler<LoginEmailPassCommand, Acce
 		{
 			throw new ApiException(ResponseCode.AccountIsInactive);
 		}
-		var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(isExisted));
-		return resp;
+		return new AccessTokenResponse(_jwtService.GenerateJwtToken(isExisted), isExisted.Status);
 	}
 }

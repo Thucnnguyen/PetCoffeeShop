@@ -41,7 +41,8 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 predicate: p => p.Id == request.OrderId && p.CreatedById == currentAccount.Id && p.Status.Equals(OrderStatus.Success) && p.StartTime > DateTimeOffset.UtcNow,
                 includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Reservation, object>>>
                 {
-                    p => p.ReservationProducts
+                    p => p.ReservationProducts,
+
                 }
                 ).FirstOrDefault();
             if (reservation == null)
@@ -50,17 +51,21 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
             }
             decimal totalPrice = 0;
             Dictionary<long, Domain.Entities.Product> products = new();
-            foreach (var pro in request.Products)
+            //new code here
+			var productIds = request.Products.Select(p => p.ProductId);
+			var productsDic = await _unitOfWork.ProductRepository
+				.Get(pr => productIds.Contains(pr.Id) && !pr.Deleted)
+				.ToDictionaryAsync(p => p.Id);
+			foreach (var pro in request.Products)
             {
 
-                var p = (await _unitOfWork.ProductRepository.GetAsync(pr => pr.Id == pro.ProductId && !pr.Deleted)).FirstOrDefault();
-                if (p == null)
+                var p = productsDic.ContainsKey(pro.ProductId);
+                if (!p)
                 {
                     throw new ApiException(ResponseCode.ProductNotExist);
                 }
-                products.Add(p.Id, p);
-                totalPrice += (decimal)p.Price * pro.Quantity;
-
+                products.Add(pro.ProductId, productsDic[pro.ProductId]);
+                totalPrice += (decimal)productsDic[pro.ProductId].Price * pro.Quantity;
             }
 
             //
@@ -77,7 +82,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 
 
             //
-
+            List<TransactionProduct> TransactionProducts = new();
             foreach (var pro in request.Products)
             {
                 var existingProduct = reservation.ReservationProducts
@@ -86,11 +91,7 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                 //
                 if (existingProduct != null)
                 {
-
                     existingProduct.TotalProduct += pro.Quantity;
-
-
-                    
                 }
                 else
                 {
@@ -99,19 +100,27 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
                     {
                         ProductId = pro.ProductId,
                         TotalProduct = pro.Quantity,
+                        
                         ProductPrice = products[pro.ProductId].Price,
                     };
 
                     reservation.ReservationProducts.Add(newReservationProduct);
-
-                    await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
-                    
                 }
 
-            }
+                TransactionProducts.Add(new TransactionProduct
+                {
+                    Price = products[pro.ProductId].Price,
+                    ProductId = pro.ProductId,
+                    ProductImage = products[pro.ProductId].Image,
+					ProductName = products[pro.ProductId].Name,
+					Quantity = pro.Quantity,
+                });
+
+			}
+			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
 
 
-            wallet.First().Balance -= totalPrice;
+			wallet.First().Balance -= totalPrice;
             await _unitOfWork.WalletRepsitory.UpdateAsync(wallet.First());
 
 
@@ -154,14 +163,14 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 				TransactionType = TransactionType.AddProducts,
 			};
-            reservation.Transactions.Add(newTransaction);
+            newTransaction.TransactionProducts = TransactionProducts;
+
+			reservation.Transactions.Add(newTransaction);
 			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
 
 			await _unitOfWork.SaveChangesAsync();
 
             return true;
-
-
         }
     }
 

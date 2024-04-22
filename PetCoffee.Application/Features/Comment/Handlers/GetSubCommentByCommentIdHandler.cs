@@ -45,7 +45,7 @@ public class GetSubCommentByCommentIdHandler : IRequestHandler<GetSubCommentByCo
 
 		var Comments = await _unitOfWork.CommentRepository
 			.GetAsync(
-				predicate: c => c.ParentCommentId == request.CommentId && !reportedCommentIds.Contains(c.Id),
+				predicate: c => c.ParentCommentId == request.CommentId && !c.Deleted && !reportedCommentIds.Contains(c.Id),
 				includes: new List<System.Linq.Expressions.Expression<Func<Domain.Entities.Comment, object>>>
 				{
 					c =>c.CreatedBy,

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Reservation.Commands;
@@ -8,12 +9,7 @@ using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PetCoffee.Application.Features.Reservation.Handlers
 {
@@ -47,21 +43,33 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 			 {
 					p => p.ReservationProducts,
 					p => p.Area
-			 }
-			 ).FirstOrDefault();
+			 })
+				.Include(p => p.Area)
+				.Include(p => p.ReservationProducts)
+					.ThenInclude(r => r.Product)
+				.FirstOrDefault();
 			if (reservation == null)
 			{
 				throw new ApiException(ResponseCode.ReservationNotExist);
 			}
 
 			decimal backMoney = 0;
+			List<TransactionProduct> TransactionProducts = new();
 			foreach (var product in reservation.ReservationProducts)
 			{
 				backMoney += product.TotalProduct * product.ProductPrice;
+				TransactionProducts.Add(new TransactionProduct
+				{
+					Price = product.ProductPrice,
+					ProductId = product.ProductId,
+					ProductName = product.Product.Name,
+					ProductImage = product.Product.Image,
+					Quantity = product.TotalProduct,
+				});
 			}
 
 			// Delete all products in the reservation
-			_unitOfWork.ReservationProductRepository.DeleteRange(reservation.ReservationProducts);
+			await _unitOfWork.ReservationProductRepository.DeleteRange(reservation.ReservationProducts);
 			reservation.TotalPrice -= backMoney;
 
 			// Update reservation and save changes
@@ -110,18 +118,18 @@ namespace PetCoffee.Application.Features.Reservation.Handlers
 				Amount = (decimal)backMoney,
 				Content = "Hủy đồ uống khỏi đơn hàng",
 				RemitterId = managaerWallet.First().Id,
-				TransactionStatus = TransactionStatus.Done,
+				TransactionStatus = TransactionStatus.Return,
 				ReferenceTransactionId = TokenUltils.GenerateOTPCode(6),
 				TransactionType = TransactionType.RemoveProducts,
+				PetCoffeeShopId = reservation.Area.PetcoffeeShopId,
 			};
+			newTransaction.TransactionProducts = TransactionProducts;
 			reservation.Transactions.Add(newTransaction);
 			await _unitOfWork.ReservationRepository.UpdateAsync(reservation);
 
 			await _unitOfWork.SaveChangesAsync();
 
 			return true;
-
-
 		}
 	}
 }

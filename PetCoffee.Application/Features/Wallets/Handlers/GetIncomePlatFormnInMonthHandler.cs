@@ -46,10 +46,10 @@ public class GetIncomePlatFormnInMonthHandler : IRequestHandler<GetIncomePlatFor
 
 		var preTransaction = await _unitOfWork.TransactionRepository
 						.Get(tr => tr.TransactionType == TransactionType.Package
-						&& (tr.CreatedAt <= preFrom && tr.CreatedAt >= preTo))
+						&& (tr.CreatedAt >= preFrom && tr.CreatedAt <= preTo))
 						.ToListAsync();
 
-		var preTotalIncomeShop = curTransaction.Sum(ct => ct.Amount);
+		var preTotalIncomeShop = preTransaction.Sum(ct => ct.Amount);
 
 		var response = new GetTransactionAmountResponse()
 		{
@@ -61,6 +61,7 @@ public class GetIncomePlatFormnInMonthHandler : IRequestHandler<GetIncomePlatFor
 				new()
 				{
 					Amount = TotalIncomeShop,
+					TotalTransaction = curTransaction.Count(),
 					TransactionTypes = TransactionType.Package,
 				}
 			} : null

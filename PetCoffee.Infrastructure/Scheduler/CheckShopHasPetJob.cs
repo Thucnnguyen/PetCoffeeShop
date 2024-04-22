@@ -15,9 +15,9 @@ public class CheckShopHasPetJob : IJob
 
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly INotifier _notifier;
-	private readonly ILogger<DeleteAccountNotVerifyJob> _logger;
+	private readonly ILogger<CheckShopHasPetJob> _logger;
 
-	public CheckShopHasPetJob(IUnitOfWork unitOfWork, ILogger<DeleteAccountNotVerifyJob> logger, INotifier notifier)
+	public CheckShopHasPetJob(IUnitOfWork unitOfWork, ILogger<CheckShopHasPetJob> logger, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;

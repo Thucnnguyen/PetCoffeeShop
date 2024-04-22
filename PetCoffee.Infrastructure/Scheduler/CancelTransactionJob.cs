@@ -12,9 +12,9 @@ public class CancelTransactionJob : IJob
 
 	public const string TransactionIdKey = "TransactionId";
 	private readonly IUnitOfWork _unitOfWork;
-	private readonly ILogger<DeleteAccountNotVerifyJob> _logger;
+	private readonly ILogger<CancelTransactionJob> _logger;
 
-	public CancelTransactionJob(IUnitOfWork unitOfWork, ILogger<DeleteAccountNotVerifyJob> logger)
+	public CancelTransactionJob(IUnitOfWork unitOfWork, ILogger<CancelTransactionJob> logger)
 	{
 		_unitOfWork = unitOfWork;
 		_logger = logger;

@@ -45,5 +45,6 @@ public class PetCoffeeShopResponse : BaseAuditableEntityResponse
 	public decimal? MaxPriceArea { get; set; }
 	public decimal? MinPriceArea { get; set; }
 
-
+	public double? Rates { get; set; } = 0;
+	public bool? HasPromotion { get; set; } = false;
 }

@@ -23,15 +23,14 @@ public class GetPostsNewsFeedQuery : PaginationRequest<Domain.Entities.Post>, IR
 	{
 		if (Search is not null)
 		{
-			if (Search is not null)
-			{
-				Expression = Expression.And(e => e.Content.ToLower().Contains(Search));
-			}
+			Expression = Expression.And(e => e.Content.ToLower().Contains(Search));
 		}
 		if (CategoryId is not null)
 		{
 			Expression = Expression.And(e => e.PostCategories.Where(p => p.CategoryId == CategoryId).Any());
 		}
+		Expression = Expression.And(e => !e.Deleted);
+
 		return Expression;
 	}
 }

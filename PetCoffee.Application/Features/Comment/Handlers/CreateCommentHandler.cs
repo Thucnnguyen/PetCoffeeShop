@@ -13,7 +13,7 @@ using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Comment.Handlers;
 
-public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand, CommentResponse>
+public class CreateCommentHandler : IRequestHandler<CreateCommentCommand, CommentResponse>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IAzureService _azureService;
@@ -21,7 +21,7 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 	private readonly IMapper _mapper;
 	private readonly INotifier _notifier;
 
-	public CreateCommentCommandHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper, INotifier notifier)
+	public CreateCommentHandler(IUnitOfWork unitOfWork, IAzureService azureService, ICurrentAccountService currentAccountService, IMapper mapper, INotifier notifier)
 	{
 		_unitOfWork = unitOfWork;
 		_azureService = azureService;
@@ -114,16 +114,6 @@ public class CreateCommentCommandHandler : IRequestHandler<CreateCommentCommand,
 				);
 			await _notifier.NotifyAsync(notificationForPoster, true);
 		}
-		
-		
-		var notificationForReply = new Notification(
-					account: post.CreatedBy,
-					type: NotificationType.ReplyComment,
-					entityType: EntityType.Post,
-					data: NewCommentData,
-					post.ShopId
-				);
-		await _notifier.NotifyAsync(notificationForReply, true);
 
 		return response;
 

@@ -42,45 +42,73 @@ public class GetPetCofffeeShopByIdHandler : IRequestHandler<GetPetCoffeeShopById
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
 
-		var CurrentShop = await _unitOfWork.PetCoffeeShopRepository.Get(
-			predicate: p => p.Id == request.Id && !p.Deleted && p.Status == ShopStatus.Active,
-			includes: new List<Expression<Func<PetCoffeeShop, object>>>()
-				{
-					shop => shop.CreatedBy,
-					shop => shop.Products,
-					shop => shop.Areas,
-					shop => shop.Follows,
-				},
-			disableTracking: true
-			).FirstOrDefaultAsync();
+		PetCoffeeShop CurrentShop;
+		if (CurrentUser.IsAdmin)
+		{
+			CurrentShop = await _unitOfWork.PetCoffeeShopRepository.Get(
+					predicate: p => p.Id == request.Id && !p.Deleted,
+					includes: new List<Expression<Func<PetCoffeeShop, object>>>()
+						{
+							shop => shop.CreatedBy,
+							//shop => shop.Products,
+							shop => shop.Areas,
+							shop => shop.Follows,
+							shop => shop.Promotions,
+						},
+					disableTracking: true
+					).FirstOrDefaultAsync();
+		}
+		else
+		{
+			CurrentShop = await _unitOfWork.PetCoffeeShopRepository.Get(
+					predicate: p => p.Id == request.Id && !p.Deleted && p.Status == ShopStatus.Active,
+					disableTracking: true
+					)
+					.Include(shop => shop.CreatedBy)
+					//.Include(shop => shop.Products.Where(p => !p.Deleted))
+					.Include(shop => shop.Areas.Where(a => !a.Deleted))
+					.Include(shop => shop.Follows)
+					.Include(shop => shop.Promotions)
+					.FirstOrDefaultAsync();
+		}
+
+					
+
 
 		if (CurrentShop == null)
 		{
 			throw new ApiException(ResponseCode.ShopNotExisted);
 		}
-		
+
 		// inital response
 		var response = _mapper.Map<PetCoffeeShopResponse>(CurrentShop);
 		response.CreatedBy = _mapper.Map<AccountForPostModel>(CurrentShop.CreatedBy);
-
+		//Count Rate
+		if (!CurrentUser.IsAdmin)
+		{
+			var reservations = await _unitOfWork.ReservationRepository.Get(r => r.Status == OrderStatus.Overtime && r.Area.PetcoffeeShopId == CurrentShop.Id && r.Rate != null)
+							.ToListAsync();
+			response.Rates = reservations.Average(r => r.Rate);
+		}
+		
 		//get max seat
 		var maxSeat = CurrentShop.Areas.MaxBy(a => a.TotalSeat);
 
 		response.MaxSeat = maxSeat != null ? maxSeat.TotalSeat : 0;
 
 		// min - max price  product 
-		var maxPriceProduct = CurrentShop.Products.MaxBy(p => p.Price);
-		var minPriceProduct = CurrentShop.Products.MinBy(p => p.Price);
+		//var maxPriceProduct = CurrentShop.Products.MaxBy(p => p.Price);
+		//var minPriceProduct = CurrentShop.Products.MinBy(p => p.Price);
 
-		response.MaxPriceProduct = maxPriceProduct != null ? maxPriceProduct.Price : 0;
-		response.MinPriceProduct = minPriceProduct != null ? minPriceProduct.Price : 0;
+		//response.MaxPriceProduct = maxPriceProduct != null ? maxPriceProduct.Price : 0;
+		//response.MinPriceProduct = minPriceProduct != null ? minPriceProduct.Price : 0;
 
 		// get min- max Area price of shop
 		var areaWithMaxPrice = CurrentShop.Areas.MaxBy(a => a.PricePerHour);
 		var areaWithMinPrice = CurrentShop.Areas.MinBy(a => a.PricePerHour);
 
-		response.MaxPriceArea = areaWithMaxPrice != null ? areaWithMaxPrice.PricePerHour: 0;
-		response.MinPriceArea = areaWithMinPrice != null ? areaWithMinPrice.PricePerHour: 0;
+		response.MaxPriceArea = areaWithMaxPrice != null ? areaWithMaxPrice.PricePerHour : 0;
+		response.MinPriceArea = areaWithMinPrice != null ? areaWithMinPrice.PricePerHour : 0;
 
 
 		response.StartTime = CurrentShop.OpeningTime;

@@ -35,6 +35,8 @@ public class Transaction : BaseAuditableEntity
 	// for donate
 	[InverseProperty(nameof(TransactionItem.Transaction))]
 	public IList<TransactionItem> Items { get; set; } = new List<TransactionItem>();
+	[InverseProperty(nameof(TransactionProduct.Transaction))]
+	public IList<TransactionProduct> TransactionProducts { get; set; } = new List<TransactionProduct>();
 
 	public TransactionStatus TransactionStatus { get; set; } = TransactionStatus.Processing;
 	public TransactionType TransactionType { get; set; }

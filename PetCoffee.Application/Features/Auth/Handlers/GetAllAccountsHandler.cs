@@ -23,8 +23,9 @@ public class GetAllAccountsHandler : IRequestHandler<GetAllAccountsQuery, Pagina
 
 	public async Task<PaginationResponse<Account, AccountForRecord>> Handle(GetAllAccountsQuery request, CancellationToken cancellationToken)
 	{
-		var accounts = await _unitOfWork.AccountRepository
-			.GetAsync(request.GetExpressions());
+		var accounts = _unitOfWork.AccountRepository
+			.Get(request.GetExpressions())
+			.OrderByDescending(a => a.CreatedAt);
 
 		return new PaginationResponse<Account, AccountForRecord>(
 				accounts,

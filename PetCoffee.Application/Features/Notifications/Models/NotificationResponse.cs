@@ -1,17 +1,19 @@
 ﻿
 
+using PetCoffee.Application.Common.Models.Response;
 using PetCoffee.Application.Features.Post.Models;
 using PetCoffee.Domain.Enums;
 
 namespace PetCoffee.Application.Features.Notifications.Models;
 
-public class NotificationResponse
+public class NotificationResponse : BaseAuditableEntityResponse
 {
 	public long Id { get; set; }
 
 	public string Title { get; set; }
 	public string Content { get; set; }
 	public string Data { get; set; }
+	public bool? IsReportForComment { get; set; }
 	public EntityType EntityType { get; set; }
 	public string? ReferenceId { get; set; }
 	public DateTimeOffset? ReadAt { get; set; }

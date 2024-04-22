@@ -40,7 +40,7 @@ public class VerifyFirebaseTokenHandler : IRequestHandler<VerifyFirebaseTokenCom
 
 		if (ExistedAccount != null)
 		{
-			var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(ExistedAccount));
+			var resp = new AccessTokenResponse(_jwtService.GenerateJwtToken(ExistedAccount), ExistedAccount.Status);
 			return resp;
 		}
 
@@ -59,7 +59,7 @@ public class VerifyFirebaseTokenHandler : IRequestHandler<VerifyFirebaseTokenCom
 		await _unitOfWork.AccountRepository.AddAsync(NewAccount);
 		await _unitOfWork.SaveChangesAsync();
 
-		var response = new AccessTokenResponse(_jwtService.GenerateJwtToken(NewAccount));
+		var response = new AccessTokenResponse(_jwtService.GenerateJwtToken(NewAccount), NewAccount.Status);
 		return response;
 
 	}

@@ -43,7 +43,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 							.Get(c => c.Id == request.CommentID)
 							.Include(c => c.CreatedBy)
 							.FirstOrDefaultAsync();
-			if (comment != null)
+			if (comment == null)
 			{
 				throw new ApiException(ResponseCode.CommentNotExist);
 			}
@@ -54,7 +54,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 			}
 
 			// check already report
-			var reportComment = await _unitOfWork.ReportRepository.GetAsync(l => l.CommentId == request.CommentID && l.CreatedById == curAccount.Id);
+			var reportComment = await _unitOfWork.ReportRepository.GetAsync(l => l.CommentId == request.CommentID && l.CreatedById == curAccount.Id && l.Status == ReportStatus.Processing);
 			if (reportComment.Any())
 			{
 				return false;
@@ -66,7 +66,7 @@ namespace PetCoffee.Application.Features.Report.Handlers
 			await _unitOfWork.SaveChangesAsync();
 			//send Notification for admin  staff platform
 			var adminAndStaffAccount = await _unitOfWork.AccountRepository
-									.Get(a => a.IsAdmin && a.IsPlatformStaff && !a.Deleted)
+									.Get(a => (a.IsAdmin || a.IsPlatformStaff )&& !a.Deleted && a.Status == AccountStatus.Active)
 									.ToListAsync();
 
 			newReportComment.Comment = comment;

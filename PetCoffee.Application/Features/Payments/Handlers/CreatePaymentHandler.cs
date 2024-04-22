@@ -72,7 +72,7 @@ public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Paymen
 		await _unitOfWork.TransactionRepository.AddAsync(transaction);
 		await _unitOfWork.SaveChangesAsync();
 
-		await _schedulerService.CancelTransactionJob(transaction.Id, transaction.CreatedAt.AddMinutes(3));
+		await _schedulerService.CancelTransactionJob(transaction.Id, transaction.CreatedAt.AddMinutes(15));
 
 		return _mapper.Map<PaymentResponse>(transaction);
 	}

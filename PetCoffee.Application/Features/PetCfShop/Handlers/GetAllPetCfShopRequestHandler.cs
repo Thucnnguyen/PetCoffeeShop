@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LinqKit;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Common.Models.Response;
@@ -11,11 +12,10 @@ using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
 using PetCoffee.Domain.Enums;
 using PetCoffee.Shared.Ultils;
-using System.Linq.Expressions;
 
 namespace PetCoffee.Application.Features.PetCfShop.Handlers;
 
-public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequestQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
+public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopQuery, PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>>
 {
 
 	private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequ
 		_currentAccountService = currentAccountService;
 	}
 
-	public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetAllPetCfShopRequestQuery request,
+	public async Task<PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>> Handle(GetAllPetCfShopQuery request,
 		CancellationToken cancellationToken)
 	{
 		var currentAccount = await _currentAccountService.GetCurrentAccount();
@@ -44,6 +44,7 @@ public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequ
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
+
 		var exp = request.GetExpressions();
 		if (currentAccount.IsAdmin || currentAccount.IsPlatformStaff)
 		{
@@ -54,62 +55,52 @@ public class GetAllPetCfShopRequestHandler : IRequestHandler<GetAllPetCfShopRequ
 			exp = exp.And(shop => shop.Status == ShopStatus.Active && shop.IsBuyPackage && !shop.Deleted);
 		}
 
-		var stores = (await _unitOfWork.PetCoffeeShopRepository.GetAsync(
-			predicate: exp,
-			disableTracking: true
-		)).ToList();
+		var stores = await _unitOfWork.PetCoffeeShopRepository
+			.Get(
+				predicate: exp,
+				disableTracking: true
+			)
+			.Include(p => p.Areas.Where(a => a.Reservations.Any()))
+				.ThenInclude(a => a.Reservations.Where(r => r.Rate != null && r.Status == OrderStatus.Success))
+			.Include(p => p.Promotions)
+			.Include(p => p.Follows)
+			.ToListAsync();
 
-		var response = new List<PetCoffeeShopForCardResponse>();
 		if (!currentAccount.IsAdmin && !currentAccount.IsPlatformStaff)
 		{
-			if (request.Longitude == 0 || request.Latitude == 0)
+			var shopResponseForCus = stores.Select(store =>
 			{
-				foreach (var store in stores)
+				var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
+				storeRes.TotalFollow = store.Follows.Count();
+				if (request.Longitude != 0 || request.Latitude != 0)
 				{
-					var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
-					storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
-					response.Add(storeRes);
-				}
-			}
-			else
-			{
-				foreach (var store in stores)
-				{
-					var storeRes = _mapper.Map<PetCoffeeShopForCardResponse>(store);
 					storeRes.Distance = CalculateDistanceUltils.CalculateDistance(request.Latitude, request.Longitude, store.Latitude, store.Longitude);
-					storeRes.TotalFollow = storeRes.TotalFollow = await _unitOfWork.FollowPetCfShopRepository.CountAsync(f => f.ShopId == store.Id);
-
-					response.Add(storeRes);
 				}
-			}
-			//if (request.Longitude == 0 || request.Latitude == 0)
-			//{
-			//	response = response.OrderBy(x => x.Distance).ThenByDescending(x => x.CreatedAt).ToList();
-			//}
-			//else
-			//{
-			response = response.OrderBy(x => x.Distance).ThenByDescending(x => x.CreatedAt).ToList();
-			//}
+				return storeRes;
+			}).ToList();
 
-			var shopResponsesCus = response
+			shopResponseForCus = shopResponseForCus.OrderBy(x => x.Distance).ThenByDescending(x => x.CreatedAt).ToList();
+
+			var shopResponsesCus = shopResponseForCus
 								.Skip((request.PageNumber - 1) * request.PageSize)
 								.Take(request.PageSize)
 								.ToList();
+
 			return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
 				shopResponsesCus,
-				response.Count(),
+				shopResponseForCus.Count(),
 				request.PageNumber,
 				request.PageSize);
 		}
 
-		var shopResponses = stores
+		var shopResponsesForPlatForm = stores
 								.Skip((request.PageNumber - 1) * request.PageSize)
 								.Take(request.PageSize)
 								.Select(s => _mapper.Map<PetCoffeeShopForCardResponse>(s))
 								.ToList();
 
 		return new PaginationResponse<PetCoffeeShop, PetCoffeeShopForCardResponse>(
-				shopResponses,
+				shopResponsesForPlatForm,
 				stores.Count(),
 				request.PageNumber,
 				request.PageSize);

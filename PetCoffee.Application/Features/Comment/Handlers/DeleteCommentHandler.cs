@@ -30,24 +30,80 @@ public class DeleteCommentHandler : IRequestHandler<DeleteCommentCommand, bool>
 		{
 			throw new ApiException(ResponseCode.AccountNotActived);
 		}
-
-		var comment = await _unitOfWork.CommentRepository.GetByIdAsync(request.CommentId);
-
-		if (comment == null)
+		if(currentAccount.IsCustomer)
 		{
-			return false;
+			var comment = await _unitOfWork.CommentRepository.GetByIdAsync(request.CommentId);
+
+			if (comment == null)
+			{
+				return false;
+			}
+
+			if (comment.CreatedById != currentAccount.Id)
+			{
+				throw new ApiException(ResponseCode.PermissionDenied);
+			}
+			var SubComments = await _unitOfWork.CommentRepository.GetAsync(s => s.ParentCommentId == comment.Id);
+			if (SubComments.Any())
+			{
+				await _unitOfWork.CommentRepository.DeleteRange(SubComments);
+			}
+			await _unitOfWork.CommentRepository.DeleteAsync(comment);
 		}
 
-		if (comment.CreatedById != currentAccount.Id)
+		if (currentAccount.IsCustomer)
 		{
-			throw new ApiException(ResponseCode.PermissionDenied);
+			var comment = await _unitOfWork.CommentRepository.GetByIdAsync(request.CommentId);
+
+			if (comment == null)
+			{
+				return false;
+			}
+
+			if (comment.CreatedById != currentAccount.Id)
+			{
+				throw new ApiException(ResponseCode.PermissionDenied);
+			}
+			var SubComments = await _unitOfWork.CommentRepository.GetAsync(s => s.ParentCommentId == comment.Id);
+			if (SubComments.Any())
+			{
+				foreach ( var subComment in SubComments)
+				{
+					subComment.DeletedAt = DateTimeOffset.UtcNow;
+					await _unitOfWork.CommentRepository.UpdateAsync(subComment);
+				}
+			}
+			comment.DeletedAt = DateTimeOffset.UtcNow;
+			await _unitOfWork.CommentRepository.UpdateAsync(comment);
 		}
-		var SubComments = await _unitOfWork.CommentRepository.GetAsync(s => s.ParentCommentId == comment.Id);
-		if (SubComments.Any())
+
+		if (currentAccount.IsStaff && currentAccount.IsManager)
 		{
-			await _unitOfWork.CommentRepository.DeleteRange(SubComments);
+			var ShopIds = currentAccount.AccountShops.Select(acs => acs.ShopId);
+			var comment = await _unitOfWork.CommentRepository.GetByIdAsync(request.CommentId);
+
+			if (comment == null)
+			{
+				return false;
+			}
+
+			if (comment.CreatedById != currentAccount.Id)
+			{
+				throw new ApiException(ResponseCode.PermissionDenied);
+			}
+			var SubComments = await _unitOfWork.CommentRepository.GetAsync(s => s.ParentCommentId == comment.Id);
+			if (SubComments.Any())
+			{
+				foreach (var subComment in SubComments)
+				{
+					subComment.DeletedAt = DateTimeOffset.UtcNow;
+					await _unitOfWork.CommentRepository.UpdateAsync(subComment);
+				}
+			}
+			comment.DeletedAt = DateTimeOffset.UtcNow;
+			await _unitOfWork.CommentRepository.UpdateAsync(comment);
 		}
-		await _unitOfWork.CommentRepository.DeleteAsync(comment);
+
 		await _unitOfWork.SaveChangesAsync();
 		return true;
 	}

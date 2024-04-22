@@ -37,5 +37,8 @@ public enum NotificationType
 
 	[Description("Quán hiện tại chưa có thú cưng, cần thêm thú cưng vào quán")]
 	RemindShopAboutNotHavingPet = 14,
-
+	[Description("Có Một cửa hàng mới đăng ký")]
+	NewShopRequest = 15,
+	[Description("Sự kiện đã hủy")]
+	CancelEvent = 16,
 }

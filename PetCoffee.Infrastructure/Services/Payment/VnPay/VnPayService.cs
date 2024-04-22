@@ -59,7 +59,7 @@ public class VnPayService : IVnPayService
 
 		var transaction = new Transaction()
 		{
-			Amount = payment.Amount,
+			Amount = payment.Amount/10,
 			Content = payment.Info,
 			ReferenceTransactionId = payment.PaymentReferenceId,
 			Url = paymentUrl,
