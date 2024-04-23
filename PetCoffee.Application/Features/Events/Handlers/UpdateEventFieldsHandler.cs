@@ -1,6 +1,6 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using PetCoffee.Application.Common.Enums;
 using PetCoffee.Application.Common.Exceptions;
 using PetCoffee.Application.Features.Events.Commands;
@@ -8,8 +8,6 @@ using PetCoffee.Application.Features.Events.Models;
 using PetCoffee.Application.Persistence.Repository;
 using PetCoffee.Application.Service;
 using PetCoffee.Domain.Entities;
-using System.Data.Entity;
-using TmsApi.Common;
 
 namespace PetCoffee.Application.Features.Events.Handlers;
 
