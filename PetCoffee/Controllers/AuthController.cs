@@ -140,6 +140,12 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
-
+		[HttpPut("staffs/password")]
+		[Authorize]
+		public async Task<ActionResult<bool>> UpdateStaffPassword([FromBody] ChangeStaffPasswordCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 	}
 }

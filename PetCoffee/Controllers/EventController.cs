@@ -124,5 +124,12 @@ namespace PetCoffee.API.Controllers
 			var response = await Mediator.Send(request);
 			return response;
 		}
+		[HttpPut("event-fields")]
+		[Authorize]
+		public async Task<ActionResult<EventFieldResponse>> UpdateEventField([FromBody] UpdateEventFieldCommand request)
+		{
+			var response = await Mediator.Send(request);
+			return response;
+		}
 	}
 }

@@ -5,25 +5,25 @@ namespace PetCoffee.Domain.Enums;
 
 public enum ReportCategory
 {
-	[Description("violence")]
+	[Description("Violence")]
 	Violence = 0,
 
-	[Description("nude photos")]
+	[Description("NudePhotos")]
 	NudePhotos = 1,
 
-	[Description("suicidal")]
+	[Description("Suicidal")]
 	Suicidal = 2,
 
-	[Description("Appear Too Much")]
+	[Description("AppearTooMuch")]
 	AppearTooMuch = 3,
 
-	[Description("Too private")]
+	[Description("TooPrivate")]
 	TooPrivate = 4,
 
-	[Description("Sensitive content")]
+	[Description("SensitiveContent")]
 	SensitiveContent = 5,
 
-	[Description("Not Suitable")]
+	[Description("NotSuitable")]
 	NotSuitable = 6,
 
 	[Description("Other")]
