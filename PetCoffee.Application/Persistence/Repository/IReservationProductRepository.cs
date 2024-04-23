@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetCoffee.Application.Persistence.Repository
+namespace PetCoffee.Application.Persistence.Repository;
+
+public interface IReservationProductRepository : IBaseRepository<ReservationProduct>
 {
-	public interface IReservationProductRepository : IBaseRepository<ReservationProduct>
-	{
-		
-	}
+	
 }

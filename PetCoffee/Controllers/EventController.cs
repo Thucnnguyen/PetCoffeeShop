@@ -126,7 +126,7 @@ namespace PetCoffee.API.Controllers
 		}
 		[HttpPut("event-fields")]
 		[Authorize]
-		public async Task<ActionResult<EventFieldResponse>> UpdateEventField([FromBody] UpdateEventFieldCommand request)
+		public async Task<ActionResult<List<FieldEventResponseForEventResponse>>> UpdateEventField([FromBody] UpdateEventFieldsCommand request)
 		{
 			var response = await Mediator.Send(request);
 			return response;
